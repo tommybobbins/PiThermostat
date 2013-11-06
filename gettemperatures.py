@@ -12,11 +12,20 @@ import threading
 import datetime
 from time import sleep
 import fileinput
+from processcalendar import parse_calendar
 import re
 sys.path.append('/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCDPlate')
 from Adafruit_I2C import Adafruit_I2C
 
-target_temp=22
+# Set this to something sensible in case we have no calendar
+
+#print parse_calendar()
+
+try:
+    target_temp=parse_calendar()
+except:
+    target_temp=14
+
 outside_temp="unknown"
 weather_file='/tmp/weather_conditions.txt'
 weather_script='/usr/local/bin/retrieve_weather.sh'
@@ -79,15 +88,14 @@ class Tmp102:
     return RawBytes,temp
 
 
-mytemp = Tmp102(address=0x48)
-floattemp = mytemp.readTemperature()[1]
-#        inttemp =  int(round(floattemp, 22))
-#        roundtemp =  (round(floattemp, 2))
-#        weathernow = ("Outside: %i%sC" % (weather_temp, chr(176)))
-weathernow = ("%i" % weather_temp)
-idealnow = ("%i" % target_temp)
-print (floattemp, target_temp, weather_temp)
-
 def read_temps():
+    mytemp = Tmp102(address=0x48)
+    floattemp = mytemp.readTemperature()[1]
+    weathernow = ("%i" % weather_temp)
+    try:
+        target_temp=parse_calendar()
+    except:
+        target_temp=14
+#    print "target temp %i" % target_temp
     return (floattemp, target_temp, weather_temp)
 

@@ -12,8 +12,8 @@
  
 # Change the next 3 lines to suit where you install your script and what you want to call it
 DIR=/usr/local/bin
-DAEMON=${DIR}/temp.py
-DAEMON_NAME=temp.py
+DAEMON=${DIR}/display.py
+DAEMON_NAME=display.py
  
 # This next line determines what user the script runs as.
 # Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
