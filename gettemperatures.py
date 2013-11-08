@@ -7,45 +7,52 @@
 # 3: weather from the weather_file (or run weather_script and try again)
 #    file is populated by weather-util. See retrieve-weather.sh for details
 
-import sys, os, time
-import threading
+import sys,time
+from sys import path
+#import threading
 import datetime
 from time import sleep
-import fileinput
+import fileinput, re
 from processcalendar import parse_calendar
+weather_script='/usr/local/bin/retrieve_weather.sh'
+weather_file='/tmp/weather_conditions.txt'
 import re
 sys.path.append('/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCDPlate')
 from Adafruit_I2C import Adafruit_I2C
 
 # Set this to something sensible in case we have no calendar
 
-#print parse_calendar()
-
 try:
     target_temp=parse_calendar()
 except:
     target_temp=14
 
-outside_temp="unknown"
-weather_file='/tmp/weather_conditions.txt'
-weather_script='/usr/local/bin/retrieve_weather.sh'
-regex = re.compile(r'\s+Temperature:\s+(\d+) F \((\d+) C\)')
-
-def parse_weather():
-    for line in fileinput.input(weather_file):
+def parse_weather(file):
+    outside_temp=0
+    weather_script='/usr/local/bin/retrieve_weather.sh'
+   #    weather_temp=parse_weather(weather_file)
+#    print ("Reading weather file %s" % file)
+    import fileinput,re
+    regex = re.compile(r'\s+Temperature:\s+(\d+) F \((\d+) C\)')
+#    print ("Regexp compiled")
+    for line in fileinput.input(file):
+#        print (line)
         line = line.rstrip() 
+#        print (line)
         match = regex.search(line)
+#        print match
         if match:
-            outside_temp= int(match.group(2))
-            return(outside_temp)
+            outside_temp = int(match.group(2))
+#            print ("we have a match %i" % outside_temp)
+    return(outside_temp)
 
 #Check to see whether the weather has been downloaded.
 try:
-    weather_temp=parse_weather()
+   weather_temp=parse_weather(weather_file)
 except IOError:
    from subprocess import call
    call([weather_script])	
-   weather_temp=parse_weather()
+   weather_temp=parse_weather(weather_file)
 
 
 class Tmp102:
@@ -91,11 +98,10 @@ class Tmp102:
 def read_temps():
     mytemp = Tmp102(address=0x48)
     floattemp = mytemp.readTemperature()[1]
-    weathernow = ("%i" % weather_temp)
+    weather_temp=parse_weather(weather_file)
     try:
-        target_temp=parse_calendar()
+        target_temp=int(parse_calendar())
     except:
         target_temp=14
-#    print "target temp %i" % target_temp
     return (floattemp, target_temp, weather_temp)
 

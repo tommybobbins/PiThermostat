@@ -5,10 +5,11 @@ import datetime
 import time
 from email.utils import parsedate
 import urllib2
+target_temp=14
 #calendar_file='/tmp/tempschedule.txt'
 
 def parse_calendar():
-     response = urllib2.urlopen('http://django/schedule/calendar/cdaily/thermostat/')
+     response = urllib2.urlopen('http://thermo/schedule/calendar/cdaily/thermostat/')
      regex_temp = re.compile(r'^Temp=(\d+)\|(.*)\|(.*)\|')
      html = response.readlines()
 #    for line in fileinput.input(calendar_file):
