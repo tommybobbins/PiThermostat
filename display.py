@@ -97,20 +97,21 @@ while mainloop:
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_up_lit, (button_up_x, button_up_y))
                   need_to_update=1
-#                  pygame.display.update()
                   working_temp_addition += 0.5
+                  pygame.display.update()
             elif ((mos_x >= 101) and (mos_x <= 200)):
                   #Mouse if over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_down_lit, (button_down_x, button_down_y))
                   need_to_update=1
-#                  pygame.display.update()
                   working_temp_addition -= 0.5
+                  pygame.display.update()
     if (sample == 0):
 #       print "initialising..."
        (floattemp,target_temp,outside_temp) = read_temps() 
        sample += 1
+       need_to_update=1
     elif ( sample >= sample_limit):
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
@@ -151,10 +152,10 @@ while mainloop:
     temppos = tempnow.get_rect(centerx=90,centery=30)
     if (sample%100 == 0):
         need_to_update=1
-        screen.blit(button_up_lit, (button_up_x, button_up_y))
-        screen.blit(button_down_lit, (button_down_x, button_down_y))
+#        screen.blit(button_up_lit, (button_up_x, button_up_y))
+#        screen.blit(button_down_lit, (button_down_x, button_down_y))
     if (need_to_update == 1):
-       print ("screen update")
+#       print ("screen update")
        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
        need_to_update = 0
 
