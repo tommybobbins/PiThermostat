@@ -4,7 +4,7 @@ import os
 import subprocess
 from pygame.locals import *
 import gettemperatures
-#import mosquitto
+import mosquitto
 import time,datetime
 import processcalendar
 from gettemperatures import read_temps
@@ -14,8 +14,8 @@ sample=0
 fps = 4 
 target_temp=14
 working_temp_addition=0
-#client = mosquitto.Mosquitto("Thermo1")
-#client.connect("mqttserver")
+client = mosquitto.Mosquitto("Thermo1")
+client.connect("mqttserver")
 ###########################################################
 from evdev import InputDevice, list_devices
 devices = map(InputDevice, list_devices())
@@ -87,7 +87,7 @@ while mainloop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             mainloop = False
-#            client.disconnect()
+            client.disconnect()
         if event.type == pygame.MOUSEBUTTONDOWN:
             mos_x, mos_y = pygame.mouse.get_pos()
 #            print("Pos: %sx%s\n" % pygame.mouse.get_pos())
@@ -116,13 +116,13 @@ while mainloop:
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
        (floattemp,target_temp,outside_temp) = read_temps() 
-#       client.publish("temperature/sensor", "%f " % floattemp , 1 )
+       client.publish("temperature/sensor", "%f " % floattemp , 1 )
+       client.publish("temperature/weather", "%f " % outside_temp , 1 )
        if (old_target_temp != target_temp ):
            working_temp_addition=0 
        sample = 1 
     elif ( sample <= sample_limit):
        sample += 1
-#    print sample
     working_temp=int(target_temp) + working_temp_addition
     roundtemp =  (round(floattemp, 1))
     # Display some text
@@ -133,6 +133,7 @@ while mainloop:
     timenow = timefont.render("%s" % (formatted_time) , 1, (YELLOW))
     weathernow = timefont.render("Outside: %i%sC" % (outside_temp, chr(176)) , 1, (WHITE))
     idealnow = timefont.render("Target: %.1f%sC" % (working_temp, chr(176)) , 1, (WHITE))
+    client.publish("temperature/target", "%f " % working_temp , 1 )
     temperature_ratio =  floattemp/working_temp
     temperature_ratio =  floattemp/working_temp
     if ( temperature_ratio >= 1 and temperature_ratio <= 1.025 ):
@@ -152,8 +153,6 @@ while mainloop:
     temppos = tempnow.get_rect(centerx=90,centery=30)
     if (sample%100 == 0):
         need_to_update=1
-#        screen.blit(button_up_lit, (button_up_x, button_up_y))
-#        screen.blit(button_down_lit, (button_down_x, button_down_y))
     if (need_to_update == 1):
 #       print ("screen update")
        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
