@@ -99,7 +99,7 @@ while mainloop:
                   need_to_update=1
                   working_temp_addition += 0.5
                   pygame.display.update()
-            elif ((mos_x >= 101) and (mos_x <= 200)):
+            elif ((mos_x >= 101) and (mos_x <= 220)):
                   #Mouse if over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -116,8 +116,6 @@ while mainloop:
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
        (floattemp,target_temp,outside_temp) = read_temps() 
-       client.publish("temperature/sensor", "%f " % floattemp , 1 )
-       client.publish("temperature/weather", "%f " % outside_temp , 1 )
        if (old_target_temp != target_temp ):
            working_temp_addition=0 
        sample = 1 
@@ -133,7 +131,6 @@ while mainloop:
     timenow = timefont.render("%s" % (formatted_time) , 1, (YELLOW))
     weathernow = timefont.render("Outside: %i%sC" % (outside_temp, chr(176)) , 1, (WHITE))
     idealnow = timefont.render("Target: %.1f%sC" % (working_temp, chr(176)) , 1, (WHITE))
-    client.publish("temperature/target", "%f " % working_temp , 1 )
     temperature_ratio =  floattemp/working_temp
     temperature_ratio =  floattemp/working_temp
     if ( temperature_ratio >= 1 and temperature_ratio <= 1.025 ):
@@ -152,9 +149,12 @@ while mainloop:
     weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
     temppos = tempnow.get_rect(centerx=90,centery=30)
     if (sample%100 == 0):
-        need_to_update=1
+       need_to_update=1
     if (need_to_update == 1):
 #       print ("screen update")
        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
+       client.publish("temperature/sensor", "%f " % floattemp , 1 )
+       client.publish("temperature/weather", "%f " % outside_temp , 1 )
+       client.publish("temperature/target", "%f " % working_temp , 1 )
        need_to_update = 0
 
