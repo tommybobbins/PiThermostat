@@ -96,9 +96,16 @@ class Tmp102:
 
 
 def read_temps():
-    mytemp = Tmp102(address=0x48)
-    floattemp = mytemp.readTemperature()[1]
-    weather_temp=parse_weather(weather_file)
+    try:
+        mytemp = Tmp102(address=0x48)
+        floattemp = mytemp.readTemperature()[1]
+    except:
+        mytemp = 0
+        floattemp = 0
+    try:
+        weather_temp=parse_weather(weather_file)
+    except:
+        weather_temp=0 
     try:
         target_temp=int(parse_calendar())
     except:
