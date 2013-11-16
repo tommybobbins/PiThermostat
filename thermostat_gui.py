@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import pygame, os, subprocess
+import pygame, os, subprocess, sys
 from pygame.locals import *
 import gettemperatures, call_433, time, datetime, processcalendar
 from gettemperatures import read_temps
@@ -10,6 +10,7 @@ sample_limit=150
 sample=0
 fps = 4 
 target_temp=14
+boiler_request_time=20 # Seconds
 last_boiler_req=False
 working_temp_addition=0
 ###########################################################
@@ -54,15 +55,13 @@ YELLOW =(204, 204,   240)
 
 def screenupdate(time,temp,weather,ideal,tempcolour):
 
+#    print ("Weather = %i" % weather)
     tempfont = pygame.font.Font(None, 60)
     tempnow = tempfont.render("%.1f%sC" % (temp, chr(176)) , 1, (tempcolour))
     timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
     idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
     weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
     temppos = tempnow.get_rect(centerx=90,centery=30)
-    timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-    idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
-    weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
     screen.fill([0,0,0])
     screen.blit(timenow, timepos)
     screen.blit(tempnow, temppos)
@@ -105,6 +104,8 @@ while mainloop:
 ####### If we are running for the first time
     if (sample == 0):
        (floattemp,target_temp,outside_temp) = read_temps() 
+#       print ("Outside temp = %i " % outside_temp)
+       boiler_request_time=20 # Seconds
        sample += 1
        need_to_update=1
 ####### If we are doing our regular update
@@ -112,7 +113,9 @@ while mainloop:
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
        (floattemp,target_temp,outside_temp) = read_temps() 
+       print ("Outside temp = %i " % outside_temp)
        need_to_update=1
+       boiler_request_time=295 # Seconds
        if (old_target_temp != target_temp ):
            working_temp_addition=0 
        sample = 1 
@@ -144,21 +147,22 @@ while mainloop:
         fontcolour=PURPLE
         boiler_req=False
 #    print ("%s\n" % temperature_ratio )
-    tempfont = pygame.font.Font(None, 60)
-    tempnow = tempfont.render("%.1f%sC" % (roundtemp, chr(176)) , 1, (fontcolour))
-    timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-    idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
-    weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-    temppos = tempnow.get_rect(centerx=90,centery=30)
+#    tempfont = pygame.font.Font(None, 60)
+#    tempnow = tempfont.render("%.1f%sC" % (roundtemp, chr(176)) , 1, (fontcolour))
+#    timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
+#    idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
+#    weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
+#    temppos = tempnow.get_rect(centerx=90,centery=30)
     if (need_to_update == 1):
 #       print ("screen update")
 #       print ("sample = %i" % sample)
 #       Assume sample_limit is set to 150 @ 4 fps, will be called every 37.5s
        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
        try:
-           publish_redis(floattemp, outside_temp, working_temp, boiler_req)
-           send_boiler(boiler_req)
+           publish_redis(floattemp, working_temp)
+           send_boiler(boiler_req, boiler_request_time)
        except:
-           print "Unable to publish"
+           print "Publishing error:", sys.exc_info()[0]
+#           print "Unable to publish"
        need_to_update = 0
        

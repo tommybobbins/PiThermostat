@@ -1,27 +1,53 @@
 #!/usr/bin/python
 import redis
 import urllib2
+#import expiry_time
 
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
-#response = urllib2.urlopen('http://433board/switchboiler/on/')
-#response = urllib2.urlopen('http://433board/switchboiler/on/')
-def publish_redis(sensor,weather,target,req):
-    redthis.set("temperature/sensor", "%f" % sensor )
-    redthis.set("temperature/weather", "%f" % weather )
-    redthis.set("temperature/target", "%f" % target )
-    redthis.set("boiler/req", "%s" % req )
-    redthis.expire("boiler/req", "%i" % 240 )
 
-def send_boiler(boiler_state):
+#If expiry_time doesn't exist, then we should add the expiry time
+#If expiry_time < 40 then we should do it
+#If expiry_time > 40 then we should wait
+
+
+def call_url(on_or_off):
+   try:
+#       print ("Calling URL")
+       response = urllib2.urlopen("http://433board/switchboiler/%s/" % on_or_off )
+       redthis.set("boiler/req", "ok" )
+       redthis.expire("boiler/req", 295) 
+   except:
+       print ("unable to open URL") 
+     
+
+def publish_redis(sensor,target):
+    redthis.set("temperature/sensor", "%f" % sensor )
+    redthis.set("temperature/target", "%f" % target )
+
+
+
+def send_boiler(boiler_state,timeout):
     if boiler_state: 
-        try:
-#            print ("Boiler state is true. Switching on")
-            response = urllib2.urlopen('http://433board/switchboiler/on/')
-        except:
-            print ("unable to open URL") 
+        switch_request="on"
     else:
-        try:
-#            print ("Boiler state is False. Switching off")
-            response = urllib2.urlopen('http://433board/switchboiler/off/')
-        except:
-            print ("unable to open URL") 
+        switch_request="off"
+    timeout = int(timeout)
+    expiry_time = (redthis.ttl("boiler/req"))
+    expiry_time = int(expiry_time)
+    if (expiry_time < 0 ):
+        print ("We have no expiry time - setting one")
+        redthis.set("boiler/req", "%s" % boiler_state)
+        redthis.expire("boiler/req", "%i" % timeout )
+    if (int(timeout) <= 40):
+        #If requested a fast turnaround job, do it
+        call_url(switch_request)
+    elif (timeout > 40):
+        #Requested to switch sometime, but not quickly
+        if (expiry_time <= 40):
+            call_url(switch_request)
+        else:
+#            print ("Not calling URL as we have a long expiry time")
+            redthis.set("boiler/req", "%s" % boiler_state)
+            redthis.expire("boiler/req", "%i" % expiry_time )
+    else:
+        print "Something wrong" 

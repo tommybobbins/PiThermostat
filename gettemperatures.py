@@ -12,13 +12,14 @@ from sys import path
 #import threading
 import datetime
 from time import sleep
-import fileinput, re
+import redis
 from processcalendar import parse_calendar
 weather_script='/usr/local/bin/retrieve_weather.sh'
 weather_file='/tmp/weather_conditions.txt'
 import re
 sys.path.append('/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCDPlate')
 from Adafruit_I2C import Adafruit_I2C
+redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
 # Set this to something sensible in case we have no calendar
 
@@ -27,33 +28,15 @@ try:
 except:
     target_temp=14
 
-def parse_weather(file):
-    outside_temp=0
-    weather_script='/usr/local/bin/retrieve_weather.sh'
-   #    weather_temp=parse_weather(weather_file)
-#    print ("Reading weather file %s" % file)
-    import fileinput,re
-    regex = re.compile(r'\s+Temperature:\s+(\d+) F \((\d+) C\)')
-#    print ("Regexp compiled")
-    for line in fileinput.input(file):
-#        print (line)
-        line = line.rstrip() 
-#        print (line)
-        match = regex.search(line)
-#        print match
-        if match:
-            outside_temp = int(match.group(2))
-#            print ("we have a match %i" % outside_temp)
+def find_weather():
+    outside_temp=int(redthis.get("temperature/weather"))
     return(outside_temp)
 
 #Check to see whether the weather has been downloaded.
 try:
-   weather_temp=parse_weather(weather_file)
-except IOError:
-   from subprocess import call
-   call([weather_script])	
-   weather_temp=parse_weather(weather_file)
-
+   weather_temp=find_weather()
+except:
+   weather_temp=0
 
 class Tmp102:
   i2c = None
@@ -103,8 +86,10 @@ def read_temps():
         mytemp = 0
         floattemp = 0
     try:
-        weather_temp=parse_weather(weather_file)
+        weather_temp=int(find_weather())
+#        print ("Found weather %i" % weather_temp)
     except:
+        print ("Unable to find weather ")
         weather_temp=0 
     try:
         target_temp=int(parse_calendar())
