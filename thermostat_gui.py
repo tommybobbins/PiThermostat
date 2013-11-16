@@ -92,6 +92,7 @@ while mainloop:
                   screen.blit(button_up_lit, (button_up_x, button_up_y))
                   need_to_update=1
                   working_temp_addition += 0.5
+                  boiler_request_time=20 # Seconds
                   pygame.display.update()
             elif ((mos_x >= 101) and (mos_x <= 220)):
                   #Mouse if over icon Down
@@ -99,12 +100,12 @@ while mainloop:
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_down_lit, (button_down_x, button_down_y))
                   need_to_update=1
+                  boiler_request_time=20 # Seconds
                   working_temp_addition -= 0.5
                   pygame.display.update()
 ####### If we are running for the first time
     if (sample == 0):
        (floattemp,target_temp,outside_temp) = read_temps() 
-#       print ("Outside temp = %i " % outside_temp)
        boiler_request_time=20 # Seconds
        sample += 1
        need_to_update=1
@@ -113,7 +114,6 @@ while mainloop:
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
        (floattemp,target_temp,outside_temp) = read_temps() 
-       print ("Outside temp = %i " % outside_temp)
        need_to_update=1
        boiler_request_time=295 # Seconds
        if (old_target_temp != target_temp ):
@@ -146,23 +146,14 @@ while mainloop:
     else:
         fontcolour=PURPLE
         boiler_req=False
-#    print ("%s\n" % temperature_ratio )
-#    tempfont = pygame.font.Font(None, 60)
-#    tempnow = tempfont.render("%.1f%sC" % (roundtemp, chr(176)) , 1, (fontcolour))
-#    timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-#    idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
-#    weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-#    temppos = tempnow.get_rect(centerx=90,centery=30)
-    if (need_to_update == 1):
-#       print ("screen update")
-#       print ("sample = %i" % sample)
 #       Assume sample_limit is set to 150 @ 4 fps, will be called every 37.5s
-       screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
-       try:
+    if (need_to_update == 1): 
+        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
+        try:
            publish_redis(floattemp, working_temp)
            send_boiler(boiler_req, boiler_request_time)
-       except:
+        except:
            print "Publishing error:", sys.exc_info()[0]
-#           print "Unable to publish"
-       need_to_update = 0
+#       print "Unable to publish"
+        need_to_update = 0
        
