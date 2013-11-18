@@ -104,8 +104,9 @@ while mainloop:
                   working_temp_addition -= 0.5
                   pygame.display.update()
 ####### If we are running for the first time
+
     if (sample == 0):
-       (floattemp,target_temp,outside_temp) = read_temps() 
+       (floattemp,target_temp,outside_temp,working_temp_addition,working_temp) = read_temps() 
        boiler_request_time=20 # Seconds
        sample += 1
        need_to_update=1
@@ -113,7 +114,8 @@ while mainloop:
     elif ( sample >= sample_limit):
 #       print "attempting to run read_temps"
        old_target_temp=target_temp
-       (floattemp,target_temp,outside_temp) = read_temps() 
+#       (floattemp,target_temp,outside_temp) = read_temps() 
+       (floattemp,target_temp,outside_temp,working_temp_addition,working_temp) = read_temps() 
        need_to_update=1
        boiler_request_time=295 # Seconds
        if (old_target_temp != target_temp ):
@@ -150,7 +152,7 @@ while mainloop:
     if (need_to_update == 1): 
         screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
         try:
-           publish_redis(floattemp, working_temp)
+           publish_redis(floattemp,target_temp, working_temp, working_temp_addition)
            send_boiler(boiler_req, boiler_request_time)
         except:
            print "Publishing error:", sys.exc_info()[0]

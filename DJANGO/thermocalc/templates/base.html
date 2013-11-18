@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
+</head>
+<body>
+    <h1>Danny was here</h1>
+    {% block content %}
+    {% render_upcoming_events 3 %}
+
+    {% endblock %}
+    {% block footer %}
+    {% endblock %}
+</body>
+</html>

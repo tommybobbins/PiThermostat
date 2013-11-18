@@ -20,9 +20,11 @@ def call_url(on_or_off):
        print ("unable to open URL") 
      
 
-def publish_redis(sensor,target):
-    redthis.set("temperature/sensor", "%f" % sensor )
-    redthis.set("temperature/target", "%f" % target )
+def publish_redis(sensor_temp,calendar_temp,required_temp,delta_temp):
+    redthis.set("temperature/sensor", "%f" % sensor_temp )
+    redthis.set("temperature/calendar", "%f" % calendar_temp )
+    redthis.set("temperature/required", "%f" % required_temp )
+    redthis.set("temperature/boost", "%f" % delta_temp )
 
 
 

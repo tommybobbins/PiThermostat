@@ -1,0 +1,2 @@
+{% load i18n %}
+{{occurrence.title}}|{% blocktrans with occurrence.start|date:"r" as start_date %}{{ start_date }}{% endblocktrans %}|{% blocktrans with occurrence.end|date:"r" as end_date %}{{ end_date }}|{% endblocktrans %}

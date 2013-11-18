@@ -1,0 +1,6 @@
+{% load i18n %}
+<BOBBINS>
+<TEMP>{{occurrence.title}}</TEMP>
+{% trans "Starts" %}|{% blocktrans with occurrence.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}
+{% trans "Ends" %}|{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}
+</BOBBINS>

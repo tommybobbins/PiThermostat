@@ -1,0 +1,11 @@
+{% autoescape off %}
+	{% block content %}
+		{% for upcome in upcoming %}
+		 {{ upcome.id }}
+		 {{ upcome.start }}
+		 {{ upcome.end }}
+		 {{ upcome.title }}
+		 {{ upcome.description }}<br/>
+		{% endfor %}
+	{% endblock %}
+{% endautoescape %}

@@ -14,29 +14,18 @@ import datetime
 from time import sleep
 import redis
 from processcalendar import parse_calendar
-weather_script='/usr/local/bin/retrieve_weather.sh'
-weather_file='/tmp/weather_conditions.txt'
 import re
 sys.path.append('/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCDPlate')
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
-# Set this to something sensible in case we have no calendar
-
-try:
-    target_temp=parse_calendar()
-except:
-    target_temp=14
-
-def find_weather():
+def find_redis():
     outside_temp=int(redthis.get("temperature/weather"))
-    return(outside_temp)
+    boost_temp=(redthis.get("temperature/boost"))
+    required_temp=(redthis.get("temperature/required"))
+    return(outside_temp,boost_temp,required_temp)
 
-#Check to see whether the weather has been downloaded.
-try:
-   weather_temp=find_weather()
-except:
-   weather_temp=0
+
 
 class Tmp102:
   i2c = None
@@ -83,17 +72,24 @@ def read_temps():
         mytemp = Tmp102(address=0x48)
         floattemp = mytemp.readTemperature()[1]
     except:
-        mytemp = 0
-        floattemp = 0
+        mytemp = 14
+        floattemp = 14.00
     try:
-        weather_temp=int(find_weather())
+        (weather_temp,boost_temp,working_temp)=find_redis()
+        weather_temp=int(weather_temp)
+        boost_temp=(float(boost_temp))
+        working_temp=(float(working_temp))
 #        print ("Found weather %i" % weather_temp)
+#        print ("Found boost %i" % boost_temp)
+#        print ("Found working %i" % working_temp)
     except:
-        print ("Unable to find weather ")
+        print ("Unable to find redis stats ")
         weather_temp=0 
+        boost_temp=0 
+        working_temp=0 
     try:
         target_temp=int(parse_calendar())
     except:
         target_temp=14
-    return (floattemp, target_temp, weather_temp)
+    return (floattemp, target_temp, weather_temp, boost_temp, working_temp)
 
