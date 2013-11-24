@@ -1,11 +1,8 @@
 {% autoescape off %}
+		 {{ upcome.id }}
 	{% block content %}
 		{% for upcome in upcoming %}
-		 {{ upcome.id }}
-		 {{ upcome.start }}
-		 {{ upcome.end }}
-		 {{ upcome.title }}
-		 {{ upcome.description }}<br/>
+{{ upcome.title }}|{{ upcome.start }}|{{ upcome.end }}|
 		{% endfor %}
 	{% endblock %}
 {% endautoescape %}

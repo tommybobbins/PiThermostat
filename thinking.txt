@@ -1,0 +1,6 @@
+Call URL
+
+If expiry_time < 10 then we are on the first run and we should do it
+If expiry_time < 40 then we should do it
+If expiry_time = 240 then we should wait
+

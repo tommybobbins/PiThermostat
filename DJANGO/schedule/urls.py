@@ -51,9 +51,6 @@ url(r'^calendar/daily/(?P<calendar_slug>[-\w]+)/$',
     name = "day_calendar",
     kwargs={'periods': [Day], 'template_name': 'schedule/calendar_day.html'}),
 
-url(r'^calendar/crankers/(?P<calendar_slug>[-\w]+)/$',
-    crankers_upcoming),
-
 url(r'^calendar/cdaily/(?P<calendar_slug>[-\w]+)/$',
     'schedule.views.calendar_by_periods',
     name = "crankers_calendar",

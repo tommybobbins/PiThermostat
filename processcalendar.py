@@ -10,6 +10,7 @@ target_temp=14
 
 def parse_calendar():
      response = urllib2.urlopen('http://thermo/schedule/calendar/cdaily/thermostat/')
+#     response = urllib2.urlopen('http://thermo/schedule/calendar/crankers/1/')
      regex_temp = re.compile(r'^Temp=(\d+)\|(.*)\|(.*)\|')
      html = response.readlines()
 #    for line in fileinput.input(calendar_file):
