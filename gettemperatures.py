@@ -15,8 +15,7 @@ from time import sleep
 import redis
 from processcalendar import parse_calendar
 import re
-sys.path.append('/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_CharLCDPlate')
-from Adafruit_I2C import Adafruit_I2C
+from Adafruit.I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
 def find_redis():
