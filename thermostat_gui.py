@@ -36,8 +36,8 @@ button_up_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelUpFO.pn
 button_down_unlit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownNF.png')
 button_down_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownFO.png')
 myFont = pygame.font.SysFont("arial", 30)
-button_up_x, button_up_y = 20, 60 
-button_down_x, button_down_y = 120, 60 
+button_up_x, button_up_y = 180, 60 
+button_down_x, button_down_y = 260, 60 
 screen.fill([0,255,0])
 screen.blit(button_up_unlit, (button_up_x, button_up_y))
 screen.blit(button_down_unlit, (button_down_x, button_down_y))
@@ -85,7 +85,7 @@ while mainloop:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mos_x, mos_y = pygame.mouse.get_pos()
 #            print("Pos: %sx%s\n" % pygame.mouse.get_pos())
-            if ((mos_x <= 100) and (mos_x > 1)):
+            if ((mos_x <= 220) and (mos_x > 1)):
                   #Mouse if over icon Up
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -94,7 +94,7 @@ while mainloop:
                   working_temp_addition += 0.5
                   boiler_request_time=20 # Seconds
                   pygame.display.update()
-            elif ((mos_x >= 101) and (mos_x <= 220)):
+            elif ((mos_x >= 201) and (mos_x <= 320)):
                   #Mouse if over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
