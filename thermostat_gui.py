@@ -10,6 +10,10 @@ sample_limit=150
 sample=0
 fps = 4 
 target_temp=14
+#######THIS VALUE NEEDS CONFIGURING##################
+standard_comfortable_temperature=20
+#####################################################
+boosted=False
 boiler_request_time=20 # Seconds
 last_boiler_req=False
 working_temp_addition=0
@@ -37,11 +41,13 @@ button_up_unlit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelUpNF.
 button_up_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelUpFO.png')
 button_down_unlit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownNF.png')
 button_down_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownFO.png')
-bob = pygame.image.load('/home/pi/PiThermostat/icons/JR-BOB-DOBBS.png')
+#bob = pygame.image.load('/home/pi/PiThermostat/icons/JR-BOB-DOBBS.png')
 bob1 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe1.png')
 bob2 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe2.png')
 bob3 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe3.png')
 bob4 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe4.png')
+boost_lit = pygame.image.load('/home/pi/PiThermostat/icons/enjiia_button_lit.png')
+boost_unlit = pygame.image.load('/home/pi/PiThermostat/icons/enjiia_button_unlit.png')
 bob_images=[bob1,bob2,bob3,bob4]
 myFont = pygame.font.SysFont("arial", 30)
 button_up_x, button_up_y = screen_general_x,250
@@ -49,6 +55,7 @@ button_down_x, button_down_y = 140,250
 screen.fill([0,255,0])
 screen.blit(button_up_unlit, (button_up_x, button_up_y))
 screen.blit(button_down_unlit, (button_down_x, button_down_y))
+#screen.blit(boost_unlit, boost_unlit.get_rect(right=(14*screen_general_x), top=(screen_general_y/5)))
 # set up the colors
 BLACK = (  0,   0,   0)
 WHITE = (255, 255, 255)
@@ -61,18 +68,18 @@ CYAN  = (  0, 255, 255)
 MAGENTA=(255,   0, 255)
 YELLOW =(204, 204,   240)
 
-def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter):
+def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter,boosted):
 
 #    print ("Weather = %i" % weather)
     tempfont = pygame.font.Font(None, 100)
     screen_general_x=int(1*screen.get_width()/14)
     screen_general_y=int(1*screen.get_height()/14)
-    timepos = timenow.get_rect(centerx=7*screen_general_x,top=(screen_general_y/4))
+    timepos = timenow.get_rect(left=1*screen_general_x,top=(screen_general_y/4))
     tempnow = tempfont.render("%.1f%sC" % (temp, chr(176)) , 1, (tempcolour))
-    temppos = tempnow.get_rect(left=screen_general_x,top=1*(screen_general_y))
-    weatherpos = weathernow.get_rect(left=2*screen_general_x,top=5*(screen_general_y))
-    idealpos = idealnow.get_rect(right=13*screen_general_x,centery=7*(screen_general_y))
-    bobpos = idealnow.get_rect(left=2*screen_general_x,centery=7*(screen_general_y))
+    temppos = tempnow.get_rect(left=screen_general_x,top=2*(screen_general_y))
+    weatherpos = weathernow.get_rect(left=2*screen_general_x,top=6*(screen_general_y))
+    idealpos = idealnow.get_rect(right=13*screen_general_x,centery=8*(screen_general_y))
+    bobpos = idealnow.get_rect(left=2*screen_general_x,centery=8*(screen_general_y))
     screen.fill([0,0,0])
     screen.blit(timenow, timepos)
     screen.blit(tempnow, temppos)
@@ -81,6 +88,11 @@ def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter):
     pygame.mouse.set_visible(False)
     screen.blit(button_up_unlit, (button_up_x, button_up_y))
     screen.blit(button_down_unlit, (button_down_x, button_down_y))
+    print boosted
+    if (boosted == True):
+        screen.blit(boost_lit, boost_lit.get_rect(right=(14*screen_general_x), top=(screen_general_y/5)))
+    else:
+        screen.blit(boost_unlit, boost_unlit.get_rect(right=(14*screen_general_x), top=(screen_general_y/5)))
     if (boilerstate == True):
 #        print bobcounter
         screen.blit(bob_images[bobcounter], bobpos)
@@ -109,7 +121,7 @@ while mainloop:
                   boiler_request_time=20 # Seconds
                   pygame.display.update()
             elif ((mos_x >= 160) and (mos_y < 110)):
-                  #Mouse if over icon Down
+                  #Mouse is over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_down_lit, (button_down_x, button_down_y))
@@ -117,6 +129,16 @@ while mainloop:
                   boiler_request_time=20 # Seconds
                   working_temp_addition -= 0.5
                   pygame.display.update()
+            elif (( mos_x < 60 ) and (mos_y <60)):
+                  #Mouse is over Boost
+		  #sudo switch_on_off_backlight.sh on
+		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
+                  boosted = not boosted
+                  need_to_update=1
+#                  print "mouse over boost"
+                  boiler_request_time=20 # Seconds
+                  pygame.display.update()
+
 ####### If we are running for the first time
 
     if (sample == 0):
@@ -134,12 +156,16 @@ while mainloop:
        boiler_request_time=295 # Seconds
        if (old_target_temp != target_temp ):
            working_temp_addition=0 
+           boosted=False
        sample = 1 
 ####### If we are doing our regular update just increment the sample
     elif ( sample <= sample_limit):
        sample += 1
 ###########################################
-    working_temp = target_temp + working_temp_addition
+    if boosted:
+        working_temp = standard_comfortable_temperature
+    else:
+        working_temp = target_temp + working_temp_addition
     roundtemp =  (round(floattemp, 1))
     # Display some text
     font = pygame.font.Font(None, 64)
@@ -166,7 +192,7 @@ while mainloop:
         boiler_req=False
 #       Assume sample_limit is set to 150 @ 4 fps, will be called every 37.5s
     if (need_to_update == 1): 
-        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour,boiler_req,bobcounter)
+        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour,boiler_req,bobcounter,boosted)
         bobcounter += 1
         if (bobcounter == 4):
             bobcounter = 0
