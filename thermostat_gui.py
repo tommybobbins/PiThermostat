@@ -13,6 +13,7 @@ target_temp=14
 boiler_request_time=20 # Seconds
 last_boiler_req=False
 working_temp_addition=0
+bobcounter=0
 ###########################################################
 from evdev import InputDevice, list_devices
 devices = map(InputDevice, list_devices())
@@ -27,17 +28,24 @@ os.environ["SDL_MOUSEDRV"] = "TSLIB"
 os.environ["SDL_MOUSEDEV"] = eventX
 pygame.init()
 ###########################################################
-screen = pygame.display.set_mode((320, 240), 0, 32)
+screen = pygame.display.set_mode((0, 0), 0, 32)
 mainloop =  True
 #screen = pygame.display.set_mode((320, 240))
+screen_general_x=int(3*screen.get_width()/14)
 clock = pygame.time.Clock() 
 button_up_unlit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelUpNF.png')
 button_up_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelUpFO.png')
 button_down_unlit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownNF.png')
 button_down_lit = pygame.image.load('/home/pi/PiThermostat/icons/OSDChannelDownFO.png')
+bob = pygame.image.load('/home/pi/PiThermostat/icons/JR-BOB-DOBBS.png')
+bob1 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe1.png')
+bob2 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe2.png')
+bob3 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe3.png')
+bob4 = pygame.image.load('/home/pi/PiThermostat/icons/bob_pipe4.png')
+bob_images=[bob1,bob2,bob3,bob4]
 myFont = pygame.font.SysFont("arial", 30)
-button_up_x, button_up_y = 180, 60 
-button_down_x, button_down_y = 260, 60 
+button_up_x, button_up_y = screen_general_x,250
+button_down_x, button_down_y = 140,250
 screen.fill([0,255,0])
 screen.blit(button_up_unlit, (button_up_x, button_up_y))
 screen.blit(button_down_unlit, (button_down_x, button_down_y))
@@ -53,15 +61,18 @@ CYAN  = (  0, 255, 255)
 MAGENTA=(255,   0, 255)
 YELLOW =(204, 204,   240)
 
-def screenupdate(time,temp,weather,ideal,tempcolour):
+def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter):
 
 #    print ("Weather = %i" % weather)
-    tempfont = pygame.font.Font(None, 60)
+    tempfont = pygame.font.Font(None, 100)
+    screen_general_x=int(1*screen.get_width()/14)
+    screen_general_y=int(1*screen.get_height()/14)
+    timepos = timenow.get_rect(centerx=7*screen_general_x,top=(screen_general_y/4))
     tempnow = tempfont.render("%.1f%sC" % (temp, chr(176)) , 1, (tempcolour))
-    timepos = timenow.get_rect(centerx=3*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-    idealpos = idealnow.get_rect(centerx=3*(screen.get_width()/4),centery=1*(screen.get_height()/14))
-    weatherpos = weathernow.get_rect(centerx=1*(screen.get_width()/4),centery=13*(screen.get_height()/14))
-    temppos = tempnow.get_rect(centerx=90,centery=30)
+    temppos = tempnow.get_rect(left=screen_general_x,top=1*(screen_general_y))
+    weatherpos = weathernow.get_rect(left=2*screen_general_x,top=5*(screen_general_y))
+    idealpos = idealnow.get_rect(right=13*screen_general_x,centery=7*(screen_general_y))
+    bobpos = idealnow.get_rect(left=2*screen_general_x,centery=7*(screen_general_y))
     screen.fill([0,0,0])
     screen.blit(timenow, timepos)
     screen.blit(tempnow, temppos)
@@ -70,6 +81,9 @@ def screenupdate(time,temp,weather,ideal,tempcolour):
     pygame.mouse.set_visible(False)
     screen.blit(button_up_unlit, (button_up_x, button_up_y))
     screen.blit(button_down_unlit, (button_down_x, button_down_y))
+    if (boilerstate == True):
+#        print bobcounter
+        screen.blit(bob_images[bobcounter], bobpos)
     pygame.display.update()
 
 
@@ -85,7 +99,7 @@ while mainloop:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mos_x, mos_y = pygame.mouse.get_pos()
 #            print("Pos: %sx%s\n" % pygame.mouse.get_pos())
-            if ((mos_x <= 220) and (mos_x > 1)):
+            if ((mos_x >= 160) and (mos_y >= 110)):
                   #Mouse if over icon Up
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -94,7 +108,7 @@ while mainloop:
                   working_temp_addition += 0.5
                   boiler_request_time=20 # Seconds
                   pygame.display.update()
-            elif ((mos_x >= 201) and (mos_x <= 320)):
+            elif ((mos_x >= 160) and (mos_y < 110)):
                   #Mouse if over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -128,13 +142,15 @@ while mainloop:
     working_temp = target_temp + working_temp_addition
     roundtemp =  (round(floattemp, 1))
     # Display some text
-    font = pygame.font.Font(None, 36)
+    font = pygame.font.Font(None, 64)
     now = datetime.datetime.now()
     formatted_time = now.strftime("%d-%h-%Y %H:%M")
     timefont = pygame.font.Font(None, 24)
     timenow = timefont.render("%s" % (formatted_time) , 1, (YELLOW))
-    weathernow = timefont.render("Outside: %i%sC" % (outside_temp, chr(176)) , 1, (WHITE))
-    idealnow = timefont.render("Target: %.1f%sC" % (working_temp, chr(176)) , 1, (WHITE))
+    weatherfont = pygame.font.Font(None, 16)
+    weathernow = weatherfont.render("External Temperature: %i%sC" % (outside_temp, chr(176)) , 1, (WHITE))
+    idealfont = pygame.font.Font(None, 60)
+    idealnow = idealfont.render("%.1f%sC" % (working_temp, chr(176)) , 1, (WHITE))
     temperature_ratio =  floattemp/working_temp
     if ( temperature_ratio >= 1 and temperature_ratio <= 1.025 ):
         fontcolour=GREEN
@@ -150,7 +166,10 @@ while mainloop:
         boiler_req=False
 #       Assume sample_limit is set to 150 @ 4 fps, will be called every 37.5s
     if (need_to_update == 1): 
-        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour)
+        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour,boiler_req,bobcounter)
+        bobcounter += 1
+        if (bobcounter == 4):
+            bobcounter = 0
         try:
            publish_redis(floattemp,target_temp, working_temp, working_temp_addition)
            send_boiler(boiler_req, boiler_request_time)
