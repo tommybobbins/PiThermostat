@@ -22,7 +22,8 @@ def find_redis():
     outside_temp=int(redthis.get("temperature/weather"))
     boost_temp=(redthis.get("temperature/boost"))
     required_temp=(redthis.get("temperature/required"))
-    return(outside_temp,boost_temp,required_temp)
+    boosted=(redthis.get("temperature/turbo"))
+    return(outside_temp,boost_temp,required_temp,boosted)
 
 
 
@@ -74,10 +75,11 @@ def read_temps():
         mytemp = 14
         floattemp = 14.00
     try:
-        (weather_temp,boost_temp,working_temp)=find_redis()
+        (weather_temp,boost_temp,working_temp,boosted)=find_redis()
         weather_temp=int(weather_temp)
         boost_temp=(float(boost_temp))
         working_temp=(float(working_temp))
+        boosted=True if boosted =="True" else False
 #        print ("Found weather %i" % weather_temp)
 #        print ("Found boost %i" % boost_temp)
 #        print ("Found working %i" % working_temp)
@@ -86,9 +88,10 @@ def read_temps():
         weather_temp=0 
         boost_temp=0 
         working_temp=0 
+        boosted=False
     try:
         target_temp=int(parse_calendar())
     except:
         target_temp=14
-    return (floattemp, target_temp, weather_temp, boost_temp, working_temp)
+    return (floattemp, target_temp, weather_temp, boost_temp, working_temp, boosted)
 
