@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Socket {{ action }} {{ switch_socket }}</h2>
+	<h3>Plug id: {{plug_id}}</h3>
+	<h3>Switch state: {{ switch_state }}</h3>
+
+	<hr/>
+	<p><a href="/socketlist/toggle/">Socket Status Table</a></p>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Thermostat Control</h2>
+<table>
+<tr><th>Device</th><th>Temperature (&deg;C)</th><th>Action</th></tr>
+<tr><td>Current temperature</td><td> {{ sensor }}</td><td></td><td></td></tr>
+<tr><td>Outside</td><td>{{ outside }}</td><td></td><td></td></tr>
+<tr><td>Calendar target</td><td>{{ calendar }}</td><td></td><td></td></tr>
+<tr><td colspan="2">BOOST</td><td><a href="/thermostat/increment/0.5/"><img src="/static/icons/tango/16x16/actions/list-add.png"></a>
+<a href="/thermostat/decrement/0.5/"><img src="/static/icons/tango/16x16/actions/list-remove.png"></a>
+</td>
+</tr>
+<tr><td>Required:</td><td>{{ required }}</td><td></td><td></td></tr>
+<tr><td>Boiler:</td><td>{{ boiler }}</td><td></td><td></td></tr>
+</table>
+{% if modify_value %}
+Modify {{ modify }} by {{ modify_value }}
+{% endif %}
+<hr/>
+{% endblock %}
