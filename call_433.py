@@ -20,12 +20,18 @@ def call_url(on_or_off):
        print ("unable to open URL") 
      
 
-def publish_redis(sensor_temp,calendar_temp,required_temp,delta_temp,boosted):
+def publish_redis(sensor_temp,calendar_temp,required_temp):
+#    print ("Sensor = %f, Calendar = %f, Required = %f\n" % (sensor_temp, calendar_temp,required_temp ))
+#   From the temperature sensor
     redthis.set("temperature/sensor", "%f" % sensor_temp )
+#   From the Django calendar
     redthis.set("temperature/calendar", "%f" % calendar_temp )
+#   From the required temp (working temp)
     redthis.set("temperature/required", "%f" % required_temp )
-    redthis.set("temperature/boost", "%f" % delta_temp )
-    redthis.set("temperature/turbo", "%s" % boosted )
+#   From the boosted (working_temp_addition)
+#    redthis.set("temperature/boosted", "%f" % delta_temp )
+#   Turbo True/False (Enjiia button pressed)
+#    redthis.set("temperature/turbo", "%s" % boosted )
 
 
 
@@ -38,7 +44,7 @@ def send_boiler(boiler_state,timeout):
     expiry_time = (redthis.ttl("boiler/req"))
     expiry_time = int(expiry_time)
     if (expiry_time < 0 ):
-        print ("We have no expiry time - setting one")
+#        print ("We have no expiry time - setting one")
         redthis.set("boiler/req", "%s" % boiler_state)
         redthis.expire("boiler/req", "%i" % timeout )
     if (int(timeout) <= 40):

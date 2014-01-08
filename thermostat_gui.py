@@ -8,16 +8,18 @@ from call_433 import send_boiler
 # Every sample_limit loops we need to re-read our parameters
 sample_limit=150
 sample=0
-turbo_temp=14
-fps = 4 
-target_temp=14
-#######THIS VALUE NEEDS CONFIGURING##################
-standard_comfortable_temperature=20
+#######THIS VALUE NEEDS CONFIGURING IN REDIS /temperature/optimal##
+optimal_temp=14
 #####################################################
+fps = 4 
+calendar_temp=9
 boosted=False
+boosted_pushed = False
+up_down_pushed = True
 boiler_request_time=20 # Seconds
 last_boiler_req=False
-working_temp_addition=0
+required_temp_addition=0
+old_required_temp_addition=0
 bobcounter=0
 ###########################################################
 from evdev import InputDevice, list_devices
@@ -69,7 +71,7 @@ CYAN  = (  0, 255, 255)
 MAGENTA=(255,   0, 255)
 YELLOW =(204, 204,   240)
 
-def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter,boosted,turbo_temp):
+def screenupdate(time,temp,weather,ideal,tempcolour,boilerstate,bobcounter,boosted,optimal_temp):
 
 #    print ("Boosted = %r" % boosted)
     tempfont = pygame.font.Font(None, 100)
@@ -119,7 +121,8 @@ while mainloop:
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_up_lit, (button_up_x, button_up_y))
                   need_to_update=1
-                  working_temp_addition += 0.5
+                  up_down_pushed = True
+                  required_temp_addition = 0.5
                   boiler_request_time=20 # Seconds
                   pygame.display.update()
             elif ((mos_x >= 160) and (mos_y < 110)):
@@ -128,14 +131,16 @@ while mainloop:
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   screen.blit(button_down_lit, (button_down_x, button_down_y))
                   need_to_update=1
+                  up_down_pushed = True
                   boiler_request_time=20 # Seconds
-                  working_temp_addition -= 0.5
+                  required_temp_addition = -0.5
                   pygame.display.update()
             elif (( mos_x < 60 ) and (mos_y <60)):
                   #Mouse is over Boost
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
                   boosted = not boosted
+                  boosted_pushed = True
                   need_to_update=1
 #                  print "mouse over boost"
                   boiler_request_time=20 # Seconds
@@ -144,30 +149,41 @@ while mainloop:
 ####### If we are running for the first time
 
     if (sample == 0):
-       (floattemp,target_temp,outside_temp,working_temp_addition,working_temp,boosted,turbo_temp) = read_temps() 
+       (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
        boiler_request_time=20 # Seconds
        sample += 1
        need_to_update=1
 ####### If we are doing our regular update
     elif ( sample >= sample_limit):
 #       print "attempting to run read_temps"
-       old_target_temp=target_temp
-#       (floattemp,target_temp,outside_temp) = read_temps() 
-       (floattemp,target_temp,outside_temp,working_temp_addition,working_temp,boosted,turbo_temp) = read_temps() 
+       old_calendar_temp=calendar_temp
+       (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
        need_to_update=1
        boiler_request_time=295 # Seconds
-       if (old_target_temp != target_temp ):
-           working_temp_addition=0 
+       if (old_calendar_temp != calendar_temp ):
+           required_temp_addition=0 
            boosted=False
        sample = 1 
 ####### If we are doing our regular update just increment the sample
     elif ( sample <= sample_limit):
        sample += 1
 ###########################################
-    if boosted:
-        working_temp = turbo_temp
-    else:
-        working_temp = target_temp + working_temp_addition
+    if boosted_pushed:
+    # If boosted pushed, we reset required_temp_addition back to zero
+        required_temp_addition = 0 
+        boosted_pushed = False
+        if boosted:
+            # Set the temperature to redis/optimal
+            required_temp = optimal_temp
+        else:
+            # Temperature is calendar_temp (calendar_temp)
+            required_temp = calendar_temp
+    # Add on any local button pushes
+#    print ("required_temp = %f, required_temp_addition = %f, optimal = %f, target=%f \n" % (required_temp, required_temp_addition, optimal_temp, calendar_temp ) )
+    if up_down_pushed:
+        required_temp = required_temp + required_temp_addition
+        up_down_pushed = False
+#    print ("required_temp = %f, required_temp_addition = %f, optimal = %f, target=%f \n" % (required_temp, required_temp_addition, optimal_temp, calendar_temp ) )
     roundtemp =  (round(floattemp, 1))
     # Display some text
     font = pygame.font.Font(None, 64)
@@ -178,8 +194,8 @@ while mainloop:
     weatherfont = pygame.font.Font(None, 16)
     weathernow = weatherfont.render("External Temperature: %i%sC" % (outside_temp, chr(176)) , 1, (WHITE))
     idealfont = pygame.font.Font(None, 60)
-    idealnow = idealfont.render("%.1f%sC" % (working_temp, chr(176)) , 1, (WHITE))
-    temperature_ratio =  floattemp/working_temp
+    idealnow = idealfont.render("%.1f%sC" % (required_temp, chr(176)) , 1, (WHITE))
+    temperature_ratio =  floattemp/required_temp
     if ( temperature_ratio >= 1 and temperature_ratio <= 1.025 ):
         fontcolour=GREEN
         boiler_req=True
@@ -194,12 +210,13 @@ while mainloop:
         boiler_req=False
 #       Assume sample_limit is set to 150 @ 4 fps, will be called every 37.5s
     if (need_to_update == 1): 
-        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour,boiler_req,bobcounter,boosted,turbo_temp)
+        screenupdate(timenow,roundtemp, weathernow, idealnow,fontcolour,boiler_req,bobcounter,boosted,optimal_temp)
         bobcounter += 1
         if (bobcounter == 4):
             bobcounter = 0
         try:
-           publish_redis(floattemp,target_temp, working_temp, working_temp_addition,boosted)
+#           print ("Float = %i, Target = %i, Working = %i, WT_Add = %i" % (floattemp, calendar_temp, required_temp, required_temp_addition))
+           publish_redis(floattemp,calendar_temp, required_temp)
            send_boiler(boiler_req, boiler_request_time)
         except:
            print "Publishing error:", sys.exc_info()[0]

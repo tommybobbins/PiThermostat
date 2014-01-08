@@ -20,12 +20,12 @@ redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
 def find_redis():
     outside_temp=int(redthis.get("temperature/weather"))
-    boost_temp=(redthis.get("temperature/boost"))
+#    boost_temp=(redthis.get("temperature/boosted"))
     required_temp=(redthis.get("temperature/required"))
-    boosted=(redthis.get("temperature/turbo"))
-    turbo_temp=float(redthis.get("temperature/turbotemp"))
-#    print ("Turbo temp = %s " % turbo_temp)
-    return(outside_temp,boost_temp,required_temp,boosted,turbo_temp)
+#    boosted=(redthis.get("temperature/turbo"))
+    optimal_temp=float(redthis.get("temperature/optimal"))
+#    print ("Optimal temp = %d " % optimal_temp)
+    return(outside_temp,required_temp,optimal_temp)
 
 
 
@@ -77,25 +77,26 @@ def read_temps():
         mytemp = 14
         floattemp = 14.00
     try:
-        (weather_temp,boost_temp,working_temp,boosted,turbo_temp)=find_redis()
+        (weather_temp,working_temp,optimal_temp)=find_redis()
         weather_temp=int(weather_temp)
-        boost_temp=(float(boost_temp))
+#        boost_temp=(float(boost_temp))
         working_temp=(float(working_temp))
-        turbo_temp=(int(turbo_temp))
-        boosted=True if boosted =="True" else False
+        optimal_temp=(int(optimal_temp))
+#        boosted=True if boosted =="True" else False
 #        print ("Found weather %i" % weather_temp)
 #        print ("Found boost %i" % boost_temp)
-#        print ("Found turbo_temp %f" % turbo_temp)
+#        print ("Found working %f" % working_temp)
+#        print ("Found optimal %i" % optimal_temp)
     except:
         print ("Unable to find redis stats ")
         weather_temp=0 
-        boost_temp=0 
-        working_temp=0 
-        turbo_temp=20
-        boosted=False
+#        boost_temp=0 
+        working_temp=30
+        optimal_temp=20
+#        boosted=False
     try:
         target_temp=int(parse_calendar())
     except:
         target_temp=14
-    return (floattemp, target_temp, weather_temp, boost_temp, working_temp, boosted, turbo_temp)
+    return (floattemp, target_temp, weather_temp, working_temp, optimal_temp)
 
