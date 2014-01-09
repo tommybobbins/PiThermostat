@@ -6,8 +6,8 @@
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Read TMP102, Update LCD and send temp via MQTT
-# Description:       Read TMP102, Update LCD and send temp via MQTT
+# Short-Description: Read TMP102, Update LCD and send temp via Redis
+# Description:       Read TMP102, Update LCD and send temp via Redis
 ### END INIT INFO
  
 # Change the next 3 lines to suit where you install your script and what you want to call it
