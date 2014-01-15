@@ -115,7 +115,7 @@ while mainloop:
         if event.type == pygame.MOUSEBUTTONDOWN:
             mos_x, mos_y = pygame.mouse.get_pos()
 #            print("Pos: %sx%s\n" % pygame.mouse.get_pos())
-            if ((mos_x >= 160) and (mos_y >= 110)):
+            if ((mos_x >= 160) and (mos_y <= 110)):
                   #Mouse if over icon Up
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -125,7 +125,7 @@ while mainloop:
                   required_temp_addition = 0.5
                   boiler_request_time=20 # Seconds
                   pygame.display.update()
-            elif ((mos_x >= 160) and (mos_y < 110)):
+            elif ((mos_x > 160) and (mos_y > 110)):
                   #Mouse is over icon Down
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
@@ -135,7 +135,7 @@ while mainloop:
                   boiler_request_time=20 # Seconds
                   required_temp_addition = -0.5
                   pygame.display.update()
-            elif (( mos_x < 60 ) and (mos_y <60)):
+            elif (( mos_x < 60 ) and (mos_y >180)):
                   #Mouse is over Boost
 		  #sudo switch_on_off_backlight.sh on
 		  subprocess.call(["/usr/local/bin/switch_on_off_backlight.sh","on"])
