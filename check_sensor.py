@@ -16,6 +16,7 @@ import redis
 from processcalendar import parse_calendar
 import re
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
+print sys.path
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
@@ -34,7 +35,7 @@ class Tmp102:
   i2c = None
 
   # Constructor
-  def __init__(self, address=0x48, mode=1, debug=False):
+  def __init__(self, address=0x48, mode=1, debug=True):
     self.i2c = Adafruit_I2C(address, debug=debug)
 
     self.address = address
@@ -70,34 +71,9 @@ class Tmp102:
     return RawBytes,temp
 
 
-def read_temps():
-    try:
-        mytemp = Tmp102(address=0x48)
-        floattemp = mytemp.readTemperature()[1]
-    except:
-        mytemp = 14
-        floattemp = 14.00
-    try:
-        (weather_temp,working_temp,optimal_temp)=find_redis()
-        weather_temp=int(weather_temp)
-#        boost_temp=(float(boost_temp))
-        working_temp=(float(working_temp))
-        optimal_temp=(int(optimal_temp))
-#        boosted=True if boosted =="True" else False
-#        print ("Found weather %i" % weather_temp)
-#        print ("Found boost %i" % boost_temp)
-#        print ("Found working %f" % working_temp)
-#        print ("Found optimal %i" % optimal_temp)
-    except:
-        print ("Unable to find redis stats ")
-        weather_temp=0 
-#        boost_temp=0 
-        working_temp=30
-        optimal_temp=20
-#        boosted=False
-    try:
-        target_temp=int(parse_calendar())
-    except:
-        target_temp=14
-    return (floattemp, target_temp, weather_temp, working_temp, optimal_temp)
+mytemp = Tmp102(address=0x48)
+floattemp = mytemp.readTemperature()[1]
+
+print ("Float temp = %f" % floattemp)
+      
 
