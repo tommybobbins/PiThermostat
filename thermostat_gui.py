@@ -163,6 +163,7 @@ while mainloop:
        if (old_calendar_temp != calendar_temp ):
            required_temp_addition=0 
            boosted=False
+           required_temp = calendar_temp
        sample = 1 
 ####### If we are doing our regular update just increment the sample
     elif ( sample <= sample_limit):
