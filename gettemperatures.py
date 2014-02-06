@@ -21,11 +21,10 @@ redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
 def find_redis():
     outside_temp=int(redthis.get("temperature/weather"))
-#    boost_temp=(redthis.get("temperature/boosted"))
     required_temp=(redthis.get("temperature/required"))
-#    boosted=(redthis.get("temperature/turbo"))
+##### Optimal temp is the debug value we want to set the house to
+##### if all else fails
     optimal_temp=float(redthis.get("temperature/optimal"))
-#    print ("Optimal temp = %d " % optimal_temp)
     return(outside_temp,required_temp,optimal_temp)
 
 
@@ -83,7 +82,6 @@ def read_temps():
 #        boost_temp=(float(boost_temp))
         working_temp=(float(working_temp))
         optimal_temp=(int(optimal_temp))
-#        boosted=True if boosted =="True" else False
 #        print ("Found weather %i" % weather_temp)
 #        print ("Found boost %i" % boost_temp)
 #        print ("Found working %f" % working_temp)
@@ -91,10 +89,8 @@ def read_temps():
     except:
         print ("Unable to find redis stats ")
         weather_temp=0 
-#        boost_temp=0 
-        working_temp=30
         optimal_temp=20
-#        boosted=False
+        working_temp=optimal_temp
     try:
         target_temp=int(parse_calendar())
     except:
