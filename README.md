@@ -37,3 +37,5 @@ x_min=230 x_plate_ohms=100 swap_xy=0 verbose=3
 dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 r
 oot=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait fbcon=map:10 fbcon
 =font:VGA8x8
+
+433PlanB contains the scripts to run on a 433 board in the event of a thermostat board failing or redis not being available.
