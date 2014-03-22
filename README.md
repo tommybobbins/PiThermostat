@@ -1,7 +1,7 @@
 PiThermostat
 ============
 
-Raspberry Pi using a HY28 LCD touchscreen and a TMP102 to make an MQTT/thermostat display.
+Raspberry Pi using a HY28 LCD touchscreen (Texy or Adafruit PiTFT) and a TMP102 to make a thermostat display. Integrates with Google calendar or Django Schedule to find required temperature.
 
 Uses pygame to build SDL interface to the thermometer
 Uses weather-util to retrieve weather info:

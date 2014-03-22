@@ -14,7 +14,9 @@ import datetime
 from time import sleep
 import redis
 from processcalendar import parse_calendar
+from google_calendar import google_calendar
 import re
+#sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
@@ -92,8 +94,14 @@ def read_temps():
         optimal_temp=20
         working_temp=optimal_temp
     try:
-        target_temp=int(parse_calendar())
+#        target_temp=int(parse_calendar())
+         target_temp=float(google_calendar())
     except:
         target_temp=14
+<<<<<<< HEAD
+#    print target_temp
+    return (floattemp, target_temp, weather_temp, boost_temp, working_temp)
+=======
     return (floattemp, target_temp, weather_temp, working_temp, optimal_temp)
+>>>>>>> d286a6aecadfa562eda92ce68d6ddb30ae7f7e06
 
