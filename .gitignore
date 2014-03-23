@@ -40,3 +40,4 @@ nosetests.xml
 client_secrets.json
 sample.dat
 google_calendar.py.bak
+*.bak

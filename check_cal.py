@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 Google Inc.
@@ -68,34 +69,34 @@ def google_calendar():
   # If the credentials don't exist or are invalid run through the native client
   # flow. The Storage object will ensure that if successful the good
   # credentials will get written back to the file.
-  storage = file.Storage('sample.dat')
-  credentials = storage.get()
-  if credentials is None or credentials.invalid:
-    credentials = tools.run_flow(FLOW, storage, flags)
+    return_temp = 13.666
+    storage = file.Storage('sample.dat')
+    credentials = storage.get()
+    if credentials is None or credentials.invalid:
+      credentials = tools.run_flow(FLOW, storage, flags)
 
   # Create an httplib2.Http object to handle our HTTP requests and authorize it
   # with our good Credentials.
-  http = httplib2.Http()
-  http = credentials.authorize(http)
+    http = httplib2.Http()
+    http = credentials.authorize(http)
 
   # Construct the service object for the interacting with the Calendar API.
-  service = discovery.build('calendar', 'v3', http=http)
+    service = discovery.build('calendar', 'v3', http=http)
 
-  try:
 #    print "Success! Now add code here."
     baildon = pytz.timezone('Europe/London')
     now = datetime.now(tz=baildon) # timezone?
 #    timeMin = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, tzinfo=baildon)
     timeMin = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second, tzinfo=baildon )
     timeMin = timeMin.isoformat()
-#    print timeMin
+    print timeMin
 #    timeMax = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, tzinfo=baildon) + timedelta(minutes=10)
     timeMax = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second,  tzinfo=baildon ) + timedelta(minutes=1)
     timeMax = timeMax.isoformat()
-#    print timeMax
+    print timeMax
     page_token = None
     while True:
-      events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
+      events = service.events().list(calendarId='34t6goq6jv9eq2ua0vsu9vqkb8@group.calendar.google.com',timeMin=timeMin, timeMax=timeMax).execute()
       for event in events['items']:
           tempstring = event['summary']
 #          print (tempstring)
@@ -112,21 +113,5 @@ def google_calendar():
 #    print return_temp
     return return_temp
 
-  except client.AccessTokenRefreshError:
-    print ("The credentials have been revoked or expired, please re-run"
-      "the application to re-authorize")
-
-
-# For more information on the Calendar API you can visit:
-#
-#   https://developers.google.com/google-apps/calendar/firstapp
-#
-# For more information on the Calendar API Python library surface you
-# can visit:
-#
-#   https://developers.google.com/resources/api-libraries/documentation/calendar/v3/python/latest/
-#
-# For information on the Python Client Library visit:
-#
-#   https://developers.google.com/api-client-library/python/start/get_started
 google_calendar()
+

@@ -13,7 +13,9 @@ redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 def call_url(on_or_off):
    try:
 #       print ("Calling URL")
-       response = urllib2.urlopen("http://433board/switchboiler/%s/" % on_or_off )
+#       response = urllib2.urlopen("http://433board/switchboiler/%s/" % on_or_off )
+       command_to_rethis = ("/usr/local/bin/drayton %s" % on_or_off)
+       redthis.rpush("jobqueue", command_to_rethis)
        redthis.set("boiler/req", "ok" )
        redthis.expire("boiler/req", 295) 
    except:

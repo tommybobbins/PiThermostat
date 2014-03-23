@@ -151,12 +151,14 @@ while mainloop:
     if (sample == 0):
        (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
        boiler_request_time=20 # Seconds
+#       print ("Calendar temp = %d" % calendar_temp)
        required_temp = calendar_temp
        sample += 1
        need_to_update=1
 ####### If we are doing our regular update
     elif ( sample >= sample_limit):
 #       print "attempting to run read_temps"
+#       print ("Calendar temp = %d" % calendar_temp)
        old_calendar_temp=calendar_temp
        (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
        need_to_update=1

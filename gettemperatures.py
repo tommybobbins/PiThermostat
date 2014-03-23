@@ -16,17 +16,18 @@ import redis
 from processcalendar import parse_calendar
 from google_calendar import google_calendar
 import re
-#sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
-sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
+sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
+#sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433board',port=6379, db=0)
 
 def find_redis():
-    outside_temp=int(redthis.get("temperature/weather"))
+    outside_temp=float(redthis.get("temperature/weather"))
     required_temp=(redthis.get("temperature/required"))
 ##### Optimal temp is the debug value we want to set the house to
 ##### if all else fails
     optimal_temp=float(redthis.get("temperature/optimal"))
+#    print(outside_temp,required_temp,optimal_temp)
     return(outside_temp,required_temp,optimal_temp)
 
 
@@ -80,28 +81,25 @@ def read_temps():
         floattemp = 14.00
     try:
         (weather_temp,working_temp,optimal_temp)=find_redis()
-        weather_temp=int(weather_temp)
-#        boost_temp=(float(boost_temp))
+        weather_temp=float(weather_temp)
         working_temp=(float(working_temp))
-        optimal_temp=(int(optimal_temp))
-#        print ("Found weather %i" % weather_temp)
-#        print ("Found boost %i" % boost_temp)
+        optimal_temp=(float(optimal_temp))
+#        print ("Found weather %f" % weather_temp)
 #        print ("Found working %f" % working_temp)
-#        print ("Found optimal %i" % optimal_temp)
+#        print ("Found optimal %f" % optimal_temp)
     except:
         print ("Unable to find redis stats ")
         weather_temp=0 
-        optimal_temp=20
+        optimal_temp=6.6
         working_temp=optimal_temp
     try:
 #        target_temp=int(parse_calendar())
          target_temp=float(google_calendar())
     except:
         target_temp=14
-<<<<<<< HEAD
+#    print ("==Read temps==")
 #    print target_temp
-    return (floattemp, target_temp, weather_temp, boost_temp, working_temp)
-=======
+#    print ("==============")
+#    print (floattemp, target_temp, weather_temp, working_temp, optimal_temp)
     return (floattemp, target_temp, weather_temp, working_temp, optimal_temp)
->>>>>>> d286a6aecadfa562eda92ce68d6ddb30ae7f7e06
 
