@@ -99,7 +99,7 @@ def google_calendar():
       events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
       for event in events['items']:
           tempstring = event['summary']
-#          print (tempstring)
+          print (tempstring)
           match = regex_temp.search(tempstring)
           if match:
               target_temp = float(match.group(1))

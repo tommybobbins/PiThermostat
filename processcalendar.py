@@ -1,4 +1,6 @@
 #!/usr/bin/python
+
+#####Processes a django-schedule calendar. Only useful if not using google calendar######
 import re
 import fileinput
 import datetime
@@ -30,5 +32,5 @@ def parse_calendar():
             if ((timenow > timestart) & ( timenow < timeend)):
                 return target_temp
 
-#desired_temp=parse_calendar()
-#print ("%i" % desired_temp)
+desired_temp=parse_calendar()
+print ("%d" % desired_temp)

@@ -46,7 +46,7 @@ parser = argparse.ArgumentParser(
 # application, including client_id and client_secret. You can see the Client ID
 # and Client secret on the APIs page in the Cloud Console:
 # <https://cloud.google.com/console#/project/796094181462/apiui>
-CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
+CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '/etc/google_calendar/client_secrets.json')
 
 # Set up a Flow object to be used for authentication.
 # Add one or more of the following scopes. PLEASE ONLY ADD THE SCOPES YOU

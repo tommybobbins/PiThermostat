@@ -68,7 +68,7 @@ def google_calendar():
   # If the credentials don't exist or are invalid run through the native client
   # flow. The Storage object will ensure that if successful the good
   # credentials will get written back to the file.
-  storage = file.Storage('sample.dat')
+  storage = file.Storage('/etc/google_calendar/sample.dat')
   credentials = storage.get()
   if credentials is None or credentials.invalid:
     credentials = tools.run_flow(FLOW, storage, flags)
