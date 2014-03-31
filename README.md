@@ -1,7 +1,9 @@
 PiThermostat
 ============
 
-Raspberry Pi using a HY28 LCD touchscreen (Texy or Adafruit PiTFT) and a TMP102 to make a thermostat display. Integrates with Google calendar or Django Schedule to find required temperature.
+Raspberry Pi using a HY28 LCD touchscreen (Texy or Adafruit PiTFT) and a TMP102 to make a thermostat display. Integrates with Google calendar or Django Schedule to find required temperature. Works with 433MHz sender board to make a complete boiler control. Currently works with British Gas and Drayton gas boilers.
+
+More details about the 433 sender board used can be found https://github.com/tommybobbins/Raspi_433
 
 Requires the Adafruit libraries to read from the TMP102:
 
