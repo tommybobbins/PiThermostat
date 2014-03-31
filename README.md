@@ -17,7 +17,15 @@ Create a new Google calendar called thermostat. You need to allow access through
 
      cp client-secrets.json /etc/google_calendar
 
-Uses pygame to build SDL interface to the thermometer
+Run the list_calendar.py
+
+     python list_calendars.py --no_auth_local_webserver
+
+This should create a sample.dat in the local directory. We need to copy this to /etc/google_calendar for neatness.
+     
+     cp sample.dat /etc/google_calendar
+
+Uses pygame to build an SDL interface to the thermometer
 Uses weather-util to retrieve weather info:
 
     sudo apt-get install weather-util
