@@ -13,7 +13,7 @@ from sys import path
 import datetime
 from time import sleep
 import redis
-from processcalendar import parse_calendar
+#from processcalendar import parse_calendar
 from google_calendar import google_calendar
 import re
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
