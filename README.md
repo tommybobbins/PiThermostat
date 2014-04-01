@@ -28,7 +28,8 @@ Create a new Google calendar called thermostat. You need to allow access through
      cp client-secrets.json /etc/google_calendar
 
 Run the list_calendar.py
-
+     
+     cd utilities 
      python list_calendars.py --no_auth_local_webserver
 
 This should create a sample.dat in the local directory. We need to copy this to /etc/google_calendar for neatness.
