@@ -40,6 +40,41 @@ The summary of all events in the calendar should be of the form
 
      Temp=20.0
 
+Installation of the files
+========================
+
+Copy the init script to /etc/init.d/temp.sh
+
+    sudo cp utilities/temp.sh /etc/init.d/
+    sudo insserv temp.sh
+
+
+/etc/hosts should contain the name/location of the redis server:
+    
+    echo "192.168.1.223       433board" >>/etc/hosts
+
+On the redis server, it is helpful to set a pre-existing weather and optimal temperature (the temperature you want it set to if all else fails):
+
+     pi@raspberrypi ~ $ redis-cli
+     redis 127.0.0.1:6379> set temperature/optimal 20
+     OK
+     redis 127.0.0.1:6379> set temperature/weather 6
+     OK
+
+The scripts to copy to /usr/local/bin are as follows:
+
+call_433.py  # Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
+gettemperatures.py # Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
+google_calendar.py # Grabs current temperature required from Google Calendar.
+processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
+thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.
+
+    sudo cp *.py /usr/local/bin/
+    sudo chmod a+rx /usr/local/bin/
+    /etc/init.d/temp.sh start
+
+ 
+
 Using Weather (optional)
 ========================
 
@@ -58,28 +93,3 @@ Add a line similar to the following to retrieve the weather for your location
 
     13 0,6,12,18 * * * /usr/local/bin/retrieve_weather.sh
 ========================
-
-Starting the Scripts automatically
-==================================
-
-Copy the init script to /etc/init.d/temp.sh
-
-    sudo cp utilities/temp.sh /etc/init.d/
-    sudo insserv temp.sh
-
-
-433PlanB contains the scripts to run on a 433 board in the event of a thermostat board failing or redis not being available.
-
-/etc/hosts should contain the name/location of the redis server:
-    
-    echo "192.168.1.223       433board" >>/etc/hosts
-
-
-The scripts to copy to /usr/local/bin are as follows:
-
-    call_433.py  # Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
-    gettemperatures.py # Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
-    google_calendar.py # Grabs current temperature required from Google Calendar.
-    processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
-    thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.
-
