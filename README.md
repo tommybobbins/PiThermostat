@@ -27,6 +27,10 @@ This should create a sample.dat in the local directory. We need to copy this to 
      
      cp sample.dat /etc/google_calendar
 
+The summary of all events in the calendar should be of the form 
+
+     Temp=20.0
+
 Uses pygame to build an SDL interface to the thermometer
 Uses weather-util to retrieve weather info:
 
@@ -34,7 +38,8 @@ Uses weather-util to retrieve weather info:
 
 Edit retreive_weather.sh (it is currently set to Leeds/Bradford airport):
 
-    sudo cp retrieve_weather.sh /usr/local/bin/
+    sudo cp utilities/retrieve_weather.sh /usr/local/bin/
+    sudo cp utilities/parse_weather.py /usr/local/bin/
     sudo chmod a+x /usr/local/bin/retrieve_weather.sh
 
     crontab -e
@@ -44,7 +49,8 @@ Add a line similar to the following to retrieve the weather for your location
 
 Copy the init script to /etc/init.d/temp.sh
 
-    insserv temp.sh
+    sudo cp utilities/temp.sh /etc/init.d/
+    sudo insserv temp.sh
 
 /etc/modules should look something like:
 
@@ -70,4 +76,10 @@ Copy the init script to /etc/init.d/temp.sh
     echo "192.168.1.223       433board" >>/etc/hosts
 
 
+The scripts to copy to /usr/local/bin are as follows:
 
+    call_433.py  # Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
+    gettemperatures.py # Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
+    google_calendar.py # Grabs current temperature required from Google Calendar.
+    processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
+    thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.

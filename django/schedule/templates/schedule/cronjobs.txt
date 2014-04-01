@@ -1,9 +1,0 @@
-{% autoescape off %}
-{% load filename %}
-	{% block content %}
-		{% for cronjob in cronjobs %}
-# {{ cronjob.name }}
-{{ cronjob.minute }} {{ cronjob.hour }} {{ cronjob.dayofmonth }} {{cronjob.monthofyear }} {{ cronjob.dayofweek }} {{ cronjob.runscript }} {{ cronjob.musicplaylist|filename }} {{ cronjob.advertplaylist|filename }} {{ cronjob.advertinterval }} >>/tmp/cronjoblogging.txt 2>&1
-		{% endfor %}
-	{% endblock %}
-{% endautoescape %}
