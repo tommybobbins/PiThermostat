@@ -5,6 +5,13 @@ Raspberry Pi using a HY28 LCD touchscreen (Texy or Adafruit PiTFT) and a TMP102 
 
 More details about the 433 sender board used can be found https://github.com/tommybobbins/Raspi_433
 
+The file structure of this project is as follows:
+     
+    This directory - Python scripts to move to /usr/local/bin
+    utilities - useful associated scripts, but may not be required in all cases.
+    init - init scripts to be moved to /etc/init.d/
+    icons - graphics used by thermostat_gui.py. Can be moved, but icon_dir in thermostat_gui.py will need updating.
+
 Requires the Adafruit libraries to read from the TMP102:
 
     git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
@@ -83,3 +90,4 @@ The scripts to copy to /usr/local/bin are as follows:
     google_calendar.py # Grabs current temperature required from Google Calendar.
     processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
     thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.
+
