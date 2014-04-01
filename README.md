@@ -11,6 +11,7 @@ The file structure of this project is as follows:
     utilities - useful associated scripts, but may not be required in all cases.
     init - init scripts to be moved to /etc/init.d/
     icons - graphics used by thermostat_gui.py. Can be moved, but icon_dir in thermostat_gui.py will need updating.
+    utilities/433PlanB - to be used in the event of redis/thermostat_gui.py dying.
 
 Requires the Adafruit libraries to read from the TMP102:
 
