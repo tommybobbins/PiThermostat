@@ -93,3 +93,18 @@ Add a line similar to the following to retrieve the weather for your location
 
     13 0,6,12,18 * * * /usr/local/bin/retrieve_weather.sh
 ========================
+
+
+Setting up the Queue runner on the 433 server
+=============================================
+
+All jobs for the 433 transmitter get queued up on a redis server inside jobqueue. This means they can run sequentially stopping the transmitter from garbling two or more messages together. To process this queue, on the 433 sender we need to run a script:
+
+    utilities/read_redis.py
+
+This needs to run as root to get access to the GPIO pin 18 (in our case). It has some protection to only allow 3 binaries to run.  There is an associated init script:
+
+    sudo cp utilities/read_redis.py /usr/local/bin/ 
+    sudo cp utilities/murunner.sh /etc/init.d/
+    sudo insserv murunner.sh
+
