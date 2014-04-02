@@ -69,7 +69,7 @@ def google_calendar():
   # flow. The Storage object will ensure that if successful the good
   # credentials will get written back to the file.
     return_temp = 13.666
-    storage = file.Storage('sample.dat')
+    storage = file.Storage('/etc/google_calendar/sample.dat')
     credentials = storage.get()
     if credentials is None or credentials.invalid:
       credentials = tools.run_flow(FLOW, storage, flags)
@@ -83,14 +83,12 @@ def google_calendar():
     service = discovery.build('calendar', 'v3', http=http)
 
 #    print "Success! Now add code here."
-    baildon = pytz.timezone('Europe/London')
-    now = datetime.now(tz=baildon) # timezone?
-#    timeMin = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, tzinfo=baildon)
-    timeMin = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second, tzinfo=baildon )
+    baildon_tz = pytz.timezone('Europe/London')
+    now = datetime.now(tz=baildon_tz) # timezone?
+    timeMin = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ))
     timeMin = timeMin.isoformat()
     print timeMin
-#    timeMax = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, tzinfo=baildon) + timedelta(minutes=10)
-    timeMax = datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second,  tzinfo=baildon ) + timedelta(minutes=1)
+    timeMax = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ) + timedelta(minutes=1))
     timeMax = timeMax.isoformat()
     print timeMax
     page_token = None
