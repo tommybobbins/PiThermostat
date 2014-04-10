@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import pygame, os, subprocess, sys
 from pygame.locals import *
-import gettemperatures, call_433, time, datetime, processcalendar
+import gettemperatures, call_433, time, datetime
 from gettemperatures import read_temps
 from call_433 import publish_redis
 from call_433 import send_boiler 
