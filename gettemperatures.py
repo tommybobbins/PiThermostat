@@ -19,16 +19,20 @@ import re
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 #sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
 from Adafruit_I2C import Adafruit_I2C
-redthis = redis.StrictRedis(host='433board',port=6379, db=0)
+redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
 
 def find_redis():
-    outside_temp=float(redthis.get("temperature/weather"))
-    required_temp=(redthis.get("temperature/required"))
+    try:
+        outside_temp=float(redthis.get("temperature/weather"))
+        required_temp=(redthis.get("temperature/required"))
 ##### Optimal temp is the debug value we want to set the house to
 ##### if all else fails
-    optimal_temp=float(redthis.get("temperature/optimal"))
+        optimal_temp=float(redthis.get("temperature/optimal"))
 #    print(outside_temp,required_temp,optimal_temp)
-    return(outside_temp,required_temp,optimal_temp)
+        return(outside_temp,required_temp,optimal_temp)
+    except:
+        print ("Unable to find redis, dumping default values")
+        return(0.0, 14.0, 20.0)
 
 
 
@@ -94,9 +98,11 @@ def read_temps():
         working_temp=optimal_temp
     try:
 #        target_temp=int(parse_calendar())
+#         print ("Going to download google calendar")
          target_temp=float(google_calendar())
+#         print ("Come back from google calendar")
     except:
-        target_temp=14
+         target_temp=14.0
 #    print ("==Read temps==")
 #    print target_temp
 #    print ("==============")

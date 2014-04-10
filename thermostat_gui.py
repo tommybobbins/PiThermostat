@@ -160,7 +160,14 @@ while mainloop:
 #       print "attempting to run read_temps"
 #       print ("Calendar temp = %d" % calendar_temp)
        old_calendar_temp=calendar_temp
-       (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
+       try: 
+           (floattemp,calendar_temp,outside_temp,required_temp,optimal_temp) = read_temps() 
+       except:
+            floattemp = 24.1111
+            calendar_temp = 14.2222
+            outside_temp = 14.33333
+            required_temp = 20.0
+            optimal_temp = 20.0
        need_to_update=1
        boiler_request_time=295 # Seconds
        if (old_calendar_temp != calendar_temp ):

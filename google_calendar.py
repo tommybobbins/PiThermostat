@@ -33,6 +33,7 @@ import pytz
 import re
 regex_temp = re.compile(r'^Temp=(.*)')
 from datetime import datetime, timedelta
+return_temp = 13.6654
 
 from apiclient import discovery
 from oauth2client import file
@@ -92,7 +93,7 @@ def google_calendar():
 #    print timeMax
     page_token = None
     while True:
-      events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
+      events = service.events().list(calendarId='gkufc7v9e8a3au43pmt59usmks@group.calendar.google.com',timeMin=timeMin, timeMax=timeMax).execute()
       for event in events['items']:
           tempstring = event['summary']
 #          print (tempstring)
@@ -110,9 +111,11 @@ def google_calendar():
     return return_temp
 
   except client.AccessTokenRefreshError:
-    print ("The credentials have been revoked or expired, please re-run"
-      "the application to re-authorize")
-
+     print ("The credentials have been revoked or expired, please re-run")
+     return return_temp
+  except:
+     print ("Bad stuff happened")
+     return return_temp
 
 # For more information on the Calendar API you can visit:
 #
