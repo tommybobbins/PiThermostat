@@ -2,20 +2,21 @@
 # Modified 30-Oct-2013
 # tng@chegwin.org
 # Retrieve: 
-# 1: target temperature from a calendar
-# 2: current temperature from a TMP102 sensor
-# 3: weather from the weather_file (or run weather_script and try again)
-#    file is populated by weather-util. See retrieve-weather.sh for details
+# 1: current temperature from a TMP102 sensor
+# 2: Send to redis
 
 import sys,time
 from sys import path
 import datetime
 from time import sleep
 import re
-#sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
+import redis
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
-#print sys.path
 from Adafruit_I2C import Adafruit_I2C
+redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
+room_location="cellar"
+sensor_name="temperature/"+room_location+"/sensor"
+print ("Sensor name is %s" % sensor_name)
 
 class Tmp102:
   i2c = None
@@ -56,9 +57,13 @@ class Tmp102:
     
     return RawBytes,temp
 
-
-mytemp = Tmp102(address=0x48)
-floattemp = mytemp.readTemperature()[1]
-print ("Float temp = %f" % floattemp)
+while True:
+    try: 
+        mytemp = Tmp102(address=0x48)
+        floattemp = mytemp.readTemperature()[1]
+        print ("Float temp = %f" % floattemp)
+        redthis.set(sensor_name,floattemp)
+    except:
+        print ("Unable to retrieve temperature")
+    time.sleep(120)
       
-
