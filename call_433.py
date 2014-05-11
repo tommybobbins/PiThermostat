@@ -30,7 +30,7 @@ def publish_redis(sensor_temp,calendar_temp,required_temp):
         if server_alive:
 #    print ("Sensor = %f, Calendar = %f, Required = %f\n" % (sensor_temp, calendar_temp,required_temp ))
 #   From the temperature sensor
-            redthis.set("temperature/sensor", "%f" % sensor_temp )
+            redthis.set("temperature/barab/sensor", "%f" % sensor_temp )
 #   From the Django calendar
             redthis.set("temperature/calendar", "%f" % calendar_temp )
 #   From the required temp (working temp)
