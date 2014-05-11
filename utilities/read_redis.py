@@ -7,7 +7,7 @@ allowed_jobs = ['/usr/local/bin/bgas', '/usr/local/bin/homeeasy', '/usr/local/bi
 #allowed_jobs = ['/usr/local/bin/homeeasy', '/usr/local/bin/drayton']
 
 while True:
-    job_to_run = redthis.lpop('jobqueue') 
+    job_to_run = redthis.lpop('cellar/jobqueue') 
 #    job_to_run = redthis.lindex('jobqueue', 0) 
     if (job_to_run):
         job_to_run = job_to_run.split()
