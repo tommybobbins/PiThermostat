@@ -19,7 +19,7 @@ while True:
             if (attic_temp <= velux_half_open_trigger):
                 job_to_run = "/usr/local/bin/close.sh"
                 print ("Trigger temp <= %f" % velux_half_open_trigger)
-                redthis.set('/velux/3','Shut')
+                redthis.set('velux/3','Shut')
             elif (attic_temp >=  velux_half_open_trigger):
                 job_to_run = "/usr/local/bin/half_open.sh"
                 print ("Trigger temp >= %f" % velux_half_open_trigger)
