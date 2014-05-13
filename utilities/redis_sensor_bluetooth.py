@@ -11,7 +11,6 @@ import datetime
 from time import sleep
 import re
 import redis
-import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
