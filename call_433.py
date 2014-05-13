@@ -17,7 +17,7 @@ def call_url(on_or_off):
        server_alive=redthis.get("temperature/weather")
        if server_alive:
            command_to_rethis = ("/usr/local/bin/drayton %s" % on_or_off)
-           redthis.rpush("jobqueue", command_to_rethis)
+           redthis.rpush("cellar/jobqueue", command_to_rethis)
            redthis.set("boiler/req", "ok" )
            redthis.expire("boiler/req", 295) 
    except:
@@ -30,7 +30,7 @@ def publish_redis(sensor_temp,calendar_temp,required_temp):
         if server_alive:
 #    print ("Sensor = %f, Calendar = %f, Required = %f\n" % (sensor_temp, calendar_temp,required_temp ))
 #   From the temperature sensor
-            redthis.set("temperature/sensor", "%f" % sensor_temp )
+            redthis.set("temperature/barab/sensor", "%f" % sensor_temp )
 #   From the Django calendar
             redthis.set("temperature/calendar", "%f" % calendar_temp )
 #   From the required temp (working temp)
