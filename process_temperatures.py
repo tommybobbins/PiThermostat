@@ -72,6 +72,7 @@ def read_temps():
     if Debug:
         print ("User Requested is now %f" % userreq_temp)
     mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult))/(cellar_mult + barab_mult + attic_mult)
+    redthis.set("temperature/weightedmean", mean_temp)
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
 
