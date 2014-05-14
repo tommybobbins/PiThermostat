@@ -18,6 +18,13 @@ Debug=False
 
 def read_temps():
     try:
+        # First of all we grab google calendar. If the internet is down 
+        # we set the value to 15.999
+        calendar_temp=float(google_calendar())
+    except:
+        print ("Google down")
+        calendar_temp=15.999
+    try:
         weather_temp=float(redthis.get("temperature/weather"))
         userreq_temp=float(redthis.get("temperature/userrequested"))
         ##### Optimal temp is the debug value we want to set the house to
@@ -31,11 +38,9 @@ def read_temps():
         cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
         previous_calendar_temp=float(redthis.get("temperature/calendar"))
         time_to_live=int(redthis.ttl("boiler/req"))
-        calendar_temp=float(google_calendar())
         redthis.set("temperature/calendar", calendar_temp)
-        
     except:
-        print ("Unable to find redis stats or google not contactable.")
+        print ("Unable to find redis stats")
         weather_temp=0.6
         userreq_temp=6.6
         attic_temp=15.6
