@@ -25,6 +25,7 @@ def read_temps():
         print ("Google down")
         calendar_temp=15.999
     try:
+        #Read in all the previous settings
         weather_temp=float(redthis.get("temperature/weather"))
         userreq_temp=float(redthis.get("temperature/userrequested"))
         ##### Optimal temp is the debug value we want to set the house to
@@ -36,20 +37,21 @@ def read_temps():
         attic_mult=float(redthis.get("temperature/attic/multiplier"))
         barab_mult=float(redthis.get("temperature/barab/multiplier"))
         cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
+        # Store our previous google calendar temperature for ref.
         previous_calendar_temp=float(redthis.get("temperature/calendar"))
         time_to_live=int(redthis.ttl("boiler/req"))
+        # Store our google calendar temperature for future reference
         redthis.set("temperature/calendar", calendar_temp)
     except:
         print ("Unable to find redis stats")
-        weather_temp=0.6
-        userreq_temp=6.6
-        attic_temp=15.6
-        barab_temp=15.6
-        cellar_temp=15.6
+        weather_temp=14.999
+        userreq_temp=6.999
+        attic_temp=15.999
+        barab_temp=15.999
+        cellar_temp=15.999
         attic_mult=1
         barab_mult=1
         cellar_mult=1
-        calendar_temp=16.6
         time_to_live=290
         previous_calendar_temp=calendar_temp
     if Debug: 
@@ -93,6 +95,9 @@ def read_temps():
                 print ("Unable to update redis") 
         else:
              print ("Something gone wrong")
+    else:
+        continue 
+        #We are in the loop but can sleep until ttl<35
 
 if __name__ == "__main__":
    while True:
