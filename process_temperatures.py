@@ -96,7 +96,7 @@ def read_temps():
         else:
              print ("Something gone wrong")
     else:
-        continue 
+        sleep(0)
         #We are in the loop but can sleep until ttl<35
 
 if __name__ == "__main__":
