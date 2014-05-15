@@ -33,7 +33,6 @@ import pytz
 import re
 regex_temp = re.compile(r'^Temp=(.*)')
 from datetime import datetime, timedelta
-return_temp = 13.6654
 
 from apiclient import discovery
 from oauth2client import file
@@ -70,6 +69,7 @@ def google_calendar():
   # credentials will get written back to the file.
   storage = file.Storage('/etc/google_calendar/sample.dat')
   credentials = storage.get()
+  return_temp = 13.6654
   if credentials is None or credentials.invalid:
     credentials = tools.run_flow(FLOW, storage, flags)
 
