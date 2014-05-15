@@ -62,9 +62,9 @@ while True:
              # We can Half open at higher temp
              if (attic_temp >= velux_full_open_trigger):
                  job_to_run="/usr/local/bin/full_open.sh"
-             elif (attic_temp <= velux_half_open_trigger):
+             elif (attic_temp <= velux_close_trigger):
                  job_to_run="/usr/local/bin/close.sh"
-             elif (attic_temp >= velux_half_open_trigger):
+             elif (attic_temp >= velux_close_trigger):
                  job_to_run="/usr/local/bin/half_open.sh"
              else:
                  job_to_run="/usr/local/bin/close.sh"
