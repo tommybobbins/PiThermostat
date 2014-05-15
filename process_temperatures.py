@@ -14,6 +14,7 @@ import redis
 from google_calendar import google_calendar
 import re
 redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+hysteresis_temp=1.3
 Debug=False
 
 def read_temps():
@@ -39,6 +40,7 @@ def read_temps():
         cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
         # Store our previous google calendar temperature for ref.
         previous_calendar_temp=float(redthis.get("temperature/calendar"))
+        boiler_state=redthis.get("boiler/req")
         time_to_live=int(redthis.ttl("boiler/req"))
         # Store our google calendar temperature for future reference
         redthis.set("temperature/calendar", calendar_temp)
@@ -78,7 +80,10 @@ def read_temps():
 
 
     if (time_to_live <= 35): 
+        working_temp = userreq_temp + hysteresis_temp
+        # e.g. 21.3 = 20.0 + 1.3
         if (mean_temp <= userreq_temp):
+#            e.g. Temp is 16.0
 #            print ("Need to switch on boiler")
             try:
                 redthis.set("boiler/req", "True")
@@ -86,12 +91,22 @@ def read_temps():
                 redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
             except:
                 print ("Unable to update redis") 
-        elif (mean_temp >= userreq_temp):
+        elif (mean_temp >= userreq_temp + hysteresis_temp):
+#            e.g. Temp is 21.3
 #            print ("No need to switch on boiler")
             try:
                 redthis.set("boiler/req", "False")
                 redthis.expire("boiler/req", 300)
                 redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton off")
+            except:
+                print ("Unable to update redis") 
+        elif ((mean_temp <= working_temp) and (mean_temp >= userreq_temp)):
+#            e.g. Temp is 20.6
+#            print ("Need to switch on boiler")
+            try:
+                redthis.set("boiler/req", "True")
+                redthis.expire("boiler/req", 300)
+                redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
             except:
                 print ("Unable to update redis") 
         else:
