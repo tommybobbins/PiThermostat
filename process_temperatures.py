@@ -14,7 +14,7 @@ import redis
 from google_calendar import google_calendar
 import re
 redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
-hysteresis_temp=1.3
+hysteresis_temp=0.5
 Debug=False
 
 def read_temps():
