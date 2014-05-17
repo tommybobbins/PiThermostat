@@ -20,11 +20,11 @@ Debug=False
 def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
-        # we set the value to 15.999
+        # we set the value to 6.999
         calendar_temp=float(google_calendar())
     except:
         print ("Google down")
-        calendar_temp=15.999
+        calendar_temp=6.999
     try:
         #Read in all the previous settings
         weather_temp=float(redthis.get("temperature/weather"))
@@ -88,6 +88,8 @@ def read_temps():
             try:
                 redthis.set("boiler/req", "True")
                 redthis.expire("boiler/req", 300)
+                redthis.set("boiler/4hourtimeout", "True")
+                redthis.expire("boiler/4hourtimeout", 14400)
                 redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
             except:
                 print ("Unable to update redis") 
@@ -106,6 +108,8 @@ def read_temps():
             try:
                 redthis.set("boiler/req", "True")
                 redthis.expire("boiler/req", 300)
+                redthis.set("boiler/4hourtimeout", "True")
+                redthis.expire("boiler/4hourtimeout", 14400)
                 redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
             except:
                 print ("Unable to update redis") 
