@@ -21,12 +21,13 @@ while True:
             #            print ("Sleeping because we have a shared/jobqueue")
             sleep(5)
             continue 
-        job_to_run = redthis.lpop('cellar/jobqueue') 
+        job_to_run = redthis.lpop('attic/jobqueue') 
 #        job_to_run = redthis.lindex('attic/jobqueue', 0) 
        # print ("Job to run is %s" % job_to_run)
         if (job_to_run):
             #print ("We have a job to run")
             job_running = redthis.set('shared/jobqueue', 'True')
+            job_running = redthis.expire('shared/jobqueue', 20) # We don't want to lock the jobqueue for long periods
             job_to_run = job_to_run.split() # We only want the binary name, not the arguments
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
