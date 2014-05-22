@@ -53,7 +53,8 @@ def window_task(fromstate,tostate):
             else:
                 logging.info ("We need to run close.sh and set to closedasleep")
                 redthis.rpush('attic/jobqueue',"/usr/local/bin/full_close.sh")
-#            redthis.set('velux/3','ClosedAsleep')
+                sleep(60)
+                redthis.set('velux/3','ClosedAsleep')
         else: 
             logging.info ("Something has gone wrong")
 
@@ -105,7 +106,7 @@ while True:
         if (boiler_been_on == "True") and (velux_state != "ClosedAsleep") :
             logging.info ("Boiler has been on in the last 4 hours")
             logging.info ("Window not closed asleep Closing")
-            window_task(open,closedasleep)
+            window_task(open,"closedasleep")
         elif (boiler_been_on == "True") and (velux_state == "ClosedAsleep"):
              logging.info ("Boiler has been on and window has closed")            
         elif (boiler_been_on != "True"): 
