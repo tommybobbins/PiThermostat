@@ -91,6 +91,7 @@ def study_temperatures(attic,half,full,closed,fromposition):
 
  
 while True:
+    try:
         attic_temp = float(redthis.get('temperature/attic/sensor'))
 #        attic_temp = 22.0
         velux_close_trigger = float(redthis.get('temperature/trigger/velux/close'))
@@ -108,10 +109,13 @@ while True:
             logging.info ("Window not closed asleep Closing")
             window_task(open,"closedasleep")
         elif (boiler_been_on == "True") and (velux_state == "ClosedAsleep"):
-             logging.info ("Boiler has been on and window has closed")            
+            logging.info ("Boiler has been on and window has closed")            
         elif (boiler_been_on != "True"): 
              logging.info ("Boiler has not been on in 4 hours. We can do something \o/ ")            
              study_temperatures(attic_temp, velux_half_open_trigger, velux_full_open_trigger, velux_close_trigger, velux_state)
         else:
              logging.info ("Something has gone wrong")
+        sleep(120)
+    except:
+        logging.info ("Redis down or network unreachable")
         sleep(120)
