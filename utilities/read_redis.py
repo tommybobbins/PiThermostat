@@ -6,6 +6,7 @@ redthis = redis.StrictRedis(host='433host',port=6379, db=0,socket_timeout=3)
 allowed_jobs = ['/usr/local/bin/bgas', 
                 '/usr/local/bin/homeeasy',
                 '/usr/local/bin/drayton',
+                '/etc/init.d/sensortag.sh',
                 '/usr/local/bin/boot_sequence.sh',
                 '/usr/local/bin/open_to_half_open.sh',
                 '/usr/local/bin/full_open.sh',
