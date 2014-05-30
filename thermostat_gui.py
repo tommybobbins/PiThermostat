@@ -230,10 +230,11 @@ def move_control(ball,(x,y),control_temp,update_temp):
               shorttemp=round(control_temp,3)
               temp = control_temp
 #    print ("Moving the globe to y=%i" % y)
-#   Finally we can move the control globe to the right position
+##   Finally we can move the control globe to the right position
     ballrect = ball.get_rect()
     ballrect = ballrect.move(x,y)
     screen.blit(ball, ballrect)
+    controlAnim.blit(screen, (ballrect))
     textpos = ballrect.midleft
     textpos = tuple(map(operator.add, textpos,shift))
     screen.blit(font.render('%.0f' % shorttemp, True, (255,255,255)), (textpos))
