@@ -22,7 +22,7 @@ pygame.init()
 #set up the window
 screen = pygame.display.set_mode((0, 0), 0, 32)
 pygame.mouse.set_visible(False)
-
+icon_dir='/home/pi/PiThermostat/icons/'
 mousepos = (200,160)
 old_mos_pos=mousepos
 screenheight = 320
@@ -99,11 +99,11 @@ def get_temps():
     except:
         return(nastring,nastring,nastring,nastring,nastring)
 
-ball1 = pygame.image.load("icons/ball1.png")
-ball2 = pygame.image.load("icons/ball2.png")
-ball3 = pygame.image.load("icons/ball3.png")
-ball4 = pygame.image.load("icons/ball4.png")
-ball5 = pygame.image.load("icons/control.png")
+ball1 = pygame.image.load(icon_dir + "ball1.png")
+ball2 = pygame.image.load(icon_dir + "ball2.png")
+ball3 = pygame.image.load(icon_dir + "ball3.png")
+ball4 = pygame.image.load(icon_dir + "ball4.png")
+ball5 = pygame.image.load(icon_dir + "control.png")
 while True:
    for event in pygame.event.get():
        if event.type == pygame.QUIT: sys.exit()
@@ -124,7 +124,7 @@ while True:
    else:
        control = move_control(ball5,(mousepos),control,False)
    if (bob == 'True'):
-      bobview = pygame.image.load("icons/bob_pipe1.png")
+      bobview = pygame.image.load(icon_dir + "bob_pipe1.png")
       bobrect = bobview.get_rect()
       bobrect = bobrect.move(200,0)
       screen.blit(bobview, bobrect)
