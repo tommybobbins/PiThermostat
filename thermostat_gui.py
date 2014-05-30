@@ -97,7 +97,7 @@ def get_temps():
         bob=(redthis.get("boiler/req"))
         return(a,b,c,d,control,bob)
     except:
-        return(nastring,nastring,nastring,nastring,nastring)
+        return(15.0,15.0,15.0,15.0,15.0,'True')
 
 ball1 = pygame.image.load(icon_dir + "ball1.png")
 ball2 = pygame.image.load(icon_dir + "ball2.png")
