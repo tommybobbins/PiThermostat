@@ -241,17 +241,24 @@ def move_control(ball,(x,y),control_temp,update_temp):
     return temp
 
 def get_temps():    
-    nastring="NA"
+    # Damocles most likely to be dead (bluetooth), so separate that out
+    try:
+        d=float(redthis.get("temperature/damocles/sensor"))
+    except:
+        d=15.0 
     try:
         a=float(redthis.get("temperature/attic/sensor"))
         b=float(redthis.get("temperature/barab/sensor"))
         c=float(redthis.get("temperature/cellar/sensor"))
-        d=float(redthis.get("temperature/damocles/sensor"))
         control=float(redthis.get("temperature/userrequested"))
         bob=(redthis.get("boiler/req"))
-        return(a,b,c,d,control,bob)
     except:
-        return(15.0,15.0,15.0,15.0,15.0,'True')
+        a=15.0
+        b=15.0
+        c=15.0
+        control=15.0
+        bob=True
+    return(a,b,c,d,control,bob)
 
 ball1 = pygame.image.load(icon_dir + "ball1.png")
 ball2 = pygame.image.load(icon_dir + "ball2.png")
