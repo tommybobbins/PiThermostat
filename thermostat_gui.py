@@ -23,143 +23,11 @@ os.environ["SDL_MOUSEDEV"] = eventX
 icon_dir='/home/pi/PiThermostat/icons/'
 pygame.init()
 
-ball1Anim = pyganim.PygAnimation([(icon_dir+'ball1_360.png', 0.1),
-                                 (icon_dir+'ball1_15.png', 0.1),
-                                 (icon_dir+'ball1_30.png', 0.1),
-                                 (icon_dir+'ball1_45.png', 0.1),
-                                 (icon_dir+'ball1_60.png', 0.1),
-                                 (icon_dir+'ball1_75.png', 0.1),
-                                 (icon_dir+'ball1_90.png', 0.1),
-                                 (icon_dir+'ball1_105.png', 0.1),
-                                 (icon_dir+'ball1_120.png', 0.1),
-                                 (icon_dir+'ball1_135.png', 0.1),
-                                 (icon_dir+'ball1_150.png', 0.1),
-                                 (icon_dir+'ball1_165.png', 0.1),
-                                 (icon_dir+'ball1_180.png', 0.1),
-                                 (icon_dir+'ball1_195.png', 0.1),
-                                 (icon_dir+'ball1_210.png', 0.1),
-                                 (icon_dir+'ball1_225.png', 0.1),
-                                 (icon_dir+'ball1_240.png', 0.1),
-                                 (icon_dir+'ball1_255.png', 0.1),
-                                 (icon_dir+'ball1_270.png', 0.1),
-                                 (icon_dir+'ball1_285.png', 0.1),
-                                 (icon_dir+'ball1_300.png', 0.1),
-                                 (icon_dir+'ball1_315.png', 0.1),
-                                 (icon_dir+'ball1_330.png', 0.1),
-                                 (icon_dir+'ball1_345.png', 0.1),
-                                ])
-ball2Anim = pyganim.PygAnimation([(icon_dir+'ball2_360.png', 0.1),
-                                 (icon_dir+'ball2_15.png', 0.1),
-                                 (icon_dir+'ball2_30.png', 0.1),
-                                 (icon_dir+'ball2_45.png', 0.1),
-                                 (icon_dir+'ball2_60.png', 0.1),
-                                 (icon_dir+'ball2_75.png', 0.1),
-                                 (icon_dir+'ball2_90.png', 0.1),
-                                 (icon_dir+'ball2_105.png', 0.1),
-                                 (icon_dir+'ball2_120.png', 0.1),
-                                 (icon_dir+'ball2_135.png', 0.1),
-                                 (icon_dir+'ball2_150.png', 0.1),
-                                 (icon_dir+'ball2_165.png', 0.1),
-                                 (icon_dir+'ball2_180.png', 0.1),
-                                 (icon_dir+'ball2_195.png', 0.1),
-                                 (icon_dir+'ball2_210.png', 0.1),
-                                 (icon_dir+'ball2_225.png', 0.1),
-                                 (icon_dir+'ball2_240.png', 0.1),
-                                 (icon_dir+'ball2_255.png', 0.1),
-                                 (icon_dir+'ball2_270.png', 0.1),
-                                 (icon_dir+'ball2_285.png', 0.1),
-                                 (icon_dir+'ball2_300.png', 0.1),
-                                 (icon_dir+'ball2_315.png', 0.1),
-                                 (icon_dir+'ball2_330.png', 0.1),
-                                 (icon_dir+'ball2_345.png', 0.1),
-                                ])
-ball3Anim = pyganim.PygAnimation([(icon_dir+'ball3_360.png', 0.1),
-                                 (icon_dir+'ball3_15.png', 0.1),
-                                 (icon_dir+'ball3_30.png', 0.1),
-                                 (icon_dir+'ball3_45.png', 0.1),
-                                 (icon_dir+'ball3_60.png', 0.1),
-                                 (icon_dir+'ball3_75.png', 0.1),
-                                 (icon_dir+'ball3_90.png', 0.1),
-                                 (icon_dir+'ball3_105.png', 0.1),
-                                 (icon_dir+'ball3_120.png', 0.1),
-                                 (icon_dir+'ball3_135.png', 0.1),
-                                 (icon_dir+'ball3_150.png', 0.1),
-                                 (icon_dir+'ball3_165.png', 0.1),
-                                 (icon_dir+'ball3_180.png', 0.1),
-                                 (icon_dir+'ball3_195.png', 0.1),
-                                 (icon_dir+'ball3_210.png', 0.1),
-                                 (icon_dir+'ball3_225.png', 0.1),
-                                 (icon_dir+'ball3_240.png', 0.1),
-                                 (icon_dir+'ball3_255.png', 0.1),
-                                 (icon_dir+'ball3_270.png', 0.1),
-                                 (icon_dir+'ball3_285.png', 0.1),
-                                 (icon_dir+'ball3_300.png', 0.1),
-                                 (icon_dir+'ball3_315.png', 0.1),
-                                 (icon_dir+'ball3_330.png', 0.1),
-                                 (icon_dir+'ball3_345.png', 0.1),
-                                ])
-ball4Anim = pyganim.PygAnimation([(icon_dir+'ball4_360.png', 0.1),
-                                 (icon_dir+'ball4_15.png', 0.1),
-                                 (icon_dir+'ball4_30.png', 0.1),
-                                 (icon_dir+'ball4_45.png', 0.1),
-                                 (icon_dir+'ball4_60.png', 0.1),
-                                 (icon_dir+'ball4_75.png', 0.1),
-                                 (icon_dir+'ball4_90.png', 0.1),
-                                 (icon_dir+'ball4_105.png', 0.1),
-                                 (icon_dir+'ball4_120.png', 0.1),
-                                 (icon_dir+'ball4_135.png', 0.1),
-                                 (icon_dir+'ball4_150.png', 0.1),
-                                 (icon_dir+'ball4_165.png', 0.1),
-                                 (icon_dir+'ball4_180.png', 0.1),
-                                 (icon_dir+'ball4_195.png', 0.1),
-                                 (icon_dir+'ball4_210.png', 0.1),
-                                 (icon_dir+'ball4_225.png', 0.1),
-                                 (icon_dir+'ball4_240.png', 0.1),
-                                 (icon_dir+'ball4_255.png', 0.1),
-                                 (icon_dir+'ball4_270.png', 0.1),
-                                 (icon_dir+'ball4_285.png', 0.1),
-                                 (icon_dir+'ball4_300.png', 0.1),
-                                 (icon_dir+'ball4_315.png', 0.1),
-                                 (icon_dir+'ball4_330.png', 0.1),
-                                 (icon_dir+'ball4_345.png', 0.1),
-                                ])
-
-controlAnim = pyganim.PygAnimation([(icon_dir+'control_360.png', 0.1),
-                                 (icon_dir+'control_15.png', 0.1),
-                                 (icon_dir+'control_30.png', 0.1),
-                                 (icon_dir+'control_45.png', 0.1),
-                                 (icon_dir+'control_60.png', 0.1),
-                                 (icon_dir+'control_75.png', 0.1),
-                                 (icon_dir+'control_90.png', 0.1),
-                                 (icon_dir+'control_105.png', 0.1),
-                                 (icon_dir+'control_120.png', 0.1),
-                                 (icon_dir+'control_135.png', 0.1),
-                                 (icon_dir+'control_150.png', 0.1),
-                                 (icon_dir+'control_165.png', 0.1),
-                                 (icon_dir+'control_180.png', 0.1),
-                                 (icon_dir+'control_195.png', 0.1),
-                                 (icon_dir+'control_210.png', 0.1),
-                                 (icon_dir+'control_225.png', 0.1),
-                                 (icon_dir+'control_240.png', 0.1),
-                                 (icon_dir+'control_255.png', 0.1),
-                                 (icon_dir+'control_270.png', 0.1),
-                                 (icon_dir+'control_285.png', 0.1),
-                                 (icon_dir+'control_300.png', 0.1),
-                                 (icon_dir+'control_315.png', 0.1),
-                                 (icon_dir+'control_330.png', 0.1),
-                                 (icon_dir+'control_345.png', 0.1),
-                                ])
-
 bobAnim = pyganim.PygAnimation([(icon_dir+'bob_pipe1.png', 1.0),
                                  (icon_dir+'bob_pipe2.png', 1.0),
                                  (icon_dir+'bob_pipe3.png', 1.0),
                                  (icon_dir+'bob_pipe4.png', 1.0)])
 
-ball1Anim.play() # there is also a pause() and stop() method
-ball2Anim.play() # there is also a pause() and stop() method
-ball3Anim.play() # there is also a pause() and stop() method
-ball4Anim.play() # there is also a pause() and stop() method
-controlAnim.play() # there is also a pause() and stop() method
 bobAnim.play() # there is also a pause() and stop() method
 
 
@@ -172,9 +40,10 @@ mousepos = (200,160)
 old_mos_pos=mousepos
 screenheight = 320
 bob=False
-font = pygame.font.SysFont('Arial', 15)
+font = pygame.font.SysFont('Arial', 12)
 black = 0, 0, 0
-shift=(20, -10 )
+shift=(25, 35 )
+circleshift=(7, 7 )
 lowertemp = 15
 uppertemp = 25
 tempdiff = uppertemp - lowertemp
@@ -197,17 +66,11 @@ def move_ball(ball,temp,x):
     ballrect = ball.get_rect()
     y = convert_temp_to_pixels(temp)
     ballrect = ballrect.move(x,y)
-    if (ball == ball1):
-        ball1Anim.blit(screen, (ballrect))
-    elif (ball == ball2):
-        ball2Anim.blit(screen, (ballrect))
-    elif (ball == ball3):
-        ball3Anim.blit(screen, (ballrect))
-    elif (ball == ball4):
-        ball4Anim.blit(screen, (ballrect))
-#    screen.blit(ball, ballrect)
+    screen.blit(ball, ballrect)
     textpos = ballrect.midleft
     textpos = tuple(map(operator.add, textpos,shift))
+    circlepos = tuple(map(operator.add, textpos,circleshift))
+    pygame.draw.circle(screen,(255,255,255), circlepos, 10, 1)
     screen.blit(font.render('%.0f' % temp, True, (255,255,255)), (textpos))
 
 def move_control(ball,(x,y),control_temp,update_temp):
@@ -234,10 +97,12 @@ def move_control(ball,(x,y),control_temp,update_temp):
     ballrect = ball.get_rect()
     ballrect = ballrect.move(x,y)
     screen.blit(ball, ballrect)
-    controlAnim.blit(screen, (ballrect))
     textpos = ballrect.midleft
     textpos = tuple(map(operator.add, textpos,shift))
+    circlepos = tuple(map(operator.add, textpos,circleshift))
+    pygame.draw.circle(screen,(255,255,255), circlepos, 10, 1)
     screen.blit(font.render('%.0f' % shorttemp, True, (255,255,255)), (textpos))
+    pygame.time.wait(40)
     return temp
 
 def get_temps():    
@@ -291,6 +156,7 @@ while True:
       bobAnim.blit(screen, (200,0))
 #      screen.blit(bobview, bobrect)
    pygame.display.flip()
+   pygame.time.wait(40)
 #   print sampling
    sampling +=1
 
