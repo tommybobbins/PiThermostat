@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys, pygame,operator, os, time
 from pygame.locals import *
+import random
 import time
 import pyganim
 import redis
@@ -33,6 +34,7 @@ bobAnim.play() # there is also a pause() and stop() method
 
 
 #set up the window
+
 screen = pygame.display.set_mode((0, 0), 0, 32)
 pygame.mouse.set_visible(False)
 icon_dir='/home/pi/PiThermostat/icons/'
@@ -41,9 +43,12 @@ old_mos_pos=mousepos
 screenheight = 320
 bob=False
 font = pygame.font.SysFont('Arial', 12)
+TARGET_FPS=6
+clock = pygame.time.Clock()
 black = 0, 0, 0
-shift=(25, 35 )
-circleshift=(7, 7 )
+shift=(22, 35 )
+circleshift=(7, 7)
+jiggle=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-1]
 lowertemp = 15
 uppertemp = 25
 tempdiff = uppertemp - lowertemp
@@ -64,14 +69,20 @@ def convert_pixels_to_temp(y):
 
 def move_ball(ball,temp,x):
     ballrect = ball.get_rect()
-    y = convert_temp_to_pixels(temp)
+    x = int(x)
+    y = int(convert_temp_to_pixels(temp))
+    random_jiggle=(random.choice(jiggle),random.choice(jiggle))
+#    print random_jiggle
+    (x,y) = tuple(map(operator.add, (x,y),random_jiggle))
     ballrect = ballrect.move(x,y)
     screen.blit(ball, ballrect)
     textpos = ballrect.midleft
     textpos = tuple(map(operator.add, textpos,shift))
+#    textpos = tuple(map(operator.add, textpos,random_jiggle))
     circlepos = tuple(map(operator.add, textpos,circleshift))
     pygame.draw.circle(screen,(255,255,255), circlepos, 10, 1)
     screen.blit(font.render('%.0f' % temp, True, (255,255,255)), (textpos))
+    pygame.time.wait(40)
 
 def move_control(ball,(x,y),control_temp,update_temp):
     (temp,shorttemp)=convert_pixels_to_temp(y)
@@ -157,6 +168,7 @@ while True:
 #      screen.blit(bobview, bobrect)
    pygame.display.flip()
    pygame.time.wait(40)
+   clock.tick(TARGET_FPS)
 #   print sampling
    sampling +=1
 
