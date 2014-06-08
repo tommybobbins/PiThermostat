@@ -2,6 +2,7 @@
 import sys, pygame,operator, os, time
 from pygame.locals import *
 import random
+import math
 import time
 import pyganim
 import redis
@@ -48,12 +49,20 @@ clock = pygame.time.Clock()
 black = 0, 0, 0
 shift=(22, 35 )
 circleshift=(7, 7)
+revcircleshift=(-7, -7)
 jiggle=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,-1]
 lowertemp = 15
 uppertemp = 25
 tempdiff = uppertemp - lowertemp
 pixfactor = screenheight/tempdiff
 #print ("pixfactor = %f" % pixfactor)
+number_positions=2000
+angle_to_move = ((2*math.pi)/number_positions)
+globe_radius=50
+ball1angle=random.uniform(0,2*math.pi)
+ball2angle=random.uniform(0,2*math.pi)
+ball3angle=random.uniform(0,2*math.pi)
+ball4angle=random.uniform(0,2*math.pi)
 sampling=1000
 
 def convert_temp_to_pixels(temp):
@@ -67,26 +76,38 @@ def convert_pixels_to_temp(y):
     shortcont = round(cont,3)
     return (cont,shortcont)
 
-def move_ball(ball,temp,x):
+def move_ball(ball,temp,x,current_angle):
+    calc_angle = current_angle + angle_to_move
+    if (calc_angle  >= (2 * math.pi)):
+        calc_angle=0
     ballrect = ball.get_rect()
+    shift=(int(globe_radius*math.cos(calc_angle)), int(globe_radius*math.sin(calc_angle)))
+#    shift=(22,35)
+#    print shift
     x = int(x)
     y = int(convert_temp_to_pixels(temp))
     random_jiggle=(random.choice(jiggle),random.choice(jiggle))
 #    print random_jiggle
-    (x,y) = tuple(map(operator.add, (x,y),random_jiggle))
+#    (x,y) = tuple(map(operator.add, (x,y),random_jiggle))
     ballrect = ballrect.move(x,y)
+#    print (x,y)
     screen.blit(ball, ballrect)
-    textpos = ballrect.midleft
+    #ballrect = ball.get_rect()
+    textpos = ballrect.center
     textpos = tuple(map(operator.add, textpos,shift))
+    textpos = tuple(map(operator.add, textpos,revcircleshift))
 #    textpos = tuple(map(operator.add, textpos,random_jiggle))
     circlepos = tuple(map(operator.add, textpos,circleshift))
     pygame.draw.circle(screen,(255,255,255), circlepos, 10, 1)
+#    print circlepos
     screen.blit(font.render('%.0f' % temp, True, (255,255,255)), (textpos))
+    return calc_angle
     pygame.time.wait(40)
 
 def move_control(ball,(x,y),control_temp,update_temp):
     (temp,shorttemp)=convert_pixels_to_temp(y)
     control_temp=float(control_temp)
+    ballrect = ball.get_rect()
 #   Mouse has moved if update_temp is True
     if update_temp:
        try:
@@ -105,7 +126,6 @@ def move_control(ball,(x,y),control_temp,update_temp):
               temp = control_temp
 #    print ("Moving the globe to y=%i" % y)
 ##   Finally we can move the control globe to the right position
-    ballrect = ball.get_rect()
     ballrect = ballrect.move(x,y)
     screen.blit(ball, ballrect)
     textpos = ballrect.midleft
@@ -134,6 +154,7 @@ def get_temps():
         c=15.0
         control=15.0
         bob=True
+#    print(a,b,c,d,control,bob)
     return(a,b,c,d,control,bob)
 
 ball1 = pygame.image.load(icon_dir + "ball1.png")
@@ -147,13 +168,28 @@ while True:
        elif event.type == pygame.MOUSEBUTTONDOWN:
             mousepos = pygame.mouse.get_pos()
    screen.fill(black)
-   if sampling >= 1000:
+   if sampling >= 100:
        (a,b,c,d,control,bob)=get_temps()
        sampling=0
-   move_ball(ball1,a,20)
-   move_ball(ball2,b,50)
-   move_ball(ball3,c,100)
-   move_ball(ball4,d,150)
+   ball1rect=ball1.get_rect()
+   ball2rect=ball2.get_rect()
+   ball3rect=ball3.get_rect()
+   ball4rect=ball4.get_rect()
+   if ball1rect.colliderect(ball2rect):
+      ball1angle=move_ball(ball1,a,15,ball1angle)
+      ball2angle=move_ball(ball2,b,55,ball2angle)
+   else:
+      ball1angle=move_ball(ball1,a,20,ball1angle)
+      ball2angle=move_ball(ball2,b,50,ball2angle)
+   if ball2rect.colliderect(ball3rect):
+      ball3angle=move_ball(ball3,c,105,ball3angle)
+   else:
+      ball3angle=move_ball(ball3,c,100,ball3angle)
+   if ball3rect.colliderect(ball4rect):
+      ball4angle=move_ball(ball4,d,150,ball4angle)
+   else:
+      ball4angle=move_ball(ball4,d,150,ball4angle)
+#   print angle
    if (old_mos_pos <> mousepos):
        control = move_control(ball5,(mousepos),0,True)
 #       print(mousepos)
