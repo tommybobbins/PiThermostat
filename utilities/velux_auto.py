@@ -51,8 +51,8 @@ def window_task(fromstate,tostate):
             if (fromstate == "ClosedAsleep"):
                 logging.info ("We need to do nothing")
             else:
-                logging.info ("We need to run close.sh and set to closedasleep")
-                redthis.rpush('attic/jobqueue',"/usr/local/bin/full_close.sh")
+                logging.info ("We need to run all_close.sh and set to closedasleep")
+                redthis.rpush('attic/jobqueue',"/usr/local/bin/all_close.sh")
                 sleep(60)
                 redthis.set('velux/3','ClosedAsleep')
         else: 
