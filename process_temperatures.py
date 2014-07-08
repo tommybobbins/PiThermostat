@@ -73,7 +73,12 @@ def read_temps():
             print ("Unable to update redis")
     if Debug:
         print ("User Requested is now %f" % userreq_temp)
-    mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult))/(cellar_mult + barab_mult + attic_mult)
+    try:
+        damo_temp=float(redthis.get("temperature/damocles/sensor"))
+        damo_mult=float(redthis.get("temperature/damocles/multiplier"))
+        mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult) + (damo_temp*damo_mult))/(cellar_mult + barab_mult + attic_mult + damo_mult)
+    except:
+        mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult))/(cellar_mult + barab_mult + attic_mult)
     redthis.set("temperature/weightedmean", mean_temp)
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
@@ -93,7 +98,7 @@ def read_temps():
                 redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
             except:
                 print ("Unable to update redis") 
-        elif (mean_temp >= userreq_temp + hysteresis_temp):
+        elif (mean_temp >= working_temp):
 #            e.g. Temp is 21.3
 #            print ("No need to switch on boiler")
             try:
