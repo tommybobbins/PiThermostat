@@ -7,6 +7,7 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/homeeasy',
                 '/usr/local/bin/drayton',
                 '/usr/local/bin/boot_sequence.sh',
+                '/usr/local/bin/energenie',
                 '/usr/local/bin/half_open.sh',
                 '/usr/local/bin/full_open.sh',
                 '/usr/local/bin/full_to_half_open.sh',
@@ -21,7 +22,7 @@ while True:
             #            print ("Sleeping because we have a shared/jobqueue")
             sleep(5)
             continue 
-        job_to_run = redthis.lpop('attic/jobqueue') 
+        job_to_run = redthis.lpop('cellar/jobqueue') 
 #        job_to_run = redthis.lindex('attic/jobqueue', 0) 
        # print ("Job to run is %s" % job_to_run)
         if (job_to_run):
