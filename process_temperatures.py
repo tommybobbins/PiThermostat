@@ -17,6 +17,24 @@ redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
 hysteresis_temp=0.5
 Debug=False
 
+def calculate_weighted_mean(incoming_multiplier,incoming_temp):
+    numerator = 0
+    denominator = 0
+    running_mean = 14.666
+    for item in incoming_multiplier.keys():
+        try:
+            numerator += incoming_multiplier[item]*incoming_temp[item] 
+            denominator += incoming_multiplier[item] 
+            running_mean =  float(numerator/denominator)
+#            print ("Running mean %f " % running_mean)
+        except:
+            print ("Something went wrong\n")
+            running_mean = 14.665
+#        print ("numerator = %i" % numerator)
+#        print ("denominator = %i" % denominator)
+    return(running_mean) 
+
+
 def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
@@ -76,9 +94,13 @@ def read_temps():
     try:
         damo_temp=float(redthis.get("temperature/damocles/sensor"))
         damo_mult=float(redthis.get("temperature/damocles/multiplier"))
-        mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult) + (damo_temp*damo_mult))/(cellar_mult + barab_mult + attic_mult + damo_mult)
+        multiplier = {'attic': attic_mult, 'barab': barab_mult, 'cellar': cellar_mult, 'damocles': damo_mult}
+        temp = {'attic': attic_temp, 'barab': barab_temp, 'cellar': cellar_temp, 'damocles': damo_temp}
+        mean_temp = calculate_weighted_mean(multiplier,temp)
     except:
-        mean_temp = float((cellar_temp*cellar_mult) + (barab_temp*barab_mult) + (attic_temp*attic_mult))/(cellar_mult + barab_mult + attic_mult)
+        multiplier = {'attic': attic_mult, 'barab': barab_mult, 'cellar': cellar_mult}
+        temp = {'attic': attic_temp, 'barab': barab_temp, 'cellar': cellar_temp}
+        mean_temp = calculate_weighted_mean(multiplier,temp)
     redthis.set("temperature/weightedmean", mean_temp)
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
