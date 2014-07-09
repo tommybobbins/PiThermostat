@@ -50,30 +50,37 @@ def read_temps():
         ##### Optimal temp is the debug value we want to set the house to
         ##### if all else fails
         failover_temp=float(redthis.get("temperature/failover"))
-        attic_temp=float(redthis.get("temperature/attic/sensor"))
-        barab_temp=float(redthis.get("temperature/barab/sensor"))
-        cellar_temp=float(redthis.get("temperature/cellar/sensor"))
-        attic_mult=float(redthis.get("temperature/attic/multiplier"))
-        barab_mult=float(redthis.get("temperature/barab/multiplier"))
-        cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
-        # Store our previous google calendar temperature for ref.
-        previous_calendar_temp=float(redthis.get("temperature/calendar"))
-        boiler_state=redthis.get("boiler/req")
-        time_to_live=int(redthis.ttl("boiler/req"))
-        # Store our google calendar temperature for future reference
-        redthis.set("temperature/calendar", calendar_temp)
     except:
         print ("Unable to find redis stats")
         weather_temp=14.999
         userreq_temp=6.999
-        attic_temp=15.999
-        barab_temp=15.999
-        cellar_temp=15.999
-        attic_mult=1
-        barab_mult=1
-        cellar_mult=1
         time_to_live=290
+        failover_temp = 14.663
         previous_calendar_temp=calendar_temp
+    try:
+        attic_temp=float(redthis.get("temperature/attic/sensor"))
+        attic_mult=float(redthis.get("temperature/attic/multiplier"))
+    except:
+        attic_temp = 0
+        attic_mult = 0
+    try:
+        barab_temp=float(redthis.get("temperature/barab/sensor"))
+        barab_mult=float(redthis.get("temperature/barab/multiplier"))
+    except:
+        barab_temp = 0
+        barab_mult = 0
+    try:
+        cellar_temp=float(redthis.get("temperature/cellar/sensor"))
+        cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
+    except:
+        cellar_temp = 0 
+        cellar_mult = 0 
+    # Store our previous google calendar temperature for ref.
+    previous_calendar_temp=float(redthis.get("temperature/calendar"))
+    boiler_state=redthis.get("boiler/req")
+    time_to_live=int(redthis.ttl("boiler/req"))
+    # Store our google calendar temperature for future reference
+    redthis.set("temperature/calendar", calendar_temp)
     if Debug: 
         print ("Found weather %f" % weather_temp)
         print ("Found user requested %f" % userreq_temp)
