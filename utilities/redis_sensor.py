@@ -11,13 +11,16 @@ import datetime
 from time import sleep
 import re
 import redis
+time_to_live = 3600
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
-room_location="attic"
+room_location="cellar"
 sensor_name="temperature/"+room_location+"/sensor"
-print ("Sensor name is %s" % sensor_name)
+mult_name="temperature/"+room_location+"/multiplier"
+#print ("Sensor name is %s" % sensor_name)
+#print ("Multiplier name is %s" % mult_name)
 
 class Tmp102:
   i2c = None
@@ -64,6 +67,8 @@ while True:
         floattemp = mytemp.readTemperature()[1]
 #        print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
+        redthis.expire(sensor_name,time_to_live)
+        redthis.expire(mult_name,time_to_live)
     except:
         print ("Unable to retrieve temperature")
     time.sleep(120)
