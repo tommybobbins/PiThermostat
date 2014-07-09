@@ -12,6 +12,12 @@ from time import sleep
 import re
 import redis
 time_to_live = 3600
+###### IMPORTANT #############
+###### How close to comfortable temperature is this sensor
+###### determines how much weighting this sensor
+###### if used at an extreme point in the house (say cellar), set to 1
+###### if used centrally (living room), set to 3 or 4
+multiplier = 1
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
@@ -67,6 +73,7 @@ while True:
         floattemp = mytemp.readTemperature()[1]
 #        print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
+        redthis.set(mult_name,multiplier)
         redthis.expire(sensor_name,time_to_live)
         redthis.expire(mult_name,time_to_live)
     except:
