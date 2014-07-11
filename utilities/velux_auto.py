@@ -9,7 +9,8 @@ redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
 #open_to_half_open.sh
 #full_close.sh
 import logging
-logging.basicConfig(filename='/home/pi/velux_action.txt',level=logging.INFO)
+FORMAT = "%(asctime)s:%(message)s"
+logging.basicConfig(filename='/home/pi/velux_action.txt',level=logging.INFO,format=FORMAT)
 
 
 def window_task(fromstate,tostate):
@@ -38,8 +39,9 @@ def window_task(fromstate,tostate):
                 redthis.rpush('attic/jobqueue',"/usr/local/bin/closed_to_half_open.sh")
                 logging.info ("We need to run closed_to_half_open.sh")
             elif (fromstate == "Open"):
-                redthis.rpush('attic/jobqueue',"/usr/local/bin/open_to_half_open.sh")
-                logging.info ("We need to run open_to_half_open.sh")
+#                redthis.rpush('attic/jobqueue',"/usr/local/bin/open_to_half_open.sh")
+                logging.info ("At this point we would have run open_to_half_open.sh")
+                logging.info ("But we wont as it will flip flop ")
             elif (fromstate == "ClosedAsleep"):
                 logging.info ("We need to run closed_to_half_open.sh")
                 redthis.rpush('attic/jobqueue',"/usr/local/bin/closed_to_half_open.sh")

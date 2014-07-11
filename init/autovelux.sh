@@ -26,13 +26,14 @@ PIDFILE=/var/run/$DAEMON_NAME.pid
  
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon"
-    start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --startas $DAEMON
+    /sbin/start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --startas $DAEMON
 #    start-stop-daemon --start --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER  --startas ${DAEMON}
     log_end_msg $?
 }
 do_stop () {
     log_daemon_msg "Stopping system $DAEMON_NAME daemon"
-    start-stop-daemon --stop --pidfile $PIDFILE --retry 10
+    /usr/local/bin/all_close.sh
+    /sbin/start-stop-daemon --stop --pidfile $PIDFILE --retry 10
     log_end_msg $?
 }
  

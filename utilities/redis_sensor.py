@@ -22,7 +22,7 @@ multiplier = 1
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
-room_location="cellar"
+room_location="attic"
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
 #print ("Sensor name is %s" % sensor_name)
