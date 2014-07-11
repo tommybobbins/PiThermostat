@@ -48,6 +48,27 @@ def find_sensor_data(incoming_sensor):
         mult =  0
     return (temp, mult)
 
+def send_call_boiler(on_or_off):
+    if (on_or_off == "on"):
+        try:
+            redthis.set("boiler/req", "True")
+            redthis.expire("boiler/req", 300)
+            redthis.set("boiler/4hourtimeout", "True")
+            redthis.expire("boiler/4hourtimeout", 14400)
+            redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
+        except:
+            print ("Unable to update redis")
+    elif (on_or_off == "off"):
+        try:
+            redthis.set("boiler/req", "False")
+            redthis.expire("boiler/req", 300)
+            redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton off")
+        except:
+            print ("Unable to update redis")
+    else:
+        print ("Need to send on or off to send_call_boiler()")
+
+
 def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
@@ -109,34 +130,18 @@ def read_temps():
         if (mean_temp <= userreq_temp):
 #            e.g. Temp is 16.0
 #            print ("Need to switch on boiler")
-            try:
-                redthis.set("boiler/req", "True")
-                redthis.expire("boiler/req", 300)
-                redthis.set("boiler/4hourtimeout", "True")
-                redthis.expire("boiler/4hourtimeout", 14400)
-                redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
-            except:
-                print ("Unable to update redis") 
+            send_call_boiler("on")
+
         elif (mean_temp >= working_temp):
 #            e.g. Temp is 21.3
 #            print ("No need to switch on boiler")
-            try:
-                redthis.set("boiler/req", "False")
-                redthis.expire("boiler/req", 300)
-                redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton off")
-            except:
-                print ("Unable to update redis") 
+            send_call_boiler("off")
+
         elif ((mean_temp <= working_temp) and (mean_temp >= userreq_temp)):
 #            e.g. Temp is 20.6
 #            print ("Need to switch on boiler")
-            try:
-                redthis.set("boiler/req", "True")
-                redthis.expire("boiler/req", 300)
-                redthis.set("boiler/4hourtimeout", "True")
-                redthis.expire("boiler/4hourtimeout", 14400)
-                redthis.rpush("cellar/jobqueue", "/usr/local/bin/drayton on")
-            except:
-                print ("Unable to update redis") 
+            send_call_boiler("on")
+
         else:
              print ("Something gone wrong")
     else:
