@@ -129,19 +129,13 @@ def read_temps():
         # e.g. 21.3 = 20.0 + 1.3
         if (mean_temp <= userreq_temp):
 #            e.g. Temp is 16.0
-#            print ("Need to switch on boiler")
             send_call_boiler("on")
-
         elif (mean_temp >= working_temp):
 #            e.g. Temp is 21.3
-#            print ("No need to switch on boiler")
             send_call_boiler("off")
-
         elif ((mean_temp <= working_temp) and (mean_temp >= userreq_temp)):
 #            e.g. Temp is 20.6
-#            print ("Need to switch on boiler")
             send_call_boiler("on")
-
         else:
              print ("Something gone wrong")
     else:
