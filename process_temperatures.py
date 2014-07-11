@@ -15,6 +15,8 @@ from google_calendar import google_calendar
 import re
 redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
 hysteresis_temp=0.5
+temp={}
+multiplier={}
 Debug=False
 
 def calculate_weighted_mean(incoming_multiplier,incoming_temp):
@@ -34,6 +36,17 @@ def calculate_weighted_mean(incoming_multiplier,incoming_temp):
 #        print ("denominator = %i" % denominator)
     return(running_mean) 
 
+def find_sensor_data(incoming_sensor):
+    try:
+        redis_temp = ('temperature/'+incoming_sensor+'/sensor')
+        redis_mult = ('temperature/'+incoming_sensor+'/multiplier')
+        temp=float(redthis.get(redis_temp))
+        mult=float(redthis.get(redis_mult))
+#        print ("For incoming %s, we have temp=%f , mult = %f" % (incoming_sensor,temp,mult))
+    except:
+        temp =  0
+        mult =  0
+    return (temp, mult)
 
 def read_temps():
     try:
@@ -57,24 +70,10 @@ def read_temps():
         time_to_live=290
         failover_temp = 14.663
         previous_calendar_temp=calendar_temp
-    try:
-        attic_temp=float(redthis.get("temperature/attic/sensor"))
-        attic_mult=float(redthis.get("temperature/attic/multiplier"))
-    except:
-        attic_temp = 0
-        attic_mult = 0
-    try:
-        barab_temp=float(redthis.get("temperature/barab/sensor"))
-        barab_mult=float(redthis.get("temperature/barab/multiplier"))
-    except:
-        barab_temp = 0
-        barab_mult = 0
-    try:
-        cellar_temp=float(redthis.get("temperature/cellar/sensor"))
-        cellar_mult=float(redthis.get("temperature/cellar/multiplier"))
-    except:
-        cellar_temp = 0 
-        cellar_mult = 0 
+    (temp['attic'],multiplier['attic']) = find_sensor_data('attic') 
+    (temp['barab'],multiplier['barab']) = find_sensor_data('barab') 
+    (temp['cellar'],multiplier['cellar']) = find_sensor_data('cellar') 
+    (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
     boiler_state=redthis.get("boiler/req")
@@ -98,16 +97,7 @@ def read_temps():
             print ("Unable to update redis")
     if Debug:
         print ("User Requested is now %f" % userreq_temp)
-    try:
-        damo_temp=float(redthis.get("temperature/damocles/sensor"))
-        damo_mult=float(redthis.get("temperature/damocles/multiplier"))
-        multiplier = {'attic': attic_mult, 'barab': barab_mult, 'cellar': cellar_mult, 'damocles': damo_mult}
-        temp = {'attic': attic_temp, 'barab': barab_temp, 'cellar': cellar_temp, 'damocles': damo_temp}
-        mean_temp = calculate_weighted_mean(multiplier,temp)
-    except:
-        multiplier = {'attic': attic_mult, 'barab': barab_mult, 'cellar': cellar_mult}
-        temp = {'attic': attic_temp, 'barab': barab_temp, 'cellar': cellar_temp}
-        mean_temp = calculate_weighted_mean(multiplier,temp)
+    mean_temp = calculate_weighted_mean(multiplier,temp)
     redthis.set("temperature/weightedmean", mean_temp)
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
