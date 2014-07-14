@@ -15,6 +15,7 @@ from google_calendar import google_calendar
 import re
 redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
 hysteresis_temp=0.5
+summer_temp = 15.0
 temp={}
 multiplier={}
 Debug=False
@@ -95,11 +96,16 @@ def read_temps():
     (temp['barab'],multiplier['barab']) = find_sensor_data('barab') 
     (temp['cellar'],multiplier['cellar']) = find_sensor_data('cellar') 
     (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
+    (eden_temp, eden_mult) = find_sensor_data('eden')
+    eden_rolling_mean=redthis.get("temperature/eden/rollingmean")
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
     boiler_state=redthis.get("boiler/req")
     time_to_live=int(redthis.ttl("boiler/req"))
     # Store our google calendar temperature for future reference
+    if (eden_rolling_mean >= summer_temp):
+        calendar_temp += -4.0
+#        print ("Calendar temp = %f" % calendar_temp)
     redthis.set("temperature/calendar", calendar_temp)
     if Debug: 
         print ("Found weather %f" % weather_temp)
