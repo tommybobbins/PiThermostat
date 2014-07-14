@@ -9,23 +9,15 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/energenie',
                 '/etc/init.d/sensortag.sh',
                 '/usr/local/bin/boot_sequence.sh',
-<<<<<<< HEAD
                 '/usr/local/bin/energenie',
                 '/usr/local/bin/half_open.sh',
-=======
                 '/usr/local/bin/open_to_half_open.sh',
->>>>>>> a052f1216763f00e219616a15a7b880acfa64f27
                 '/usr/local/bin/full_open.sh',
                 '/usr/local/bin/closed_to_half_open.sh',
                 '/usr/local/bin/all_open.sh',
                 '/usr/local/bin/all_close.sh',
                 '/usr/local/bin/all_half.sh',
                 '/usr/local/bin/full_close.sh']
-#-rwxr-xr-x 1 pi staff 336 May 14 16:30 boot_sequence.sh
-#-rwxr-xr-x 1 pi staff 249 May 15 16:34 closed_to_half_open.sh
-#-rwxr-xr-x 1 pi staff 182 May 15 16:34 full_open.sh
-#-rwxr-xr-x 1 pi staff 258 May 15 16:35 open_to_half_open.sh
-#-rwxr-xr-x 1 pi staff 232 May 15 16:35 full_close.sh
 while True:
     try:
         # Check for permission to run 
