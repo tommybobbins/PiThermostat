@@ -1,0 +1,26 @@
+#!/usr/bin/python
+# Modified 29-Jul-2014
+# tng@chegwin.org
+# Create a list of the temperatures hourly for graphing purposes
+
+from time import sleep
+import redis
+redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
+import logging, datetime
+dt = datetime.datetime.now()
+
+logging.basicConfig(filename='/home/pi/TEMPERATURES/temps_%i_%i_%i.log' %(dt.year, dt.month, dt.day),level=logging.INFO)
+
+try:
+    outside_temp=float(redthis.get("temperature/weather"))
+    barab_sensor_temp=float(redthis.get("temperature/barab/sensor"))
+    attic_sensor_temp=float(redthis.get("temperature/attic/sensor"))
+    cellar_sensor_temp=float(redthis.get("temperature/cellar/sensor"))
+    required_temp=float(redthis.get("temperature/userrequested"))
+    damocles_sensor_temp=(0.0)
+    eden_sensor_temp=float(redthis.get("temperature/eden/sensor"))
+except:
+    outside_temp = 0
+    sensor_temp = 0
+    required_temp = 0
+logging.info ("%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f" % (dt,outside_temp,barab_sensor_temp,required_temp, attic_sensor_temp, cellar_sensor_temp, damocles_sensor_temp, eden_sensor_temp ))
