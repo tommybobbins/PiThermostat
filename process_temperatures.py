@@ -18,6 +18,8 @@ hysteresis_temp=0.5
 summer_temp = 15.0
 temp={}
 multiplier={}
+external_temp={}
+external_multiplier={}
 Debug=False
 
 def calculate_weighted_mean(incoming_multiplier,incoming_temp):
@@ -96,7 +98,8 @@ def read_temps():
     (temp['barab'],multiplier['barab']) = find_sensor_data('barab') 
     (temp['cellar'],multiplier['cellar']) = find_sensor_data('cellar') 
     (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
-    (eden_temp, eden_mult) = find_sensor_data('eden')
+    (external_temp['eden'],external_multiplier['eden']) = find_sensor_data('eden')
+    (external_temp['forno'],external_multiplier['forno']) = find_sensor_data('forno')
     eden_rolling_mean=redthis.get("temperature/eden/rollingmean")
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
@@ -110,9 +113,12 @@ def read_temps():
     if Debug: 
         print ("Found weather %f" % weather_temp)
         print ("Found user requested %f" % userreq_temp)
-        print ("Found Barab %f" % barab_temp)
-        print ("Found Cellar %f" % cellar_temp)
-        print ("Found Attic %f" % attic_temp)
+        print ("Found Barab %f" % temp['barab'])
+        print ("Found Cellar %f" % temp['cellar'])
+        print ("Found Attic %f" % temp['attic'])
+        print ("Found Damocles %f" % temp['damocles'])
+        print ("Found Eden %f" % etemp['eden'])
+        print ("Found Forno %f" % etemp['forno'])
         print ("Found calendar %f" % calendar_temp)
         print ("Time until boiler needs poking = %i" % time_to_live)
     if (previous_calendar_temp != calendar_temp):
@@ -125,7 +131,9 @@ def read_temps():
     if Debug:
         print ("User Requested is now %f" % userreq_temp)
     mean_temp = calculate_weighted_mean(multiplier,temp)
-    redthis.set("temperature/weightedmean", mean_temp)
+    mean_external_temp = calculate_weighted_mean(external_multiplier,external_temp)
+    redthis.set("temperature/inside/weightedmean", mean_temp)
+    redthis.set("temperature/outside/weightedmean", mean_external_temp)
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
 
