@@ -100,15 +100,19 @@ def read_temps():
     (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
     (external_temp['eden'],external_multiplier['eden']) = find_sensor_data('eden')
     (external_temp['forno'],external_multiplier['forno']) = find_sensor_data('forno')
-    eden_rolling_mean=redthis.get("temperature/outside/rollingmean")
+    outside_rolling_mean=float(redthis.get("temperature/outside/rollingmean"))
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
     boiler_state=redthis.get("boiler/req")
     time_to_live=int(redthis.ttl("boiler/req"))
     # Store our google calendar temperature for future reference
-    if (eden_rolling_mean >= summer_temp):
+    if (outside_rolling_mean >= summer_temp):
         calendar_temp += -4.0
 #        print ("Calendar temp = %f" % calendar_temp)
+#        print ("Outside Rolling mean temp = %f" % outside_rolling_mean)
+#        print ("Summer temp = %f" % summer_temp)
+#    else:
+#        print ("It is not summer")
     redthis.set("temperature/calendar", calendar_temp)
     if Debug: 
         print ("Found weather %f" % weather_temp)
