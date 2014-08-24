@@ -121,13 +121,18 @@ def read_temps():
         print ("Found Cellar %f" % temp['cellar'])
         print ("Found Attic %f" % temp['attic'])
         print ("Found Damocles %f" % temp['damocles'])
-        print ("Found Eden %f" % etemp['eden'])
-        print ("Found Forno %f" % etemp['forno'])
+        print ("Found Eden %f" % external_temp['eden'])
+        print ("Found Forno %f" % external_temp['forno'])
         print ("Found calendar %f" % calendar_temp)
         print ("Time until boiler needs poking = %i" % time_to_live)
+        print ("Previous calendar = %f" % previous_calendar_temp)
+        print ("Calendar_temp = %f" % calendar_temp)
     if (previous_calendar_temp != calendar_temp):
         #Calendar appointment has changed. Reset User Requested temperature 
         userreq_temp=calendar_temp 
+        if Debug:
+            print ("Previous, current_calendar %f %f " % (previous_calendar_temp, calendar_temp))
+            print ("User Requested is not equal to calendar %f %f " % (userreq_temp, calendar_temp))
         try:
             redthis.set("temperature/userrequested", userreq_temp)
         except:
