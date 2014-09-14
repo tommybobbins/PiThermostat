@@ -20,12 +20,12 @@ if (length_of_list > 24):
     redthis.lpop("temperature/outside/rollingtemp")
 else:
     print ("Length of list = %i" % length_of_list)
-for listcounter in range(0,(length_of_list - 1)):
+for listcounter in range(0,(length_of_list)):
     temp = float(redthis.lindex('temperature/outside/rollingtemp', listcounter))
     numerator += temp
 #    print ("temp = %f " % temp ) 
 #print ("Numerator = %f " % numerator)
-denominator = length_of_list - 1
+denominator = length_of_list
 mean_temp = numerator/denominator
 redthis.set('temperature/outside/rollingmean', mean_temp)
 #print ("Mean temp = %f " % mean_temp) 
