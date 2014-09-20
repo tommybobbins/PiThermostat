@@ -100,6 +100,7 @@ def read_temps():
     (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
     (external_temp['eden'],external_multiplier['eden']) = find_sensor_data('eden')
     (external_temp['forno'],external_multiplier['forno']) = find_sensor_data('forno')
+    (external_temp['outside'],external_multiplier['outside']) = (weather_temp,5) 
     outside_rolling_mean=float(redthis.get("temperature/outside/rollingmean"))
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
