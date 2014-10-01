@@ -38,10 +38,15 @@ class Tmp102:
     "Reads the raw (uncompensated) temperature from the sensor"
     self.i2c.write8(0, 0x00)                 # Set temp reading mode
     raw = self.i2c.readList(0,2)
-
-    val = raw[0] << 4;
-    val |= raw[1] >> 4;
-
+    print ("Raw1 = %s, Raw2 = %s" % (raw[0],raw[1]))
+    if raw[0] & 0x80 == 0x80:
+       raw[0] = (raw[0] + 1 & 0xff)
+       val = 0 - (( raw[0] << 4 ) | ( raw[1] >> 4))
+       print (float(val))
+    else:
+       val = (( raw[0] << 4 ) | ( raw[1] >> 4))
+       print (float(val))
+    print float(val)
     return val
 
 
