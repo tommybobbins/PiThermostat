@@ -40,9 +40,9 @@ class Tmp102:
     raw = self.i2c.readList(0,2)
     print ("Raw1 = %s, Raw2 = %s" % (raw[0],raw[1]))
     if raw[0] & 0x80 == 0x80:
-       raw[0] = (raw[0] + 1 & 0xff)
+       raw[0] = raw[0]|(-1 - 0x7ff)
        val = 0 - (( raw[0] << 4 ) | ( raw[1] >> 4))
-       print (float(val))
+       val = raw[0]
     else:
        val = (( raw[0] << 4 ) | ( raw[1] >> 4))
        print (float(val))
