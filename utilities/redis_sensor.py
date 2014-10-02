@@ -45,35 +45,30 @@ class Tmp102:
     else:
       self.mode = mode
 
-  def readRawTemp(self):
-    "Reads the raw (uncompensated) temperature from the sensor"
-    self.i2c.write8(0, 0x00)                 # Set temp reading mode
-    raw = self.i2c.readList(0,2)
-    if raw[0] & 0x80 == 0x80:
-       raw[0] = (raw[0] + 1 & 0xff)
-       val = 0 - (( raw[0] << 4 ) | ( raw[1] >> 4))
-       print (float(val))
-    else:
-       val = (( raw[0] << 4 ) | ( raw[1] >> 4))
-       print (float(val))
-    return val
-
-
   def readTemperature(self):
     "Gets the compensated temperature in degrees celcius"
-
-    RawBytes = self.readRawTemp()  #get the temp from readRawTemp (above)
-    temp = float(float(RawBytes) * 0.0625)  #this is the conversion value from the data sheet.
+    self.i2c.write8(0, 0x00)                 # Set temp reading mode
+    raw = self.i2c.readList(0,2)
     if (self.debug):
-      print "DBG: Raw Temp: 0x%04X (%d)" % (RawBytes & 0xFFFF, RawBytes)
-      print "DBG: Calibrated temperature = %f C" % temp
-    
-    return RawBytes,temp
+        print ("Raw0 = %s, Raw1 = %s" % (raw[0],raw[1]))
+    negative = (raw[0] >> 7) == 1
+    shift = 4
+    if not negative:
+        val = (((raw[0] * 256) + raw[1]) >> shift)
+    else:
+        remove_bit = 0b011111111111
+        ti = (((raw[0] * 256) + raw[1]) >> shift)
+        # Complement, but remove the first bit.
+        ti = float(~ti & remove_bit)
+        val = float(float(-(ti))*0.0625)
+    if (self.debug):
+        print val
+    return val
 
 while True:
     try: 
         mytemp = Tmp102(address=0x48)
-        floattemp = mytemp.readTemperature()[1]
+        floattemp = mytemp.readTemperature()
 #        print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
         redthis.set(mult_name,multiplier)
