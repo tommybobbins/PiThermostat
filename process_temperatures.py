@@ -101,7 +101,10 @@ def read_temps():
     (external_temp['eden'],external_multiplier['eden']) = find_sensor_data('eden')
     (external_temp['forno'],external_multiplier['forno']) = find_sensor_data('forno')
     (external_temp['outside'],external_multiplier['outside']) = (weather_temp,5) 
-    outside_rolling_mean=float(redthis.get("temperature/outside/rollingmean"))
+    try:
+        outside_rolling_mean=float(redthis.get("temperature/outside/rollingmean"))
+    except:
+        outside_rolling_mean = 6.33
     # Store our previous google calendar temperature for ref.
     previous_calendar_temp=float(redthis.get("temperature/calendar"))
     boiler_state=redthis.get("boiler/req")
