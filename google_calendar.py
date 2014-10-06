@@ -93,7 +93,7 @@ def google_calendar():
 #    print timeMax
     page_token = None
     while True:
-      events = service.events().list(calendarId='gkufc7v9e8a3au43pmt59usmks@group.calendar.google.com',timeMin=timeMin, timeMax=timeMax).execute()
+      events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
       for event in events['items']:
           tempstring = event['summary']
 #          print (tempstring)
