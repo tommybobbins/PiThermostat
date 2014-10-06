@@ -79,8 +79,11 @@ def google_calendar():
   http = credentials.authorize(http)
 
   # Construct the service object for the interacting with the Calendar API.
-  service = discovery.build('calendar', 'v3', http=http)
-
+  try:
+      service = discovery.build('calendar', 'v3', http=http)
+  except: 
+      print ("Internet down. Here be dragons")
+      return(return_temp)
   try:
 #    print "Success! Now add code here."
     baildon_tz = pytz.timezone('Europe/London')
