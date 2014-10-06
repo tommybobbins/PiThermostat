@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Thermostat Action</h2>
+{% if turbo == False %}
+<img src="/static/icons/tango/16x16/status/weather-snow.png"><br/>
+{% else %}
+<img src="/static/icons/tango/16x16/status/weather-clear.png"><br/>
+{%endif %}
+Turbo Boost to:{{ turbo_temp }}
+{% if modify_value %}
+Modify {{ modify }} by {{ modify_value }}
+{% endif %}
+<hr/>
+<p>Please <a href="/thermostat/">click here</a> to return to the status page</p>
+<hr/>
+{% endblock %}
