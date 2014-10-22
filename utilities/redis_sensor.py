@@ -22,7 +22,7 @@ multiplier = 1
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
 redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
-room_location="attic"
+room_location="cellar"
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
 #print ("Sensor name is %s" % sensor_name)
@@ -45,32 +45,30 @@ class Tmp102:
     else:
       self.mode = mode
 
-  def readRawTemp(self):
-    "Reads the raw (uncompensated) temperature from the sensor"
-    self.i2c.write8(0, 0x00)                 # Set temp reading mode
-    raw = self.i2c.readList(0,2)
-
-    val = raw[0] << 4;
-    val |= raw[1] >> 4;
-
-    return val
-
-
   def readTemperature(self):
     "Gets the compensated temperature in degrees celcius"
-
-    RawBytes = self.readRawTemp()  #get the temp from readRawTemp (above)
-    temp = float(float(RawBytes) * 0.0625)  #this is the conversion value from the data sheet.
+    self.i2c.write8(0, 0x00)                 # Set temp reading mode
+    raw = self.i2c.readList(0,2)
     if (self.debug):
-      print "DBG: Raw Temp: 0x%04X (%d)" % (RawBytes & 0xFFFF, RawBytes)
-      print "DBG: Calibrated temperature = %f C" % temp
-    
-    return RawBytes,temp
+        print ("Raw0 = %s, Raw1 = %s" % (raw[0],raw[1]))
+    negative = (raw[0] >> 7) == 1
+    shift = 4
+    if not negative:
+        val = (((raw[0] * 256) + raw[1]) >> shift) * 0.0625
+    else:
+        remove_bit = 0b011111111111
+        ti = (((raw[0] * 256) + raw[1]) >> shift)
+        # Complement, but remove the first bit.
+        ti = float(~ti & remove_bit)
+        val = float(float(-(ti))*0.0625)
+    if (self.debug):
+        print val
+    return val
 
 while True:
     try: 
         mytemp = Tmp102(address=0x48)
-        floattemp = mytemp.readTemperature()[1]
+        floattemp = mytemp.readTemperature()
 #        print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
         redthis.set(mult_name,multiplier)

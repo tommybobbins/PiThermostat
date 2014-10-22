@@ -46,6 +46,15 @@ The summary of all events in the calendar should be of the form
 Installation of the files
 ========================
 
+## Setting up a Temperature sensor
+
+This will setup the sensor for the attic.
+
+    cd PiThermostat
+    sudo cp utilities/redis_sensor.py /usr/local/bin/
+    sudo cp init/redis_sensor.sh /etc/init.d/
+    sudo insserv redis_sensor.sh
+
 Copy the init script to /etc/init.d/temp.sh
 
     sudo cp utilities/temp.sh /etc/init.d/
@@ -111,3 +120,16 @@ This needs to run as root to get access to the GPIO pin 18 (in our case). It has
     sudo cp utilities/murunner.sh /etc/init.d/
     sudo insserv murunner.sh
 
+
+Django front end
+=================
+
+Setting up Django is beyond the scope of this document, but there are instructions on how to do this https://www.djangoproject.com/
+
+Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there.
+
+    cd /usr/local/django
+
+    sudo python manage.py syncdb
+
+    chmod a+rw home.db

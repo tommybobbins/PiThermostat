@@ -1,0 +1,323 @@
+p {
+   font-size: 100%;
+   color: #ccc;
+}
+
+h1,h2{
+   font-size: 100%;
+}
+
+body {
+   font-size: 100%;
+   margin: 20px;
+   background: #000 url(../img/lcars_background.png) no-repeat;
+}
+
+#lcars_home a:link, #lcars_home a:visited {
+   color: #fff;
+   position: absolute;
+   top: 4px;
+   left: 100px;
+   font-size: 120%;
+}
+
+#lcars_home a:hover {
+   color: #bbf;
+}
+
+.lcars_home {
+}
+
+.lcars_command {
+   position: absolute;
+   font-size: 120%;
+   color: #fff;
+   top: -15px;
+   left: 250px;
+}
+
+.lcars_output {
+   position: absolute;
+   font-size: 80%;
+   color: #fff;
+   top: -4px;
+   left: 490px;
+}
+
+
+td,th {
+  font-size: 66%;
+}
+
+.makeachoice {
+   font-color: blue;
+   font-size: 120%;
+}
+
+input[type="range"] {
+   width: 400px;
+   height: 100px;
+}
+
+img {
+border: none;
+position: relative;
+left: 0px;
+top: 0px;
+}
+
+.bigfont {
+   font-size: 200%;
+}
+
+.smallfont {
+   font-size: 80%;
+}
+
+.medfont {
+   font-size: 120%;
+}
+
+.massive a{
+   font-size: 300%;
+   padding: 20px;
+   top: 100px;
+   text-align: center;
+   color: #fff;
+}
+
+.massivebuttons {
+   border: #f00;
+   left: 100px;
+   position: relative;
+   top: 100px;
+}
+
+.buttonclass {
+width: 380px;
+height: 400px;
+/*background-color:#0f0;*/
+position: relative;
+left: 20px;
+top: 0px;
+margin: 0px;
+}
+
+.button {
+background-image:url("/static/admin/img/bigred1.png");
+background-repeat:no-repeat;
+border: none;
+margin: 0px;
+width: 350px;
+height: 393px;
+}
+
+
+.button:hover {
+/*background-color:#f00;*/
+background-image:url("/static/admin/img/bigred1.png");
+background-repeat:no-repeat;
+border: none;
+margin: 0px;
+width: 350px;
+height: 393px;
+}
+
+.button:active {
+-webkit-animation: myfirst 1s; /* Chrome, Safari, Opera */
+-webkit-animation-iteration-count: 1;
+border: none;
+width: 350px;
+height: 393px;
+margin-top: 6px;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes myfirst
+{
+border: none;
+width: 350px;
+/*margin-top: 300px;*/
+height: 393px;
+0%  {background-image:url("/static/admin/img/bigred1.png");}
+25%  {background-image:url("/static/admin/img/bigred2.png");}
+50%  {background-image:url("/static/admin/img/bigred3.png");}
+100% {background-image:url("/static/admin/img/bigred4.png");}
+}
+
+.redbadge {
+    background-color: #cd5c5c;
+    border: 2px solid white;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+    box-shadow: 1px 1px 1px white;
+    color: white;
+    font: bold 22px/20px Helvetica, Verdana, Tahoma;
+    font-size: 800%;
+    max-height: 60px; 
+    min-width: 30px;
+    max-width: 60px;
+    padding: 0px;
+    text-align: center;
+}
+
+.bluebadge {
+    background-color: #ff8c00;
+    border: 2px solid white;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+    box-shadow: 1px 1px 1px white;
+    color: white;
+    font: bold 22px/20px Helvetica, Verdana, Tahoma;
+    font-size: 400%;
+    max-height: 60px; 
+    min-width: 30px;
+    max-width: 60px;
+    padding: 3px;
+    text-align: center;
+}
+
+table {
+    font: bold 22px/20px Helvetica, Verdana, Tahoma;
+    font-size: 200%;
+}
+
+
+
+tr {
+    text-align: center;
+    margin: 60px 60px 60px 60px;
+}
+
+th{
+     text-align: center;
+     height:40px;
+     border-color: #f0f;
+     color: #fff;
+}
+
+td {
+     height:40px;
+}
+
+.readout {
+    position: relative;
+    left: 150px;
+    top: 15px;
+}
+
+.readout a,td {
+    color: #fff;
+}
+
+.readout h2 { 
+    position: absolute;
+    left: 200px;
+    top: -20px;
+    color: #000; }
+
+.tablecol1 {
+    background-color: #cc6666;
+    width: 250px;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    font-size: 100%;
+}
+.tablecol2 {
+    background-color: #ff8c00;
+    width: 250px;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    font-size: 100%;
+}
+.tablecol3 {
+    background-color: #ff9966;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    width: 250px;
+    font-size: 100%;
+}
+.tablecol4 {
+    background-color: #ffcc99;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    width: 250px;
+    font-size: 100%;
+}
+
+.tablecol5 {
+    background-color: #cc99cc;
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    width: 250px;
+    font-size: 100%;
+}
+
+.tablecol6 {
+    background-color: #9999cc;
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    width: 250px;
+    font-size: 100%;
+}
+
+.tablecol7 {
+    background-color: #9999ff;
+    color: #fff;
+    border: 2px solid transparent;
+    border-radius: 60px; /* one half of ( (border * 2) + height + padding ) */
+    width: 250px;
+    font-size: 100%;
+}
+
+#interface {
+    position: absolute;
+    top: 0px;
+    left: 650px;
+    background-color: #0f0;
+}
+
+#bigrow {
+    position: absolute;
+    padding: 40px;
+    left: 0px;
+    top: 0px;
+}
+
+#smallerrow {
+    position: absolute;
+    padding: 10px;
+    left: 200px;
+    top: 25px;
+}
+
+#bigrow li {
+    list-style-type: none; 
+    padding: 40px;
+}
+
+#smallerrow li{
+    list-style-type: none;
+    padding: 20px;
+}
+
+.tempselec {
+   width: 100%
+   margin: 80px;
+}
+
+.buttonbox {
+   width: 100%;
+   margin: 80px;
+}
+
+a:link, a:visited {
+    color: #333;
+    padding: 0px 20px 20px 20px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #66d;
+}
+
