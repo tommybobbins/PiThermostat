@@ -17,11 +17,11 @@ while True:
         if currState != prevState:
             newState = "HIGH" if currState else "LOW"
 #            print "GPIO pin %s is %s" % (18, newState)
-             try:
-                 redthis.set('weather/eden/rainsensor', 'True')
-                 redthis.expire('weather/eden/rainsensor', 14400)
-             except:
-                 print ("Unable to update redis")
+            try:
+                redthis.set('weather/eden/rainsensor', 'True')
+                redthis.expire('weather/eden/rainsensor', 14400)
+            except:
+                print ("Unable to update redis")
             sleep(10)
     except (KeyboardInterrupt, SystemExit):
         GPIO.cleanup()
