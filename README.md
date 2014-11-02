@@ -162,6 +162,15 @@ Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf 
 
     </IfModule>
 
+Apache should allow the static directories to be served. Add this to /etc/apache/sites-available/default:
+
+
+        # Non-Django directories
+        Alias /static /usr/local/django/homeauto/static/
+          <Location "/static">
+              SetHandler None
+          </Location>
+
 Install the Tango icons:
 
     sudo pip install django-icons-tango
@@ -173,3 +182,5 @@ Create the sqlite database:
     sudo python manage.py syncdb
 
     chmod a+rw home.db
+
+    sudo /etc/init.d/apache2 restart
