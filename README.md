@@ -96,10 +96,10 @@ Edit the redis server configuration to allow incoming connections:
 
 Ensure that it looks like the following:
 
-# If you want you can bind a single interface, if the bind option is not
-# specified all the interfaces will listen for incoming connections.
-#
-#bind 127.0.0.1
+    # If you want you can bind a single interface, if the bind option is not
+    # specified all the interfaces will listen for incoming connections.
+    #
+    #bind 127.0.0.1
 
 Restart redis:
 
@@ -145,7 +145,24 @@ Django front end
 
 Setting up Django is beyond the scope of this document, but there are instructions on how to do this https://www.djangoproject.com/
 
-Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there.
+    sudo apt-get install -y python-django libapache2-mod-wsgi
+
+Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there. The bottom of the file should look something like:
+
+            WSGIScriptAlias / /usr/local/django/homeauto/wsgi.py
+            WSGIPythonPath /usr/local/django
+            WSGIPassAuthorization On
+    #            <Location />
+    #                AuthType Basic
+    #                AuthName "Authentication Required"
+    #                AuthUserFile "/etc/apache2/htpasswd"
+    #                Require valid-user
+    #            </Location>
+
+
+    </IfModule>
+
+Create the sqlite database
 
     cd /usr/local/django
 
