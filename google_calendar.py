@@ -96,6 +96,10 @@ def google_calendar():
 #    print timeMax
     page_token = None
     while True:
+      # Replace thermostat with
+      #  <something>@group.calendar.google.com
+      # where something is found from running 
+      # PiThermostat/utilities/list_calendars.py
       events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
       for event in events['items']:
           tempstring = event['summary']

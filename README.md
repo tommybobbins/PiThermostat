@@ -23,12 +23,12 @@ Requires the Adafruit libraries to read from the TMP102:
 
 Install the Python Google API:
 
-     sudo pip install google-api-python-client pytz evdev httplib2 pygame redis smbus
+     sudo pip install google-api-python-client pytz evdev pygame redis smbus
      mkdir /etc/google_calendar/
 
 Create a new Google calendar called thermostat. You need to allow access through to this calendar here: https://developers.google.com/google-apps/calendar/get_started . Download the client-secrets.json file and put it into /etc/google_calendar/
 
-     cp client-secrets.json /etc/google_calendar
+     sudo cp client-secrets.json /etc/google_calendar
 
 Run the list_calendar.py
      
@@ -37,11 +37,16 @@ Run the list_calendar.py
 
 This should create a sample.dat in the local directory. We need to copy this to /etc/google_calendar for neatness.
      
-     cp sample.dat /etc/google_calendar
+     sudo cp sample.dat /etc/google_calendar
 
 The summary of all events in the calendar should be of the form 
 
      Temp=20.0
+
+Installation of redis
+=====================
+
+     sudo apt-get install redis-server python-redis
 
 Installation of the files
 ========================
@@ -85,7 +90,21 @@ thermostat_gui.py  # Pygame binary to display data on screen and call all other 
     sudo chmod a+rx /usr/local/bin/
     /etc/init.d/temp.sh start
 
- 
+Edit the redis server configuration to allow incoming connections:
+
+    sudo vi /etc/redis/redis.conf
+
+Ensure that it looks like the following:
+
+# If you want you can bind a single interface, if the bind option is not
+# specified all the interfaces will listen for incoming connections.
+#
+#bind 127.0.0.1
+
+Restart redis:
+
+sudo /etc/init.d/redis-server restart
+
 
 Using Weather (optional)
 ========================
