@@ -162,7 +162,11 @@ Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf 
 
     </IfModule>
 
-Create the sqlite database
+Install the Tango icons:
+
+    sudo pip install django-icons-tango
+
+Create the sqlite database:
 
     cd /usr/local/django
 
