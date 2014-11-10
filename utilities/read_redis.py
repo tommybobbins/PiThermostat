@@ -34,7 +34,7 @@ while True:
         if (job_to_run):
             #print ("We have a job to run")
             job_running = redthis.set('shared/jobqueue', 'True')
-            job_running = redthis.expire('shared/jobqueue', 120) # We don't want to lock the jobqueue for long periods
+            job_running = redthis.expire('shared/jobqueue', 20) # We don't want to lock the jobqueue for long periods
             job_to_run = job_to_run.split() # We only want the binary name, not the arguments
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
