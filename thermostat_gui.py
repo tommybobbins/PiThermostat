@@ -143,15 +143,23 @@ def get_temps():
         d=15.0 
     try:
         a=float(redthis.get("temperature/attic/sensor"))
-        b=float(redthis.get("temperature/barab/sensor"))
-        c=float(redthis.get("temperature/cellar/sensor"))
-        control=float(redthis.get("temperature/userrequested"))
-        bob=(redthis.get("boiler/req"))
     except:
         a=15.0
+    try:
+        b=float(redthis.get("temperature/barab/sensor"))
+    except:
         b=15.0
+    try:
+        c=float(redthis.get("temperature/cellar/sensor"))
+    except:
         c=15.0
+    try:
+        control=float(redthis.get("temperature/userrequested"))
+    except:
         control=15.0
+    try:
+        bob=(redthis.get("boiler/req"))
+    except:
         bob=True
 #    print(a,b,c,d,control,bob)
     return(a,b,c,d,control,bob)
