@@ -54,7 +54,11 @@ class Tmp102:
     negative = (raw[0] >> 7) == 1
     shift = 4
     if not negative:
+<<<<<<< HEAD
         val = (((raw[0] * 256) + raw[1]) >> shift)*0.0625
+=======
+        val = (((raw[0] * 256) + raw[1]) >> shift) * 0.0625
+>>>>>>> 3893de224e87ab919d906b44da5082bed9141d98
     else:
         remove_bit = 0b011111111111
         ti = (((raw[0] * 256) + raw[1]) >> shift)

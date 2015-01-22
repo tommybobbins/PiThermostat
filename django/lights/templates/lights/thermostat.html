@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Systems Control</h2>
+<table class="bigfont">
+<tr><th>Device</th><th>Temperature (&deg;C)</th></tr>
+<tr><td>Current temperature</td><td> {{ sensor }}</td></tr>
+<tr><td>Outside</td><td>{{ outside }}</td></tr>
+<tr><td>Mean Eden</td><td>{{ meaneden }}</td></tr>
+<tr><td>Calendar target</td><td>{{ calendar }}</td></tr>
+</tr>
+<tr><td>Required temp:</td><td>{{ required }}</td></tr>
+<tr><td>Boiler:</td><td>{{ boiler }}</td></tr>
+</table>
+<script>
+function outputUpdate(temp) {
+document.querySelector('#tempselected').value = temp;
+document.getElementById("abc").href='/thermostat/required/'+temp+'/'; 
+}
+</script>
+<hr/>
+<div class="bigfont">
+<label for="idealtemp">Required Temperature</label><input type="range" min="12.0" max="30.0" value="19" id="idealtemp" step="0.5" onchange="outputUpdate(value)"><output for="idealtemp" id="tempselected">19</output><br/>
+<div class="buttonclass"><a href="#" id="abc"><img src="/static/admin/img/1x1.png" alt="big red button" width="350" height="393" class="button" /></a>
+</div>
+</div>
+{% if modify_value %}
+Modified {{ modify }} to {{ modify_value }}
+{% endif %}
+{% endblock %}

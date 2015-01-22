@@ -23,12 +23,12 @@ Requires the Adafruit libraries to read from the TMP102:
 
 Install the Python Google API:
 
-     sudo pip install google-api-python-client pytz evdev httplib2 pygame redis smbus
+     sudo pip install google-api-python-client pytz evdev pygame redis smbus
      mkdir /etc/google_calendar/
 
 Create a new Google calendar called thermostat. You need to allow access through to this calendar here: https://developers.google.com/google-apps/calendar/get_started . Download the client-secrets.json file and put it into /etc/google_calendar/
 
-     cp client-secrets.json /etc/google_calendar
+     sudo cp client-secrets.json /etc/google_calendar
 
 Run the list_calendar.py
      
@@ -37,14 +37,28 @@ Run the list_calendar.py
 
 This should create a sample.dat in the local directory. We need to copy this to /etc/google_calendar for neatness.
      
-     cp sample.dat /etc/google_calendar
+     sudo cp sample.dat /etc/google_calendar
 
 The summary of all events in the calendar should be of the form 
 
      Temp=20.0
 
+Installation of redis
+=====================
+
+     sudo apt-get install redis-server python-redis
+
 Installation of the files
 ========================
+
+## Setting up a Temperature sensor
+
+This will setup the sensor for the attic.
+
+    cd PiThermostat
+    sudo cp utilities/redis_sensor.py /usr/local/bin/
+    sudo cp init/redis_sensor.sh /etc/init.d/
+    sudo insserv redis_sensor.sh
 
 Copy the init script to /etc/init.d/temp.sh
 
@@ -76,7 +90,21 @@ thermostat_gui.py  # Pygame binary to display data on screen and call all other 
     sudo chmod a+rx /usr/local/bin/
     /etc/init.d/temp.sh start
 
- 
+Edit the redis server configuration to allow incoming connections:
+
+    sudo vi /etc/redis/redis.conf
+
+Ensure that it looks like the following:
+
+    # If you want you can bind a single interface, if the bind option is not
+    # specified all the interfaces will listen for incoming connections.
+    #
+    #bind 127.0.0.1
+
+Restart redis:
+
+sudo /etc/init.d/redis-server restart
+
 
 Using Weather (optional)
 ========================
@@ -111,3 +139,48 @@ This needs to run as root to get access to the GPIO pin 18 (in our case). It has
     sudo cp utilities/murunner.sh /etc/init.d/
     sudo insserv murunner.sh
 
+
+Django front end
+=================
+
+Setting up Django is beyond the scope of this document, but there are instructions on how to do this https://www.djangoproject.com/
+
+    sudo apt-get install -y python-django libapache2-mod-wsgi
+
+Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there. The bottom of the file should look something like:
+
+            WSGIScriptAlias / /usr/local/django/homeauto/wsgi.py
+            WSGIPythonPath /usr/local/django
+            WSGIPassAuthorization On
+    #            <Location />
+    #                AuthType Basic
+    #                AuthName "Authentication Required"
+    #                AuthUserFile "/etc/apache2/htpasswd"
+    #                Require valid-user
+    #            </Location>
+
+
+    </IfModule>
+
+Apache should allow the static directories to be served. Add this to /etc/apache/sites-available/default:
+
+
+        # Non-Django directories
+        Alias /static /usr/local/django/homeauto/static/
+          <Location "/static">
+              SetHandler None
+          </Location>
+
+Install the Tango icons:
+
+    sudo pip install django-icons-tango
+
+Create the sqlite database:
+
+    cd /usr/local/django
+
+    sudo python manage.py syncdb
+
+    chmod a+rw home.db
+
+    sudo /etc/init.d/apache2 restart
