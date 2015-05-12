@@ -24,6 +24,8 @@ Requires the Adafruit libraries to read from the TMP102:
 Install the Python Google API:
 
      sudo pip install google-api-python-client pytz evdev pygame redis smbus
+     sudo pip install apiclient urllib3
+
      mkdir /etc/google_calendar/
 
 Create a new Google calendar called thermostat. You need to allow access through to this calendar here: https://developers.google.com/google-apps/calendar/get_started . Download the client-secrets.json file and put it into /etc/google_calendar/
