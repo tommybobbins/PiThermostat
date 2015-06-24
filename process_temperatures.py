@@ -6,12 +6,16 @@
 # 2: current temperature from a TMP102 sensor
 # 3: weather from the weather_file (or run weather_script and try again)
 #    file is populated by weather-util. See retrieve-weather.sh for details
+# Modified 24-June-2015
+# tng@chegwin.org
+# Move to django_happenings
 
 from sys import path
 import datetime
 from time import sleep
 import redis
-from google_calendar import google_calendar
+#from google_calendar import google_calendar
+from django_happenings import parse_calendar
 import re
 redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
 hysteresis_temp=0.5
@@ -31,12 +35,14 @@ def calculate_weighted_mean(incoming_multiplier,incoming_temp):
             numerator += incoming_multiplier[item]*incoming_temp[item] 
             denominator += incoming_multiplier[item] 
             running_mean =  float(numerator/denominator)
-#            print ("Running mean %f " % running_mean)
+            if Debug:
+                print ("Running mean %f " % running_mean)
         except:
             print ("Something went wrong\n")
             running_mean = 14.665
-#        print ("numerator = %i" % numerator)
-#        print ("denominator = %i" % denominator)
+            if Debug:
+                print ("numerator = %i" % numerator)
+                print ("denominator = %i" % denominator)
     return(running_mean) 
 
 def find_sensor_data(incoming_sensor):
@@ -52,6 +58,8 @@ def find_sensor_data(incoming_sensor):
     return (temp, mult)
 
 def send_call_boiler(on_or_off):
+    if Debug:
+        print ("On/Off = %s " % on_or_off)
     if (on_or_off == "on"):
         try:
             redthis.set("boiler/req", "True")
@@ -76,7 +84,8 @@ def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
         # we set the value to 6.999
-        calendar_temp=float(google_calendar())
+#        calendar_temp=float(google_calendar())
+        calendar_temp=float(parse_calendar())
     except:
         print ("Google down")
         calendar_temp=6.999
@@ -152,19 +161,29 @@ def read_temps():
 
 
     if (time_to_live <= 35): 
+        if Debug:
+            print ("Time to live is <= 35 seconds")
         working_temp = userreq_temp + hysteresis_temp
         # e.g. 21.3 = 20.0 + 1.3
         if (mean_temp <= userreq_temp):
 #            e.g. Temp is 16.0
             send_call_boiler("on")
+            if Debug:
+                print ("Switching On")
         elif (mean_temp >= working_temp):
 #            e.g. Temp is 21.3
             send_call_boiler("off")
+            if Debug:
+                print ("Switching Off")
         elif ((mean_temp <= working_temp) and (mean_temp >= userreq_temp)):
 #            e.g. Temp is 20.6
             send_call_boiler("on")
+            if Debug:
+                print ("Switching On")
         else:
              print ("Something gone wrong")
+             if Debug:
+                 print ("Switching Wrong")
     else:
         sleep(0)
         #We are in the loop but can sleep until ttl<35

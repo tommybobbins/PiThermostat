@@ -21,9 +21,16 @@ Requires the Adafruit libraries to read from the TMP102:
     git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
     cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 
+
+Using django happenings for Calendaring (see Django setup below):
+
+This is now the Default behaviour:
+
+    sudo pip install django-happenings
+
 Install the Python Google API:
 
-     sudo pip install google-api-python-client pytz evdev pygame redis smbus
+     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus
      sudo pip install apiclient urllib3
 
      mkdir /etc/google_calendar/
@@ -44,6 +51,8 @@ This should create a sample.dat in the local directory. We need to copy this to 
 The summary of all events in the calendar should be of the form 
 
      Temp=20.0
+
+Note that django-happenings has supplanted Google Calendar as the default. Uncomment line 88 if you wish to use Google Calendar.
 
 Installation of redis
 =====================
@@ -71,6 +80,11 @@ Copy the init script to /etc/init.d/temp.sh
 /etc/hosts should contain the name/location of the redis server:
     
     echo "192.168.1.223       433board" >>/etc/hosts
+
+To make redis listen on all available ports, edit /etc/redis/redis.conf:
+
+    #bind 127.0.0.1
+
 
 On the redis server, it is helpful to set a pre-existing weather and optimal temperature (the temperature you want it set to if all else fails):
 
@@ -186,3 +200,7 @@ Create the sqlite database:
     chmod a+rw home.db
 
     sudo /etc/init.d/apache2 restart
+   
+Check that Django Happenings is installed:
+ 
+    sudo pip install django-happenings
