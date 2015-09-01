@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h2>Correct the Sockets</h2>
+	<p>Click on the name to Correct the State.</p>
+	<table>
+	<tr><th>Location</th><th>Set ID</th><th>Plug Number</th><th>State</th><th>Last Toggled</th></tr>
+	{% for number in sockets %}
+	<tr>
+	<td>
+	<a href="/correctstate/{{number.set_id}}/{{number.plug_id}}/">
+	{{ number.name }}</a>
+	</td> 
+	<td>{{ number.set_id }}</td>
+	<td>{{ number.plug_id }}</td>
+        {% ifequal number.switch_state True %}
+        <td><img src="/static/admin/img/icon-yes.gif" alt="On"/></td>
+        {% else %}
+        <td><img src="/static/admin/img/icon-no.gif" alt="Off"/></td>
+        {% endifequal %}
+        <td>{{ number.lastcheckin }}</td>
+	</tr>
+	{% endfor %}
+	</table>
+	<hr/>
+	<p><a href="/socketlist/toggle/">Return to Toggle table</a></p>
+{% endblock %}
