@@ -24,6 +24,8 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     elif (plug_type == "homeeasy"):
         command_to_rethis = ("/usr/local/bin/homeeasy %s %s %s" %(set_id,plug_id,switch_onoroff))
+    elif (plug_type == "biard"):
+        command_to_rethis = ("/usr/local/bin/light %s" %(plug_id))
     else:
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     if cb.location == "cellar":
