@@ -39,9 +39,11 @@ def catcannon(request, switch_onoroff):
     if switch_onoroff == "on":
         switch_status="True"
         redthis.set("permission_to_fire", switch_status)
+        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_on.sh")
     elif switch_onoroff == "off":
         switch_status="False"
         redthis.set("permission_to_fire", switch_status)
+        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_off.sh")
     elif switch_onoroff == "status":
 ##### Make the system call###########
         switch_status=redthis.get("permission_to_fire")
@@ -179,3 +181,6 @@ def holding_page(request):
 
 def makeachoice(request):
     return render(request,'lights/makeachoice.html')
+
+def current(request):
+    return render(request,'lights/current_happenings.html')

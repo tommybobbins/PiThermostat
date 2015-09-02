@@ -10,6 +10,7 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/light',
                 '/etc/init.d/sensortag.sh',
                 '/usr/local/bin/boot_sequence.sh',
+                '/usr/bin/ssh',
                 '/usr/local/bin/energenie',
                 '/usr/local/bin/half_open.sh',
                 '/usr/local/bin/open_to_half_open.sh',
@@ -39,6 +40,7 @@ while True:
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
                 print ("Shellscript to run is %s \n" % job_to_run[0]) 
+                sleep(1)
                 subprocess.call(job_to_run) 
                 sleep(2)
                 job_running = redthis.delete('shared/jobqueue')
