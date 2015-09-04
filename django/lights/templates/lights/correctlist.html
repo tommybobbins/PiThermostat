@@ -1,6 +1,14 @@
 {% extends "base.html" %}
-
 {% block content %}
+    <div id="lcars_command">
+        <h2>{{ current_location }}</h2>
+    </div>
+{% if modify_value %}
+<div id="lcars_output">
+<h2>MODIFY {{ modify_value }}</h2>
+</div>
+<div class="readout_left">
+{% endif %}
 	<h2>Correct the Sockets</h2>
 	<p>Click on the name to Correct the State.</p>
 	<table>
@@ -24,4 +32,6 @@
 	</table>
 	<hr/>
 	<p><a href="/socketlist/toggle/">Return to Toggle table</a></p>
+</div>
 {% endblock %}
+

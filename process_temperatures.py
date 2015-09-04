@@ -159,6 +159,14 @@ def read_temps():
     if Debug:
         print ("Mean temperature = %f" % mean_temp)
 
+#   If in holiday mode, then keep userreq_temp at holiday_countdown
+    try:
+        userreq_temp = float(redthis.get("holiday_countdown"))
+        if Debug:
+            print ("Holiday mode: User Requested Temp = %f" % userreq_temp)
+    except:
+        if Debug:
+            print ("Not in holiday Mode")
 
     if (time_to_live <= 35): 
         if Debug:

@@ -12,7 +12,7 @@ target_temp=14
 
 def parse_calendar():
      target_temp = 14;
-     response = urllib2.urlopen('http://433board/current/')
+     response = urllib2.urlopen('http://433board:5537/current/')
      regex_temp = re.compile(r'^\s+Temp=(.*)\s+$')
      html = response.readlines()
      for line in html:

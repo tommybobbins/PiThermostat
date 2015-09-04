@@ -1,13 +1,13 @@
 # Create your views here.
 from django.utils import timezone
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
+from lights.models import Socket, Boiler
 import datetime, os
 import re
 import redis
-from lights.models import Socket, Boiler
 
 def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb = get_object_or_404(Socket,plug_type=plug_type,set_id=set_id, plug_id=plug_id )
@@ -171,6 +171,8 @@ def thermostat(request,modify=None,modify_value=0.0):
     if (modify_value > 0.0):
         required_temp = float(modify_value)
         redthis.set("temperature/userrequested",modify_value)
+        #If user selects a temperature, take it out of holiday mode too
+        redthis.expire("holiday_countdown",0)
         redirect_required = True
     else:
         required_temp = float(required_temp)
@@ -186,3 +188,28 @@ def makeachoice(request):
 
 def current(request):
     return render(request,'lights/current_happenings.html')
+
+def holiday(request,modify=None,modify_value=12.0):
+    redthis = redis.StrictRedis(host='433board',port=6379, db=0)
+    try:  
+        holiday_temp=round(float(redthis.get("holiday_countdown")),3)
+        holiday_time=redthis.ttl("holiday_countdown")
+    except:
+        holiday_temp=7.0
+        holiday_time=0
+    if (modify == "temp"):
+        holiday_temp = float(modify_value)
+        redthis.set("holiday_countdown",holiday_temp)
+        redthis.expire("holiday_countdown",holiday_time)
+    elif (modify == "days"):
+        days = (float(modify_value))
+        holiday_time = int(days * 24 * 60 * 60)
+        redthis.set("holiday_countdown",7.0)
+        holiday_temp = 7.0
+        redthis.expire("holiday_countdown",holiday_time)
+    days = round(float (holiday_time / (24.0 * 60.0 * 60.0)),3)
+    return render(request, 'lights/holiday.html', {'holiday_temp': holiday_temp,
+                                                   'seconds': holiday_time,
+                                                   'days': days,
+                                                   })
+

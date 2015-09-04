@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="lcars_command">
-    <h2>VELUX</h2>
+    <div id="lcars_command">
+        <h2>{{ current_location }}</h2>
+    </div>
+{% if modify_value %}
+<div id="lcars_output">
+<h2>MODIFY {{ modify_value }}</h2>
 </div>
-<div class="lcars_output">
-<h3>REQ:{{ switch_state }}</h3>
-</div>
-<div class="readout">
+{% endif %}
+<div id="readout_left">
 <table>
 <tr>
 <td class="tablecol5"><a href="/velux/toggleseason/" class="massive">{{season}}</a></td>

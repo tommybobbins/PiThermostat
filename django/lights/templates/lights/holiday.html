@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="lcars_command">
+        <h2>{{ current_location }}</h2>
+    </div>
+{% if modify_value %}
+<div id="lcars_output">
+<h2>MODIFY {{ modify_value }}</h2>
+</div>
+{% endif %}
+<div id="readout_left">
+<table> 
+<tr><th class="tablecol7">Trip</th><th class="tablecol7">Value</th></tr>
+<tbody>
+<tr><td class="tablecol5">Num. Days</td><td class="tablecol5"> {{ days }}</td></tr>
+<td class="tablecol6">Min. Temp</td><td class="tablecol6">{{ holiday_temp }}</td>
+</tr>
+<tr><td class="tablecol3">Trip Duration</td><td class="tablecol4">Min. Temp</td></td></tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/0/" class="massive">Home now</a></td>
+<td class="tablecol4"></td>
+</tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/2.0/" class="massive">2 days</a></td>
+<td class="tablecol4"><a href="/holiday/temp/22.0/" class="massive">22.0</a></td>
+</tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/3.0/" class="massive">3 days</a></td>
+<td class="tablecol4"><a href="/holiday/temp/20.0/" class="massive">20.0</a></td>
+</tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/7.0/" class="massive">7 days</a></td>
+<td class="tablecol4"><a href="/holiday/temp/15.0/" class="massive">15.0</a></td>
+</tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/10.0/" class="massive">10 days</a></td>
+<td class="tablecol4"><a href="/holiday/temp/10.0/" class="massive">10.0</a></td>
+</tr>
+<tr>
+<td class="tablecol3"><a href="/holiday/days/14.0/" class="massive">14 days</a></td>
+<td class="tablecol4"><a href="/holiday/temp/7.0/" class="massive">7.0</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+{% endblock %}
