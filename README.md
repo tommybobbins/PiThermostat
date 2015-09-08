@@ -21,6 +21,11 @@ Requires the Adafruit libraries to read from the TMP102:
     git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
     cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 
+Install i2c using raspi-config
+ 
+    sudo raspi-config
+
+Select Advanced mode, enable i2c and then reboot
 
 Using django happenings for Calendaring (see Django setup below):
 
@@ -96,11 +101,20 @@ On the redis server, it is helpful to set a pre-existing weather and optimal tem
 
 The scripts to copy to /usr/local/bin are as follows:
 
-call_433.py  # Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
-gettemperatures.py # Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
-google_calendar.py # Grabs current temperature required from Google Calendar.
-processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
-thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.
+# Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
+    call_433.py  
+
+# Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
+    gettemperatures.py
+
+# Grabs current temperature required from Google Calendar.
+    google_calendar.py 
+
+# Deprecated. Was used with django-schedule and is left her for future reference.
+    processcalendar.py 
+
+# Pygame binary to display data on screen and call all other libraries.
+    thermostat_gui.py  
 
     sudo cp *.py /usr/local/bin/
     sudo chmod a+rx /usr/local/bin/
