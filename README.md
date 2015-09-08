@@ -99,12 +99,6 @@ On the redis server, it is helpful to set a pre-existing weather and optimal tem
      redis 127.0.0.1:6379> set temperature/weather 6
      OK
 
-
-
-| Id | Name |
-| ----------------- | ---- |
-| 1 | Test |
-
 The scripts to copy to /usr/local/bin are as follows:
 
 | Script | Description |
