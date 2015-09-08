@@ -100,10 +100,11 @@ On the redis server, it is helpful to set a pre-existing weather and optimal tem
      OK
 
 The scripts to copy to /usr/local/bin are as follows:
-| Script      | Description |
-|-------------|-------------|
-| call_433.py | Makes redis calls to / from the redis server which maintains temperature states/ runs boiler |
-|gettemperatures.py | Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.|
+
+| Script       |  Description |
+|+-------------|+-------------|
+| call_433.py | Makes redis calls to / from the redis server which maintains temperature states/ runs boiler.|
+| gettemperatures.py | Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.|
 |google_calendar.py | Grabs current temperature required from Google Calendar.|
 | processcalendar.py | Deprecated. Was used with django-schedule and is left her for future reference.|
 |thermostat_gui.py | Pygame binary to display data on screen and call all other libraries. |
