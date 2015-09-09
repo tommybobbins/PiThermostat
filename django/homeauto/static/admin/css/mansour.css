@@ -23,9 +23,9 @@ body {
 
 #lcars_command {
    position: absolute;
-   font-size: 120%;
+   font-size: 100%;
    color: #fff;
-   top: -15px;
+   top: -10px;
    left: 220px;
    border: 20px, solid, transparent;
 }
@@ -35,7 +35,7 @@ body {
    font-size: 80%;
    color: #fff;
    top: -5px;
-   left: 500px;
+   left: 400px;
    border: 20px, solid, transparent;
 }
 
