@@ -134,7 +134,7 @@ a:link, a:hover {
     float: left;
     position: relative;
     left: 150px;
-    top: 15px;
+    top: 5px;
 }
 
 .readout h2 { 
@@ -186,7 +186,7 @@ a:link, a:hover {
     float: left;
     padding: 0px;
     margin: 0px;
-    top: 0px;
+    top: 10px;
 }
 
 #buttons li {

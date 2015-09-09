@@ -25,22 +25,20 @@
 <tr>
 <td class="tablecol6">TEMP</td><td class="tablecol6">{{attic_temp}}</td>
 </tr>
-<tr>
-<td class="tablecol3">Hall</td>
-<td class="tablecol4">All</a></td>
-</tr>
-
-<tr>
-<td class="tablecol3"><a href="/velux/open/" class="massive">Open</a></td>
-<td class="tablecol4"><a href="/velux/allopen/" class="massive">Open</a></td>
-</tr>
-<tr>
-<td class="tablecol3"><a href="/velux/close/" class="massive">Close</a></td>
-<td class="tablecol4"><a href="/velux/allclose/" class="massive">Close</a></td>
-</tr>
-<tr>
-<td class="tablecol3"><a href="/velux/half/" class="massive">Half</a></td>
-<td class="tablecol4"><a href="/velux/allhalf/" class="massive">Half</a></td>
-</tr>
+</table>
+</div>
+<div id="readout_right">
+    <ul id="buttons">
+        <li><a href="/velux/open/" class="redbadge">Hall Open</a></li>
+        <li><a href="/velux/half/" class="redbadge">Hall Half</a></li>
+        <li><a href="/velux/close/" class="redbadge">Hall Close</a></li>
+    </ul>
+</div>
+<div id="readout_right">
+    <ul id="buttons">
+        <li><a href="/velux/allopen/" class="bluebadge">All Open</a></li>
+        <li><a href="/velux/allhalf/" class="bluebadge">All Half</a></li>
+        <li><a href="/velux/allclose/" class="bluebadge">All Close</a></li>
+    </ul>
 </div>
 {% endblock %}
