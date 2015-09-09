@@ -31,11 +31,11 @@ body {
 }
 
 #lcars_output {
-   position: relative;
+   position: absolute;
    font-size: 80%;
    color: #fff;
-   top: 15px;
-   left: 20px;
+   top: -5px;
+   left: 500px;
    border: 20px, solid, transparent;
 }
 

@@ -34,7 +34,7 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
         redthis.rpush("attic/jobqueue", command_to_rethis)
     else:
         redthis.rpush("cellar/jobqueue", command_to_rethis)
-    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name,'plug_type':plug_type, 'plug_id':plug_id, 'set_id':set_id, 'switch_state':cb.switch_state } )
+    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name,'plug_type':plug_type, 'plug_id':plug_id, 'set_id':set_id, 'switch_state':cb.switch_state, 'current_location':'POWER', } )
 
 def catcannon(request, switch_onoroff):
     redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
@@ -49,7 +49,7 @@ def catcannon(request, switch_onoroff):
     elif switch_onoroff == "status":
 ##### Make the system call###########
         switch_status=redthis.get("permission_to_fire")
-    return render(request, 'lights/catcannon.html', { 'action':'switching', 'switch_state':switch_status } )
+    return render(request, 'lights/catcannon.html', { 'action':'switching', 'switch_state':switch_status, 'current_location':'CATCANNON', } )
 
 def velux(request, openclosestate):
     redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
@@ -93,7 +93,7 @@ def velux(request, openclosestate):
     attic_temp = redthis.get("temperature/attic/sensor")
     if switch_status:
         redthis.rpush("attic/jobqueue", switch_status)
-    return render(request, 'lights/velux.html', { 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season } )
+    return render(request, 'lights/velux.html', { 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
 
 def switch_boiler(request, switch_onoroff):
     cb = get_object_or_404(Boiler, id=1)
@@ -108,7 +108,7 @@ def switch_boiler(request, switch_onoroff):
     redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
     command_to_rethis = ("/usr/local/bin/drayton %s" %(switch_onoroff))
     redthis.rpush("cellar/jobqueue", command_to_rethis)
-    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state } )
+    return render(request, 'lights/socketlist.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state, 'current_location':'LIFE SUPPORT', } )
 
 def socket_list(request,corortoggle):
     try:
@@ -119,7 +119,8 @@ def socket_list(request,corortoggle):
         template_name = 'lights/togglelist.html'
     else: 
         template_name = 'lights/togglelist.html'
-    return render(request, template_name, {'sockets': socket_list})
+    return render(request, template_name, {'sockets': socket_list,
+                                           'current_location':'POWER',})
 
 def sockets(request):
     try:
@@ -177,7 +178,7 @@ def thermostat(request,modify=None,modify_value=0.0):
     else:
         required_temp = float(required_temp)
         redirect_required = False
-    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, })
+    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, 'current_location':'POWER' })
 
 
 def holding_page(request):
@@ -211,5 +212,7 @@ def holiday(request,modify=None,modify_value=12.0):
     return render(request, 'lights/holiday.html', {'holiday_temp': holiday_temp,
                                                    'seconds': holiday_time,
                                                    'days': days,
+                                                   'current_location': 'TRANSPORT',
+                                                   'switch_status': modify,
                                                    })
 

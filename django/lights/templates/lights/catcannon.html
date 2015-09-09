@@ -3,13 +3,8 @@
     <div id="lcars_command">
         <h2>{{ current_location }}</h2>
     </div>
-{% if modify_value %}
 <div id="lcars_output">
-<h2>MODIFY {{ modify_value }}</h2>
-</div>
-{% endif %}
-<div id="readout_left">
-<p></p>
+<h2>ARMED: {{ switch_state }}</h2>
 </div>
 <div id="readout_right">
     <ul id="buttons">

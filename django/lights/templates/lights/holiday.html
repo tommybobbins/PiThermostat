@@ -3,11 +3,12 @@
     <div id="lcars_command">
         <h2>{{ current_location }}</h2>
     </div>
-{% if modify_value %}
+{% if switch_status %}
 <div id="lcars_output">
-<h2>MODIFY {{ modify_value }}</h2>
+<h2>MODIFY: {{ switch_status }}</h2>
 </div>
 {% endif %}
+
 <div id="readout_left">
 <table> 
 <tr><th class="tablecol7">Trip</th><th class="tablecol7">Value</th></tr>
@@ -31,11 +32,11 @@
 <div id="readout_right">
     <ul id="buttons">
         <li><a href="/holiday/temp/7.0/" class="bluebadge">7.0C</a></li>
-        <li><a href="/holiday/days/10.0/" class="bluebadge">10.0C</a></li>
-        <li><a href="/holiday/days/15.0/" class="bluebadge">15.0C</a></li>
-        <li><a href="/holiday/days/18.0/" class="bluebadge">15.0C</a></li>
-        <li><a href="/holiday/days/20.0/" class="bluebadge">20.0C</a></li>
-        <li><a href="/holiday/days/22.0/" class="bluebadge">22.0C</a></li>
+        <li><a href="/holiday/temp/10.0/" class="bluebadge">10.0C</a></li>
+        <li><a href="/holiday/temp/15.0/" class="bluebadge">15.0C</a></li>
+        <li><a href="/holiday/temp/18.0/" class="bluebadge">15.0C</a></li>
+        <li><a href="/holiday/temp/20.0/" class="bluebadge">20.0C</a></li>
+        <li><a href="/holiday/temp/22.0/" class="bluebadge">22.0C</a></li>
     </ul>
 </div>
 {% endblock %}
