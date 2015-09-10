@@ -39,12 +39,12 @@ while True:
             job_to_run = job_to_run.split() # We only want the binary name, not the arguments
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
-                print ("Shellscript to run is %s \n" % job_to_run[0]) 
+#                print ("Shellscript to run is %s \n" % job_to_run[0]) 
                 subprocess.call(job_to_run) 
                 sleep(2)
                 job_running = redthis.delete('shared/jobqueue')
             else: 
-                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
+#                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
                 job_running = redthis.delete('shared/jobqueue')
                 continue
         else:

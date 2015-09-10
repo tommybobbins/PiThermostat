@@ -108,7 +108,7 @@ td {
       width: 100%;
 }
 
-a:link, a:hover {
+a:visited, a:link, a:hover {
       text-decoration: none;
       color: #fff;
 }
@@ -165,14 +165,17 @@ a:link, a:hover {
 
 .tablecol5 {
     background-color: #cc99cc;
+    color: #fff;
 }
 
 .tablecol6 {
     background-color: #9999cc;
+    color: #fff;
 }
 
 .tablecol7 {
     background-color: #9999ff;
+    color: #fff;
 }
 
 #interface {
@@ -197,5 +200,5 @@ a:link, a:hover {
 }
 
 a:hover {
-    color: #66d;
+    color: #000;
 }
