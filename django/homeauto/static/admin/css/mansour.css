@@ -1,48 +1,36 @@
 p {
-   font-size: 100%;
    color: #ccc;
 }
 
-h1,h2{
-   font-size: 100%;
-}
-
 body {
-   font-size: 100%;
-   margin: 20px;
+   font-size: 140%;
+   margin: 0px;
    background: #000 url(../img/lcars_background.png) no-repeat;
 }
 
 #lcars_home a{
    position: relative;
-   top: -15px;
-   left: 80px;
+   top: 15px;
+   left: 70px;
    color: #fff;
-   font-size: 120%;
 }
 
 #lcars_command {
    position: absolute;
-   font-size: 100%;
    color: #fff;
    top: -10px;
    left: 220px;
-   border: 20px, solid, transparent;
+   border: 5px, solid, transparent;
 }
 
 #lcars_output {
    position: absolute;
-   font-size: 80%;
    color: #fff;
-   top: -5px;
+   top: -10px;
    left: 400px;
-   border: 20px, solid, transparent;
+   border: 5px, solid, transparent;
 }
 
-
-td,th {
-  font-size: 66%;
-}
 
 img {
 border: none;
@@ -51,57 +39,42 @@ left: 0px;
 top: 0px;
 }
 
-.bigfont {
-   font-size: 200%;
-}
-
-.smallfont {
-   font-size: 80%;
-}
-
-.medfont {
-   font-size: 200%;
-}
-
 .redbadge {
+    font-size: 160%;
     background-color: #cd5c5c;
     border: 2px solid white;
     border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
     box-shadow: 1px 1px 1px white;
     color: white;
-    padding: 40px;
+    padding: 15px;
     text-align: center;
 }
 
 .bluebadge {
+    font-size: 160%;
     background-color: #ff8c00;
     border: 2px solid white;
     border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
     box-shadow: 1px 1px 1px white;
     color: white;
-    padding: 40px;
+    padding: 15px;
     text-align: center;
 }
-
-table {
-    font: bold 22px/20px Helvetica, Verdana, Tahoma;
-    font-size: 200%;
-}
-
-
 
 tr {
     text-align: center;
 }
 
 th{
+     font-size: 80%;
      text-align: center;
-     height:40px;
+     height:10px;
      color: #fff;
 }
 
 td {
-     height:40px;
+     font-size: 80%;
+     height:20px;
 }
 
 #main {
@@ -116,8 +89,8 @@ a:visited, a:link, a:hover {
 .readout a,td,th {                                            
     color: #fff;                                              
     background-color: #9999ff;                                
-    border: 2px solid transparent;                            
-    padding: 15px;                                            
+    border: 15px solid transparent;                            
+    padding: 5px;                                            
     border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
 } 
 
@@ -125,16 +98,15 @@ a:visited, a:link, a:hover {
     left: 150px;
     float: left;
     position: relative;
-    top: 15px;
-    font-size: 100%;
-    border
+    top: 2px;
+    border 5px;
 }
 
 #readout_right {
     float: left;
     position: relative;
     left: 150px;
-    top: 5px;
+    top: 0px;
 }
 
 .readout h2 { 
@@ -164,7 +136,7 @@ a:visited, a:link, a:hover {
 }
 
 .tablecol5 {
-    background-color: #cc99cc;
+    background-color: #ff9966;
     color: #fff;
 }
 
@@ -189,14 +161,13 @@ a:visited, a:link, a:hover {
     float: left;
     padding: 0px;
     margin: 0px;
-    top: 10px;
+    top: 20px;
 }
 
 #buttons li {
     list-style-type: none; 
-    padding: 60px 0px 60px 0px;
+    padding: 25px 0px 25px 0px;
     margin: 5px;
-    font-size: 200%;
 }
 
 a:hover {
