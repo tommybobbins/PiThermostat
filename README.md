@@ -23,7 +23,7 @@ Requires the Adafruit libraries to read from the TMP102:
 
 Install the Python Google API:
 
-     sudo pip install google-api-python-client pytz evdev httplib2 pygame redis smbus
+     sudo pip install google-api-python-client pytz evdev httplib2 pygame redis smbus configparser
      mkdir /etc/google_calendar/
 
 Create a new Google calendar called thermostat. You need to allow access through to this calendar here: https://developers.google.com/google-apps/calendar/get_started . Download the client-secrets.json file and put it into /etc/google_calendar/
@@ -54,6 +54,9 @@ This will setup the sensor for the attic.
     sudo cp utilities/redis_sensor.py /usr/local/bin/
     sudo cp init/redis_sensor.sh /etc/init.d/
     sudo insserv redis_sensor.sh
+    sudo cp etc/pithermostat.conf /etc/
+
+Edit /etc/pithermostat.conf to suit
 
 Copy the init script to /etc/init.d/temp.sh
 
