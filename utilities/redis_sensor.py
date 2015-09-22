@@ -11,6 +11,18 @@ import datetime
 from time import sleep
 import re
 import redis
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+
+
+
 time_to_live = 3600
 ###### IMPORTANT #############
 ###### How close to comfortable temperature is this sensor
@@ -21,7 +33,7 @@ multiplier = 1
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
-redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 room_location="cellar"
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"

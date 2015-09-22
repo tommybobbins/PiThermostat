@@ -13,7 +13,17 @@ import re
 import redis
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
-redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
 room_location="attic"
 sensor_name="temperature/"+room_location+"/sensor"
 print ("Sensor name is %s" % sensor_name)

@@ -2,7 +2,18 @@
 import redis
 import subprocess
 from time import sleep
-redthis = redis.StrictRedis(host='433host',port=6379, db=0,socket_timeout=3)
+from ConfigParser import SafeConfigParser
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
+
 allowed_jobs = ['/usr/local/bin/bgas', 
                 '/usr/local/bin/homeeasy',
                 '/usr/local/bin/drayton',

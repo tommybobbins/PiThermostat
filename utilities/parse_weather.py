@@ -13,9 +13,18 @@ import redis
 import datetime
 from time import sleep
 import fileinput, re
+from ConfigParser import SafeConfigParser
 from processcalendar import parse_calendar
 weather_file='/tmp/weather_conditions.txt'
-redthis = redis.StrictRedis(host='433board',port=6379, db=0)
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 
 def queue_weather(file):
     outside_temp=0
