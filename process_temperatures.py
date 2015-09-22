@@ -16,6 +16,7 @@ import redis
 import re
 parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
+Debug=parser.get('main','debug')
 
 redishost=parser.get('redis','broker')
 redisport=parser.get('redis','port')
@@ -29,7 +30,6 @@ temp={}
 multiplier={}
 external_temp={}
 external_multiplier={}
-Debug=parser.get('main','debug')
 
 def calculate_weighted_mean(incoming_multiplier,incoming_temp):
     numerator = 0
@@ -85,7 +85,7 @@ def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
         # we set the value to 6.999
-        calendar_temp=14
+        calendar_temp=float(14)
 	#calendar_temp=float(google_calendar())
     except:
         print ("Google down")
