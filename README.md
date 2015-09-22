@@ -35,7 +35,7 @@ This is now the Default behaviour:
 
 Install the Python Google API:
 
-     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus
+     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus configparser
      sudo pip install apiclient urllib3
 
      mkdir /etc/google_calendar/
