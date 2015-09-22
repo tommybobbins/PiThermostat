@@ -85,7 +85,8 @@ def read_temps():
     try:
         # First of all we grab google calendar. If the internet is down 
         # we set the value to 6.999
-        calendar_temp=float(google_calendar())
+        calendar_temp=14
+	#calendar_temp=float(google_calendar())
     except:
         print ("Google down")
         calendar_temp=6.999
