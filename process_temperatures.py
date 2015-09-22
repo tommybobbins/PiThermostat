@@ -16,7 +16,7 @@ import redis
 import re
 parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
-Debug=parser.get('main','debug')
+Debug=False
 
 redishost=parser.get('redis','broker')
 redisport=parser.get('redis','port')
