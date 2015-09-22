@@ -8,6 +8,16 @@ import datetime, os
 import re
 import redis
 from lights.models import Socket, Boiler
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+
 
 def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb = get_object_or_404(Socket,plug_type=plug_type,set_id=set_id, plug_id=plug_id )
@@ -19,7 +29,8 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb.save()
 #    obj_list = Socket.objects(plug_id=plug_id)
 ##### Make the system call###########
-    redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
     if (plug_type == "energenie"):
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     elif (plug_type == "homeeasy"):
@@ -35,7 +46,7 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name,'plug_type':plug_type, 'plug_id':plug_id, 'set_id':set_id, 'switch_state':cb.switch_state } )
 
 def catcannon(request, switch_onoroff):
-    redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     if switch_onoroff == "on":
         switch_status="True"
         redthis.set("permission_to_fire", switch_status)
@@ -48,7 +59,7 @@ def catcannon(request, switch_onoroff):
     return render(request, 'lights/catcannon.html', { 'action':'switching', 'switch_state':switch_status } )
 
 def velux(request, openclosestate):
-    redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     #/usr/local/bin/full_open.sh
     #/usr/local/bin/closed_to_half_open.sh  
     #/usr/local/bin/open_to_half_open.sh
@@ -101,7 +112,7 @@ def switch_boiler(request, switch_onoroff):
     cb.save()
 #    obj_list = Socket.objects(plug_id=plug_id)
 ##### Make the system call###########
-    redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     command_to_rethis = ("/usr/local/bin/drayton %s" %(switch_onoroff))
     redthis.rpush("cellar/jobqueue", command_to_rethis)
     return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state } )
@@ -126,7 +137,7 @@ def sockets(request):
     return render(request, template_name, {'sockets': socket_list})
 
 def thermostat(request,modify=None,modify_value=0.0):
-    redthis = redis.StrictRedis(host='433board',port=6379, db=0)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
     required_temp=round(float(redthis.get("temperature/userrequested")),1)
