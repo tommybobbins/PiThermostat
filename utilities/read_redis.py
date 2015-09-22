@@ -18,6 +18,8 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/homeeasy',
                 '/usr/local/bin/drayton',
                 '/usr/local/bin/energenie',
+                '/usr/local/bin/light',
+                '/usr/bin/ssh',
                 '/etc/init.d/sensortag.sh',
                 '/usr/local/bin/boot_sequence.sh',
                 '/usr/local/bin/energenie',
@@ -44,16 +46,16 @@ while True:
         if (job_to_run):
             #print ("We have a job to run")
             job_running = redthis.set('shared/jobqueue', 'True')
-            job_running = redthis.expire('shared/jobqueue', 120) # We don't want to lock the jobqueue for long periods
+            job_running = redthis.expire('shared/jobqueue', 20) # We don't want to lock the jobqueue for long periods
             job_to_run = job_to_run.split() # We only want the binary name, not the arguments
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
-                print ("Shellscript to run is %s \n" % job_to_run[0]) 
+#                print ("Shellscript to run is %s \n" % job_to_run[0]) 
                 subprocess.call(job_to_run) 
                 sleep(2)
                 job_running = redthis.delete('shared/jobqueue')
             else: 
-                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
+#                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
                 job_running = redthis.delete('shared/jobqueue')
                 continue
         else:

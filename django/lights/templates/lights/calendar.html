@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="lcars_command">
+        <h2>{{ current_location }}</h2>
+    </div>
+{% if modify_value %}
+<div id="lcars_output">
+<h2>MODIFY {{ modify_value }}</h2>
+</div>
+{% endif %}
+<div id="readout_left">
+    {% upcoming_events num=1%}
+</div>
+{% endblock %}

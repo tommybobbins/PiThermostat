@@ -1,23 +1,13 @@
 # Create your views here.
 from django.utils import timezone
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
-from lights.models import Socket, Boiler
 import datetime, os
 import re
 import redis
-from ConfigParser import SafeConfigParser
-
-parser = SafeConfigParser()
-parser.read('/etc/pithermostat.conf')
-
-redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
-redisdb=parser.get('redis','db')
-redistimeout=float(parser.get('redis','timeout'))
-
+from lights.models import Socket, Boiler
 
 def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb = get_object_or_404(Socket,plug_type=plug_type,set_id=set_id, plug_id=plug_id )
@@ -29,14 +19,11 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb.save()
 #    obj_list = Socket.objects(plug_id=plug_id)
 ##### Make the system call###########
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-
+    redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
     if (plug_type == "energenie"):
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     elif (plug_type == "homeeasy"):
         command_to_rethis = ("/usr/local/bin/homeeasy %s %s %s" %(set_id,plug_id,switch_onoroff))
-    elif (plug_type == "biard"):
-        command_to_rethis = ("/usr/local/bin/light %s" %(plug_id))
     else:
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     if cb.location == "cellar":
@@ -45,25 +32,23 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
         redthis.rpush("attic/jobqueue", command_to_rethis)
     else:
         redthis.rpush("cellar/jobqueue", command_to_rethis)
-    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name,'plug_type':plug_type, 'plug_id':plug_id, 'set_id':set_id, 'switch_state':cb.switch_state, 'current_location':'POWER', } )
+    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name,'plug_type':plug_type, 'plug_id':plug_id, 'set_id':set_id, 'switch_state':cb.switch_state } )
 
 def catcannon(request, switch_onoroff):
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
     if switch_onoroff == "on":
         switch_status="True"
         redthis.set("permission_to_fire", switch_status)
-        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_on.sh")
     elif switch_onoroff == "off":
         switch_status="False"
         redthis.set("permission_to_fire", switch_status)
-        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_off.sh")
     elif switch_onoroff == "status":
 ##### Make the system call###########
         switch_status=redthis.get("permission_to_fire")
-    return render(request, 'lights/catcannon.html', { 'action':'switching', 'switch_state':switch_status, 'current_location':'CATCANNON', } )
+    return render(request, 'lights/catcannon.html', { 'action':'switching', 'switch_state':switch_status } )
 
 def velux(request, openclosestate):
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    redthis = redis.StrictRedis(host='localhost',port=6379, db=0, socket_timeout=3)
     #/usr/local/bin/full_open.sh
     #/usr/local/bin/closed_to_half_open.sh  
     #/usr/local/bin/open_to_half_open.sh
@@ -104,7 +89,7 @@ def velux(request, openclosestate):
     attic_temp = redthis.get("temperature/attic/sensor")
     if switch_status:
         redthis.rpush("attic/jobqueue", switch_status)
-    return render(request, 'lights/velux.html', { 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
+    return render(request, 'lights/velux.html', { 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season } )
 
 def switch_boiler(request, switch_onoroff):
     cb = get_object_or_404(Boiler, id=1)
@@ -116,10 +101,10 @@ def switch_boiler(request, switch_onoroff):
     cb.save()
 #    obj_list = Socket.objects(plug_id=plug_id)
 ##### Make the system call###########
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
     command_to_rethis = ("/usr/local/bin/drayton %s" %(switch_onoroff))
     redthis.rpush("cellar/jobqueue", command_to_rethis)
-    return render(request, 'lights/socketlist.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state, 'current_location':'LIFE SUPPORT', } )
+    return render(request, 'lights/socketswitch.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state } )
 
 def socket_list(request,corortoggle):
     try:
@@ -130,8 +115,7 @@ def socket_list(request,corortoggle):
         template_name = 'lights/togglelist.html'
     else: 
         template_name = 'lights/togglelist.html'
-    return render(request, template_name, {'sockets': socket_list,
-                                           'current_location':'POWER',})
+    return render(request, template_name, {'sockets': socket_list})
 
 def sockets(request):
     try:
@@ -142,7 +126,7 @@ def sockets(request):
     return render(request, template_name, {'sockets': socket_list})
 
 def thermostat(request,modify=None,modify_value=0.0):
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    redthis = redis.StrictRedis(host='433board',port=6379, db=0)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
     required_temp=round(float(redthis.get("temperature/userrequested")),1)
@@ -183,47 +167,24 @@ def thermostat(request,modify=None,modify_value=0.0):
     if (modify_value > 0.0):
         required_temp = float(modify_value)
         redthis.set("temperature/userrequested",modify_value)
-        #If user selects a temperature, take it out of holiday mode too
-        redthis.expire("holiday_countdown",0)
         redirect_required = True
     else:
         required_temp = float(required_temp)
         redirect_required = False
-    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT' })
+    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, })
 
 
 def holding_page(request):
     return render(request,'lights/holdingpage.html')
 
-def makeachoice(request):
-    return render(request,'lights/makeachoice.html')
+def tempcal(request):
+    return render(request,'lights/calendar.html')
+
+def upcoming(request):
+    return render(request,'lights/upcoming_events.html')
 
 def current(request):
     return render(request,'lights/current_happenings.html')
 
-def holiday(request,modify=None,modify_value=12.0):
-    redthis = redis.StrictRedis(host='433board',port=6379, db=0)
-    try:  
-        holiday_temp=round(float(redthis.get("holiday_countdown")),3)
-        holiday_time=redthis.ttl("holiday_countdown")
-    except:
-        holiday_temp=7.0
-        holiday_time=0
-    if (modify == "temp"):
-        holiday_temp = float(modify_value)
-        redthis.set("holiday_countdown",holiday_temp)
-        redthis.expire("holiday_countdown",holiday_time)
-    elif (modify == "days"):
-        days = (float(modify_value))
-        holiday_time = int(days * 24 * 60 * 60)
-        redthis.set("holiday_countdown",7.0)
-        holiday_temp = 7.0
-        redthis.expire("holiday_countdown",holiday_time)
-    days = round(float (holiday_time / (24.0 * 60.0 * 60.0)),3)
-    return render(request, 'lights/holiday.html', {'holiday_temp': holiday_temp,
-                                                   'seconds': holiday_time,
-                                                   'days': days,
-                                                   'current_location': 'TRANSPORT',
-                                                   'switch_status': modify,
-                                                   })
-
+def makeachoice(request):
+    return render(request,'lights/makeachoice.html')

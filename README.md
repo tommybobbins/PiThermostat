@@ -21,14 +21,28 @@ Requires the Adafruit libraries to read from the TMP102:
     git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
     cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 
+Install i2c using raspi-config
+ 
+    sudo raspi-config
+
+Select Advanced mode, enable i2c and then reboot
+
+Using django happenings for Calendaring (see Django setup below):
+
+This is now the Default behaviour:
+
+    sudo pip install django-happenings
+
 Install the Python Google API:
 
-     sudo pip install google-api-python-client pytz evdev httplib2 pygame redis smbus configparser
+     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus
+     sudo pip install apiclient urllib3
+
      mkdir /etc/google_calendar/
 
 Create a new Google calendar called thermostat. You need to allow access through to this calendar here: https://developers.google.com/google-apps/calendar/get_started . Download the client-secrets.json file and put it into /etc/google_calendar/
 
-     cp client-secrets.json /etc/google_calendar
+     sudo cp client-secrets.json /etc/google_calendar
 
 Run the list_calendar.py
      
@@ -37,11 +51,18 @@ Run the list_calendar.py
 
 This should create a sample.dat in the local directory. We need to copy this to /etc/google_calendar for neatness.
      
-     cp sample.dat /etc/google_calendar
+     sudo cp sample.dat /etc/google_calendar
 
 The summary of all events in the calendar should be of the form 
 
      Temp=20.0
+
+Note that django-happenings has supplanted Google Calendar as the default. Uncomment line 88 if you wish to use Google Calendar.
+
+Installation of redis
+=====================
+
+     sudo apt-get install redis-server python-redis
 
 Installation of the files
 ========================
@@ -68,6 +89,11 @@ Copy the init script to /etc/init.d/temp.sh
     
     echo "192.168.1.223       433board" >>/etc/hosts
 
+To make redis listen on all available ports, edit /etc/redis/redis.conf:
+
+    #bind 127.0.0.1
+
+
 On the redis server, it is helpful to set a pre-existing weather and optimal temperature (the temperature you want it set to if all else fails):
 
      pi@raspberrypi ~ $ redis-cli
@@ -78,17 +104,33 @@ On the redis server, it is helpful to set a pre-existing weather and optimal tem
 
 The scripts to copy to /usr/local/bin are as follows:
 
-call_433.py  # Makes redis calls to / from the redis server which maintains temperature states/ runs boiler
-gettemperatures.py # Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data.
-google_calendar.py # Grabs current temperature required from Google Calendar.
-processcalendar.py # Deprecated. Was used with django-schedule and is left her for future reference.
-thermostat_gui.py  # Pygame binary to display data on screen and call all other libraries.
+| Script | Description |
+| ------------- | ------------- |
+| call_433.py | Makes redis calls to / from the redis server which maintains temperature states/ runs boiler. |
+| gettemperatures.py | Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data. |
+| google_calendar.py | Grabs current temperature required from Google Calendar. |
+| processcalendar.py | Deprecated. Was used with django-schedule and is left her for future reference. |
+| thermostat_gui.py | Pygame binary to display data on screen and call all other libraries. |
 
     sudo cp *.py /usr/local/bin/
     sudo chmod a+rx /usr/local/bin/
     /etc/init.d/temp.sh start
 
- 
+Edit the redis server configuration to allow incoming connections:
+
+    sudo vi /etc/redis/redis.conf
+
+Ensure that it looks like the following:
+
+    # If you want you can bind a single interface, if the bind option is not
+    # specified all the interfaces will listen for incoming connections.
+    #
+    #bind 127.0.0.1
+
+Restart redis:
+
+sudo /etc/init.d/redis-server restart
+
 
 Using Weather (optional)
 ========================
@@ -129,10 +171,46 @@ Django front end
 
 Setting up Django is beyond the scope of this document, but there are instructions on how to do this https://www.djangoproject.com/
 
-Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there.
+    sudo apt-get install -y python-django libapache2-mod-wsgi
+
+Code is inside django. Copy to /usr/local/django and point apache mod_wsgi.conf there. The bottom of the file should look something like:
+
+            WSGIScriptAlias / /usr/local/django/homeauto/wsgi.py
+            WSGIPythonPath /usr/local/django
+            WSGIPassAuthorization On
+    #            <Location />
+    #                AuthType Basic
+    #                AuthName "Authentication Required"
+    #                AuthUserFile "/etc/apache2/htpasswd"
+    #                Require valid-user
+    #            </Location>
+
+
+    </IfModule>
+
+Apache should allow the static directories to be served. Add this to /etc/apache/sites-available/default:
+
+
+        # Non-Django directories
+        Alias /static /usr/local/django/homeauto/static/
+          <Location "/static">
+              SetHandler None
+          </Location>
+
+Install the Tango icons:
+
+    sudo pip install django-icons-tango
+
+Create the sqlite database:
 
     cd /usr/local/django
 
     sudo python manage.py syncdb
 
     chmod a+rw home.db
+
+    sudo /etc/init.d/apache2 restart
+   
+Check that Django Happenings is installed:
+ 
+    sudo pip install django-happenings
