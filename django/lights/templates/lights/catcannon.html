@@ -1,20 +1,19 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="lcars_command">
-    <h2>CATCANNON</h2>
+    <div id="lcars_command">
+        <h2>{{ current_location }}</h2>
+    </div>
+<div id="lcars_output">
+<h2>ARMED: {{ switch_state }}</h2>
 </div>
-<div class="lcars_output">
-<h3>ARMED:{{ switch_state }}</h3>
+<div id="readout_right">
+    <ul id="buttons">
+        <li><a href="/catcannon/on/" class="redbadge">On</a></li>
+    </ul>
 </div>
-<div class="readout">
-<div class="massivebuttons">
-<table>
-<tr>
-<td class="tablecol3"><a href="/catcannon/on/" class="massive">On</a></td>
-<td class="tablecol4"><a href="/catcannon/off/" class="massive">Off</a></td>
-</tr>
-</table>
-</div>
+<div id="readout_right">
+    <ul id="buttons">
+        <li><a href="/catcannon/off/" class="bluebadge">Off</a></li>
+    </ul>
 </div>
 {% endblock %}

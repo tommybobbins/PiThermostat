@@ -29,12 +29,12 @@ time_to_live = 3600
 ###### determines how much weighting this sensor
 ###### if used at an extreme point in the house (say cellar), set to 1
 ###### if used centrally (living room), set to 3 or 4
-multiplier = 1
+multiplier = 3
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
-redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-room_location="cellar"
+redthis = redis.StrictRedis(host='433host',port=6379, db=0, socket_timeout=3)
+room_location="barab"
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
 #print ("Sensor name is %s" % sensor_name)

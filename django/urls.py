@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, include, url
-from lights.views import switch_socket, socket_list, holding_page, sockets, switch_boiler, thermostat, makeachoice, catcannon, velux, current, holiday
+from lights.views import switch_socket, socket_list, holding_page, sockets, switch_boiler, thermostat, makeachoice, catcannon, velux, tempcal, upcoming, current
 from django.contrib import admin
 admin.autodiscover()
 
@@ -11,10 +11,9 @@ urlpatterns = patterns('',
     (r'^thermostat/$', thermostat ),
     (r'^thermostat/(required)/(\S+)/$', thermostat ),
     (r'^thermostat/(damoclesrepair)/$', thermostat ),
-    (r'^holiday/$', holiday ),
-    (r'^holiday/(temp)/(\S+)/$', holiday ),
-    (r'^holiday/(days)/(\S+)/$', holiday ),
     (r'^calendar/', include('happenings.urls', namespace='calendar')),
+    (r'^tempcal/$', tempcal ),
+    (r'^upcoming/$', upcoming ),
     (r'^current/$', current ),
     (r'^socketlist/(toggle)/$', socket_list ),
     (r'^catcannon/(\w+)/$', catcannon ),
