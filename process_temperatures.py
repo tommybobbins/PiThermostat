@@ -8,12 +8,21 @@
 #    file is populated by weather-util. See retrieve-weather.sh for details
 
 from sys import path
+from ConfigParser import SafeConfigParser
 import datetime
 from time import sleep
 import redis
 from google_calendar import google_calendar
 import re
-redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=parser.get('redis','timeout')
+
+redthis = redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 hysteresis_temp=0.5
 summer_temp = 15.0
 temp={}
