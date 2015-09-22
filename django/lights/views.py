@@ -30,7 +30,6 @@ def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
 #    obj_list = Socket.objects(plug_id=plug_id)
 ##### Make the system call###########
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-
     if (plug_type == "energenie"):
         command_to_rethis = ("/usr/local/bin/energenie %s %s %s" %(set_id,plug_id,switch_onoroff))
     elif (plug_type == "homeeasy"):
@@ -202,7 +201,7 @@ def current(request):
     return render(request,'lights/current_happenings.html')
 
 def holiday(request,modify=None,modify_value=12.0):
-    redthis = redis.StrictRedis(host='433board',port=6379, db=0)
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     try:  
         holiday_temp=round(float(redthis.get("holiday_countdown")),3)
         holiday_time=redthis.ttl("holiday_countdown")
