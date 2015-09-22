@@ -21,10 +21,9 @@ Debug=parser.get('main','debug')
 redishost=parser.get('redis','broker')
 redisport=parser.get('redis','port')
 redisdb=parser.get('redis','db')
-redistimeout=parser.get('redis','timeout')
-#redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+redistimeout=float(parser.get('redis','timeout'))
 
-redthis=redis.StrictRedis(host="redishost",port="redisport", db="redisdb", socket_timeout="redistimeout")
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 hysteresis_temp=0.5
 summer_temp=parser.get('weather','summer_temp')
 temp={}
