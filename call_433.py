@@ -1,9 +1,17 @@
 #!/usr/bin/python
 import redis
 import urllib2
+from ConfigParser import SafeConfigParser
 #import expiry_time
 
-redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 
 #If expiry_time doesn't exist, then we should add the expiry time
 #If expiry_time < 40 then we should do it

@@ -11,20 +11,29 @@
 # Move to django_happenings
 
 from sys import path
+from ConfigParser import SafeConfigParser
 import datetime
 from time import sleep
 import redis
 #from google_calendar import google_calendar
 from django_happenings import parse_calendar
 import re
-redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+Debug=False
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 hysteresis_temp=0.5
-summer_temp = 15.0
+summer_temp=parser.get('weather','summer_temp')
 temp={}
 multiplier={}
 external_temp={}
 external_multiplier={}
-Debug=False
 
 def calculate_weighted_mean(incoming_multiplier,incoming_temp):
     numerator = 0

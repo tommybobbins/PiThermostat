@@ -4,9 +4,20 @@
 ### Used to determine whether it is Summer or Winter
 import redis
 from time import sleep
+from ConfigParser import SafeConfigParser
 import random
 numerator = 0
-redthis = redis.StrictRedis(host='433host',port=6379, db=0,socket_timeout=3)
+
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
 try:
     current_eden_temp = float(redthis.get('temperature/outside/weightedmean'))
     #current_eden_temp = float(random.randrange(15.0,19.0,1)) # For testing

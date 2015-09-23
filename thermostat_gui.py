@@ -7,7 +7,17 @@ import time
 import pyganim
 import redis
 
-redthis = redis.StrictRedis(host='433board',port=6379, db=0, socket_timeout=3)
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
 temperature={}
 
 from evdev import InputDevice, list_devices

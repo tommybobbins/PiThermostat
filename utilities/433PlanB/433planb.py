@@ -16,7 +16,16 @@ import smtplib
 sent_email=0
 from email.mime.text import MIMEText
 threshold_temp = 12
-redthis = redis.StrictRedis(host='localhost',port=6379, db=0)
+from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+redishost=parser.get('redis','broker')
+redisport=parser.get('redis','port')
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 
 
 def send_email():

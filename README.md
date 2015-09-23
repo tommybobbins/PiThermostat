@@ -35,7 +35,7 @@ This is now the Default behaviour:
 
 Install the Python Google API:
 
-     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus
+     sudo pip install --upgrade google-api-python-client pytz evdev pygame redis smbus configparser
      sudo pip install apiclient urllib3
 
      mkdir /etc/google_calendar/
@@ -75,6 +75,9 @@ This will setup the sensor for the attic.
     sudo cp utilities/redis_sensor.py /usr/local/bin/
     sudo cp init/redis_sensor.sh /etc/init.d/
     sudo insserv redis_sensor.sh
+    sudo cp etc/pithermostat.conf /etc/
+
+Edit /etc/pithermostat.conf to suit
 
 Copy the init script to /etc/init.d/temp.sh
 
