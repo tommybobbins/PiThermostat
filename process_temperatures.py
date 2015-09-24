@@ -20,10 +20,12 @@ from django_happenings import parse_calendar
 import re
 parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
-Debug=False
 
+debug=parser.get('main','debug') # As string
+Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
+print ("Debug = %s\n" % Debug)
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 
