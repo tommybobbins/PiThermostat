@@ -9,10 +9,26 @@ from email.utils import parsedate
 import urllib2
 target_temp=14
 #calendar_file='/tmp/tempschedule.txt'
+from ConfigParser import SafeConfigParser
+parser = SafeConfigParser()
+parser.read('/etc/pithermostat.conf')
+
+debug=parser.get('main','debug') # As string
+Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
+
+redishost=parser.get('redis','broker')
+redisport=int(parser.get('redis','port'))
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+apacheaddress=parser.get('apache','address')
+apacheport=int(parser.get('apache','port'))
+
 
 def parse_calendar():
      target_temp = 14;
-     response = urllib2.urlopen('http://433board:5537/current/')
+     calendar_url = ("http://%s:%i/current/" % (apacheaddress,apacheport))
+#     print ("Calendar url = %s\n" % calendar_url)
+     response = urllib2.urlopen(calendar_url)
      regex_temp = re.compile(r'^\s+Temp=(.*)\s+$')
      html = response.readlines()
      for line in html:
@@ -29,4 +45,4 @@ def parse_calendar():
          
 
 desired_temp=parse_calendar()
-print ("%f" % desired_temp)
+#print ("%f" % desired_temp)

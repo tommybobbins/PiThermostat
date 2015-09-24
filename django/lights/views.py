@@ -147,7 +147,12 @@ def thermostat(request,modify=None,modify_value=0.0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
-    required_temp=round(float(redthis.get("temperature/userrequested")),1)
+#    required_temp=round(float(redthis.get("temperature/userrequested")),1)
+    try:
+        required_temp=round(float(redthis.get("holiday_countdown")),3)
+    except:
+        required_temp=round(float(redthis.get("temperature/userrequested")),1)
+
     try: 
         attic_sensor_temp=round(float(redthis.get("temperature/attic/sensor")),3)
     except:
