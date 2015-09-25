@@ -7,7 +7,7 @@ parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 
