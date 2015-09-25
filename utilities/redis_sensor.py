@@ -21,6 +21,7 @@ redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+# Find location from pithermostat.conf
 room_location=parser.get('locale','location')
 
 
