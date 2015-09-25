@@ -2,7 +2,7 @@ PiThermostat
 ============
 
 
-Raspberry Pi using a HY28 LCD touchscreen (Texy or Adafruit PiTFT) and a TMP102 to make a thermostat display. Integrates with Google calendar or Django Schedule to find required temperature. Works with 433MHz sender board to make a complete boiler control. Currently works with British Gas and Drayton gas boilers.
+Central heating system using a Raspberry Pi and optinally an LCD touchscreen requires at least one TMP102 to make a thermostat. Integrates with Google calendar or Django Happenings to find required temperature. Works with 433MHz sender board to make a complete boiler control. Currently works with British Gas and Drayton gas boilers.
 
 More details about the 433 sender board used can be found https://github.com/tommybobbins/Raspi_433
 
@@ -109,7 +109,7 @@ The scripts to copy to /usr/local/bin are as follows:
 | call_433.py | Makes redis calls to / from the redis server which maintains temperature states/ runs boiler. |
 | gettemperatures.py | Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data. |
 | google_calendar.py | Grabs current temperature required from Google Calendar. |
-| processcalendar.py | Deprecated. Was used with django-schedule and is left her for future reference. |
+| processcalendar.py | Deprecated. Was used with django-schedule and is left here for future reference. |
 | thermostat_gui.py | Pygame binary to display data on screen and call all other libraries. |
 
     sudo cp *.py /usr/local/bin/

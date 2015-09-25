@@ -14,10 +14,11 @@ parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 
+catcannon_string=parser.get('catcannon','catcannon_host')
 
 def switch_socket(request,plug_type,set_id, plug_id, switch_onoroff):
     cb = get_object_or_404(Socket,plug_type=plug_type,set_id=set_id, plug_id=plug_id )
@@ -51,11 +52,13 @@ def catcannon(request, switch_onoroff):
     if switch_onoroff == "on":
         switch_status="True"
         redthis.set("permission_to_fire", switch_status)
-        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_on.sh")
+        command_to_rethis = ("/usr/bin/ssh %s /usr/bin/sudo /usr/local/bin/remote_ultra_on.sh" % catcannon_string)
+        redthis.rpush("cellar/jobqueue", command_to_rethis)
     elif switch_onoroff == "off":
         switch_status="False"
         redthis.set("permission_to_fire", switch_status)
-        command_to_rethis = ("/usr/bin/ssh pi@192.168.0.20 /usr/bin/sudo /usr/local/bin/remote_ultra_off.sh")
+        command_to_rethis = ("/usr/bin/ssh %s /usr/bin/sudo /usr/local/bin/remote_ultra_off.sh" % catcannon_string)
+        redthis.rpush("cellar/jobqueue", command_to_rethis)
     elif switch_onoroff == "status":
 ##### Make the system call###########
         switch_status=redthis.get("permission_to_fire")
@@ -144,7 +147,12 @@ def thermostat(request,modify=None,modify_value=0.0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
-    required_temp=round(float(redthis.get("temperature/userrequested")),1)
+#    required_temp=round(float(redthis.get("temperature/userrequested")),1)
+    try:
+        required_temp=round(float(redthis.get("holiday_countdown")),3)
+    except:
+        required_temp=round(float(redthis.get("temperature/userrequested")),1)
+
     try: 
         attic_sensor_temp=round(float(redthis.get("temperature/attic/sensor")),3)
     except:

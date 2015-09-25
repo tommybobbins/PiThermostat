@@ -17,10 +17,12 @@ parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+# Find location from pithermostat.conf
+room_location=parser.get('locale','location')
 
 
 time_to_live = 3600
@@ -33,7 +35,6 @@ multiplier = 3
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
-room_location="barab"
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
 #print ("Sensor name is %s" % sensor_name)
