@@ -9,6 +9,9 @@
 # Modified 24-June-2015
 # tng@chegwin.org
 # Move to django_happenings
+# Modified 27-Sep-2015
+# tng@chegwin.org/jon@rosslug.org.uk
+# Modularised, added config file, made generic
 
 from sys import path
 from ConfigParser import SafeConfigParser
@@ -38,18 +41,6 @@ multiplier={}
 external_temp={}
 external_multiplier={}
 
-def find_sensor_data(incoming_sensor):
-    try:
-        redis_temp = ('temperature/'+incoming_sensor+'/sensor')
-        redis_mult = ('temperature/'+incoming_sensor+'/multiplier')
-        temp=float(redthis.get(redis_temp))
-        mult=float(redthis.get(redis_mult))
-#        print ("For incoming %s, we have temp=%f , mult = %f" % (incoming_sensor,temp,mult))
-    except:
-        temp =  0
-        mult =  0
-    return (temp, mult)
-
 def send_call_boiler(on_or_off):
     if Debug:
         print ("On/Off = %s " % on_or_off)
@@ -75,12 +66,13 @@ def send_call_boiler(on_or_off):
 
 def read_temps():
     try:
-        # First of all we grab google calendar. If the internet is down 
+        # First of all we grab google/Django happenings calendar. 
+        # If the internet is down 
         # we set the value to 6.999
 #        calendar_temp=float(google_calendar())
         calendar_temp=float(parse_calendar())
     except:
-        print ("Google down")
+        print ("Google down or Django happenings not happening")
         calendar_temp=6.999
     try:
         #Read in all the previous settings
