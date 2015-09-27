@@ -107,10 +107,10 @@ The scripts to copy to /usr/local/bin are as follows:
 | Script | Description |
 | ------------- | ------------- |
 | call_433.py | Makes redis calls to / from the redis server which maintains temperature states/ runs boiler. |
-| gettemperatures.py | Makes call to the TMP102 to grab the temperatures and calls call_433 to grab redis data. |
 | google_calendar.py | Grabs current temperature required from Google Calendar. |
 | processcalendar.py | Deprecated. Was used with django-schedule and is left here for future reference. |
 | thermostat_gui.py | Pygame binary to display data on screen and call all other libraries. |
+| calculate_temps.py | Pull in the data from the temperature sensors and calculates an internal and external mean |
 
     sudo cp *.py /usr/local/bin/
     sudo chmod a+rx /usr/local/bin/
