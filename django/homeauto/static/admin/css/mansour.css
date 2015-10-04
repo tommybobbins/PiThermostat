@@ -135,18 +135,23 @@ a:visited, a:link, a:hover {
     color: #000;
 }
 
-.tablecol5 {
+.internal {
     background-color: #ff9966;
     color: #fff;
 }
 
-.tablecol6 {
+.external {
     background-color: #9999cc;
     color: #fff;
 }
 
 .tablecol7 {
     background-color: #9999ff;
+    color: #fff;
+}
+
+.tablecol8 {
+    background-color: #cd5c5c;
     color: #fff;
 }
 

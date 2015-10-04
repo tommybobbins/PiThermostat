@@ -13,35 +13,46 @@
 <tr><th>Device</th><th>Reading</th><th>Device</th><th>Reading</th></tr>
 <tbody>
 <tr>
-<td class="tablecol5">Attic</td><td class="tablecol5"> {{ attic_sensor }}</td>
-<td class="tablecol6">Eden</td><td class="tablecol6"> {{ eden_sensor }}</td>
+{% if required > int_weighted_mean  %}
+<td class="internal">Mean Int.</td><td class="tablecol8"> {{ int_weighted_mean }}</td>
+{% else %}
+<td class="internal">Mean Int.</td><td class="internal"> {{ int_weighted_mean }}</td>
+{% endif %}
+<td class="external">Mean Ext.</td><td class="external"> {{ ext_weighted_mean }}</td>
 </tr>
 <tr>
-<td class="tablecol6">Barab</td><td class="tablecol6"> {{ barab_sensor }}</td>
-<td class="tablecol5">Forno</td><td class="tablecol5"> {{ forno_sensor }}</td>
+<td class="internal">Required</td><td class="internal">{{ required }}</td>
+<td class="external">RollExt</td><td class="external"> {{ outside_rollingmean }}</td>
 </tr>
 <tr>
-<td class="tablecol5">Cellar</td><td class="tablecol5"> {{ cellar_sensor }}</td>
-<td class="tablecol6">Mean Int.</td><td class="tablecol6"> {{ int_weighted_mean }}</td>
+<td class="internal">Attic</td><td class="internal"> {{ attic_sensor }}</td>
+<td class="external">Eden</td><td class="external"> {{ eden_sensor }}</td>
+</tr>
+<tr>
+<td class="internal">Barab</td><td class="internal"> {{ barab_sensor }}</td>
+<td class="external">Forno</td><td class="external"> {{ forno_sensor }}</td>
+</tr>
+<tr>
+<td class="internal">Cellar</td><td class="internal"> {{ cellar_sensor }}</td>
+<td></td><td></td>
 </tr>
 <tr>
 {% if damo_sensor %}
-<td class="tablecol6">Damocles</td><td class="tablecol6"> {{ damo_sensor }}</td>
-<!--<tr><td class="tablecol5">Damocles</td><td class="tablecol5"><a href="/thermostat/damoclesrepair/">Repair</a></td>-->
+<td class="internal">Damocles</td><td class="internal"> {{ damo_sensor }}</td>
+<!--<tr><td class="external">Damocles</td><td class="external"><a href="/thermostat/damoclesrepair/">Repair</a></td>-->
 {% else %}
-<td class="tablecol6">Damocles</td><td class="tablecol6">N/A</td>
+<td class="internal">Damocles</td><td class="internal">N/A</td>
 {% endif %}
-<td class="tablecol5">Mean Ext.</td><td class="tablecol5"> {{ ext_weighted_mean }}</td>
+<td class="external">Outside</td><td class="external">{{ outside }}</td>
 </tr>
 <tr>
-<td class="tablecol5">Outside</td><td class="tablecol5">{{ outside }}</td>
-<td class="tablecol6">RollExt</td><td class="tablecol6"> {{ outside_rollingmean }}</td>
+<td class="internal">Calendar</td><td class="internal">{{ calendar }}</td>
+{% if boiler == "True"  %}
+<td class="internal">Boiler</td><td class="tablecol8">{{ boiler }}</td>
+{% else %}
+<td class="internal">Boiler</td><td class="internal">{{ boiler }}</td>
+{% endif %}
 </tr>
-<tr>
-<td class="tablecol6">Calendar</td><td class="tablecol6">{{ calendar }}</td>
-<td class="tablecol5">Required</td><td class="tablecol5">{{ required }}</td>
-</tr>
-<tr><td class="tablecol5">Boiler</td><td class="tablecol5">{{ boiler }}</td><td></td><td></td></tr>
 </tbody>
 </table>
 </div>
