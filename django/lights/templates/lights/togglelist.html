@@ -13,15 +13,15 @@
 	{% for number in sockets %}
 	<tr>
 	{% ifequal number.switch_state True %}
-	<td class="tablecol2">
+	<td class="internal">
 	<a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">
 	{% else %}
-	<td class="tablecol6">
+	<td class="external">
 	<a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
 	{% endifequal %}
 	{{ number.name }}</a>
 	</td> 
-        <td class="tablecol6">{{ number.lastcheckin }}</td>
+        <td class="external">{{ number.lastcheckin }}</td>
 	</tr>
 	{% endfor %}
 	</table>
