@@ -19,7 +19,7 @@ from Adafruit_I2C import Adafruit_I2C
 import logging, datetime
 dt = datetime.datetime.now()
 
-logging.basicConfig(filename='/home/pi/freezer_stats.log',level=logging.INFO)
+logging.basicConfig(filename='/home/pi/temp_sensor.log',level=logging.INFO)
 
 class Tmp102:
   i2c = None
@@ -61,8 +61,6 @@ class Tmp102:
 
 
 mytemp = Tmp102(address=0x48)
-floattemp = mytemp.readTemperature()
+floattemp = float(mytemp.readTemperature())
 print ("%s Float temp = %f" % (dt,floattemp))
 logging.info("%s Float temp = %f" % (dt,floattemp))
-      
-
