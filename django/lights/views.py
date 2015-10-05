@@ -154,33 +154,33 @@ def thermostat(request,modify=None,modify_value=0.0):
         required_temp=round(float(redthis.get("temperature/userrequested")),1)
 
     try: 
-        attic_sensor_temp=round(float(redthis.get("temperature/attic/sensor")),3)
+        attic_sensor_temp=round(float(redthis.get("temperature/attic/sensor")),2)
     except:
         attic_sensor_temp=""
     try:
-        barab_sensor_temp=round(float(redthis.get("temperature/barab/sensor")),3)    
+        barab_sensor_temp=round(float(redthis.get("temperature/barab/sensor")),2)    
     except:
         barab_sensor_temp=""
     try:
-        cellar_sensor_temp=round(float(redthis.get("temperature/cellar/sensor")),3)
+        cellar_sensor_temp=round(float(redthis.get("temperature/cellar/sensor")),2)
     except:
         cellar_sensor_temp=""
     try:
-        damo_sensor_temp=round(float(redthis.get("temperature/damocles/sensor")),3)
+        damo_sensor_temp=round(float(redthis.get("temperature/damocles/sensor")),2)
     except:
         damo_sensor_temp=""
 #    damo_sensor_press=round(float(redthis.get("pressure/damocles/sensor")),3)
 #    damo_sensor_humid=round(float(redthis.get("humidity/damocles/sensor")),3)
     try:
-        eden_sensor_temp=round(float(redthis.get("temperature/eden/sensor")),3)
+        eden_sensor_temp=round(float(redthis.get("temperature/eden/sensor")),2)
     except:
         eden_sensor_temp=""
     try:
-        forno_sensor_temp=round(float(redthis.get("temperature/forno/sensor")),3)
+        forno_sensor_temp=round(float(redthis.get("temperature/forno/sensor")),2)
     except:
         forno_sensor_temp=""
-    int_weighted_mean=round(float(redthis.get("temperature/inside/weightedmean")),3)
-    ext_weighted_mean=round(float(redthis.get("temperature/outside/weightedmean")),3)
+    int_weighted_mean=round(float(redthis.get("temperature/inside/weightedmean")),2)
+    ext_weighted_mean=round(float(redthis.get("temperature/outside/weightedmean")),2)
     calendar_temp=round(float(redthis.get("temperature/calendar")),1)
     boiler_req=(redthis.get("boiler/req"))
     thermostat_template = 'lights/thermostat_mobile.html'
@@ -211,7 +211,7 @@ def current(request):
 def holiday(request,modify=None,modify_value=12.0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     try:  
-        holiday_temp=round(float(redthis.get("holiday_countdown")),3)
+        holiday_temp=round(float(redthis.get("holiday_countdown")),2)
         holiday_time=redthis.ttl("holiday_countdown")
     except:
         holiday_temp=7.0
@@ -226,7 +226,7 @@ def holiday(request,modify=None,modify_value=12.0):
         redthis.set("holiday_countdown",7.0)
         holiday_temp = 7.0
         redthis.expire("holiday_countdown",holiday_time)
-    days = round(float (holiday_time / (24.0 * 60.0 * 60.0)),3)
+    days = round(float (holiday_time / (24.0 * 60.0 * 60.0)),2)
     return render(request, 'lights/holiday.html', {'holiday_temp': holiday_temp,
                                                    'seconds': holiday_time,
                                                    'days': days,
