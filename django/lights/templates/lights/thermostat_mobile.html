@@ -13,7 +13,7 @@
 <tr><th>Device</th><th>Reading</th><th>Device</th><th>Reading</th></tr>
 <tbody>
 <tr>
-{% if required > int_weighted_mean  %}
+{% if boiler == "True"  %}
 <td class="internal">Mean Int.</td><td class="tablecol8"> {{ int_weighted_mean }}</td>
 {% else %}
 <td class="internal">Mean Int.</td><td class="internal"> {{ int_weighted_mean }}</td>
@@ -47,11 +47,7 @@
 </tr>
 <tr>
 <td class="internal">Calendar</td><td class="internal">{{ calendar }}</td>
-{% if boiler == "True"  %}
-<td class="internal">Boiler</td><td class="tablecol8">{{ boiler }}</td>
-{% else %}
 <td class="internal">Boiler</td><td class="internal">{{ boiler }}</td>
-{% endif %}
 </tr>
 </tbody>
 </table>
