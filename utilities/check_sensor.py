@@ -47,7 +47,7 @@ class Tmp102:
     negative = (raw[0] >> 7) == 1
     shift = 4
     if not negative:
-        val = (((raw[0] * 256) + raw[1]) >> shift)
+        val = (((raw[0] * 256) + raw[1]) >> shift) * 0.0625
     else:
         remove_bit = 0b011111111111
         ti = (((raw[0] * 256) + raw[1]) >> shift)
@@ -62,6 +62,7 @@ class Tmp102:
 
 mytemp = Tmp102(address=0x48)
 floattemp = mytemp.readTemperature()
+print ("%s Float temp = %f" % (dt,floattemp))
 logging.info("%s Float temp = %f" % (dt,floattemp))
       
 
