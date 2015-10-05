@@ -66,9 +66,9 @@ def calculate_temps():
         try:
             match = regex_temp.search(tempkey)
             location=match.group(1)
-            print ("location = %s " % location)
+#            print ("location = %s " % location)
             zonelocation=(redthis.get('temperature/%s/zone' % location))
-            print ("zonelocation = %s " % zonelocation)
+#            print ("zonelocation = %s " % zonelocation)
             multvalue=float(redthis.get('temperature/%s/multiplier' % location))
 #            print ("multiplier = %s " % multvalue)
             if (zonelocation != "outside"):

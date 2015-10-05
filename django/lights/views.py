@@ -186,6 +186,8 @@ def thermostat(request,modify=None,modify_value=0.0):
     thermostat_template = 'lights/thermostat_mobile.html'
     if (modify == "damoclesrepair"):
         redthis.rpush("attic/jobqueue","/etc/init.d/sensortag.sh restart")
+    elif (modify == "android"):
+        thermostat_template = 'lights/thermostat_android.html'
     modify_value=float(modify_value)
     if (modify_value > 0.0):
         required_temp = float(modify_value)
