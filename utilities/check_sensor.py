@@ -62,7 +62,5 @@ class Tmp102:
 
 mytemp = Tmp102(address=0x48)
 floattemp = float(mytemp.readTemperature())
+print ("%s Float temp = %f" % (dt,floattemp))
 logging.info("%s Float temp = %f" % (dt,floattemp))
-print("%s Float temp = %f" % (dt,floattemp))
-      
-
