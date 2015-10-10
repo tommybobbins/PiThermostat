@@ -40,6 +40,18 @@ install:
         (crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
         @echo "Copying apache2 configuration"
         cp -rp etc/apache2/* /etc/apache2/
+        @echo "Downloading 433 code"
+        git clone https://github.com/tommybobbins/Raspi_433
+        cd Raspi_433/bcm2835-1.42
+        make install
+        cd ../TRANSMITTER
+        make drayton
+        make bgas
+        cp bgas $(BINDIR) 
+        chmod 755 $(BINDIR)/bgas
+        cp drayton $(BINDIR) 
+        chmod 755 $(BINDIR)/drayton
+        cd ../../
         @echo "Starting processes"
         /etc/init.d/redis_sensor.sh start
         /etc/init.d/murunner.sh start
