@@ -1,5 +1,17 @@
 BINDIR ?=/usr/local/bin/
 CONFIGDIR ?=/etc
+MAKE_INSTALL ?=make install
+
+raspi433:
+	@cd /home/pi
+	git clone https://github.com/tommybobbins/Raspi_433
+	cd Raspi_433/bcm2835-1.42 && $(MAKE_INSTALL)
+	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL) 
+
+adafruit:
+	@cd /home/pi
+	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
+	cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 
 install:
 	@echo "Installing prereqs"
@@ -8,8 +20,7 @@ install:
 	apt-get install -y python-django libapache2-mod-wsgi
 	pip install --upgrade pytz evdev redis configparser
 	pip install apiclient urllib3 django-icons-tango django-happenings
-	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
-	cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
+	adafruit
 	@echo "Installing into $(BINDIR)"
 	cp calculate_temps.py  $(BINDIR)
 	cp django_happenings.py  $(BINDIR)
@@ -24,9 +35,9 @@ install:
 	@echo "Copying configuration file"
 	cp etc/pithermostat.conf /etc
 	@echo "Copying init script"
-	cp init.d/murunner.sh $(CONFIGDIR)/init.d
-	cp init.d/thermostat.sh $(CONFIGDIR)/init.d/
-	cp init.d/redis_sensor.sh $(CONFIGDIR)/init.d/
+	cp init/murunner.sh $(CONFIGDIR)/init.d/
+	cp init/thermostat.sh $(CONFIGDIR)/init.d/
+	cp init/redis_sensor.sh $(CONFIGDIR)/init.d/
 	@echo "Setting runlevels"
 	insserv murunner.sh
 	insserv thermostat.sh
@@ -45,17 +56,6 @@ install:
 	@echo "Copying apache2 configuration"
 	cp -rp etc/apache2/* /etc/apache2/
 	@echo "Downloading 433 code"
-	git clone https://github.com/tommybobbins/Raspi_433
-	cd Raspi_433/bcm2835-1.42
-	make install
-	cd ../TRANSMITTER
-	make drayton
-	make bgas
-	cp bgas $(BINDIR) 
-	chmod 755 $(BINDIR)/bgas
-	cp drayton $(BINDIR) 
-	chmod 755 $(BINDIR)/drayton
-	cd ../../
 	@echo "Starting processes"
 	/etc/init.d/redis_sensor.sh start
 	/etc/init.d/murunner.sh start
@@ -64,13 +64,6 @@ install:
 	@echo "Install complete"
 
 clean:
-	insserv -r murunner.sh
-	insserv -r thermostat.sh
-	insserv -r redis_sensor.sh
-	rm /etc/init.d/murunner.sh
-	rm /etc/init.d/thermostat.sh
-	rm /etc/init.d/redis_sensor.sh
-	rm /etc/pithermostat.conf 
 	rm $(BINDIR)calculate_temps.py
 	rm $(BINDIR)django_happenings.py
 	rm $(BINDIR)process_temperatures.py
@@ -78,6 +71,14 @@ clean:
 	rm $(BINDIR)read_redis.py
 	rm $(BINDIR)retrieve_weather.sh
 	rm $(BINDIR)parse_weather.py
+	rm -rf Adafruit-Raspberry-Pi-Python-Code
+	rm /etc/pithermostat.conf 
 	rm -rf /usr/local/django
 	rm -rf /usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code
+	insserv -r murunner.sh
+	insserv -r thermostat.sh
+	insserv -r redis_sensor.sh
+	rm /etc/init.d/murunner.sh
+	rm /etc/init.d/thermostat.sh
+	rm /etc/init.d/redis_sensor.sh
 	@echo "Removal complete"
