@@ -3,7 +3,7 @@ CONFIGDIR ?=/etc
 
 install:
 	@echo "Installing prereqs"
-        apt-get install -y python-dev
+	apt-get install -y python-dev
 	apt-get install -y redis-server python-redis weather-util apache2
 	apt-get install -y python-django libapache2-mod-wsgi
 	pip install --upgrade pytz evdev redis configparser
