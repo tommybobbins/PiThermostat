@@ -8,11 +8,13 @@ install:
 	apt-get install -y python-django libapache2-mod-wsgi
 	pip install --upgrade pytz evdev redis configparser
 	pip install apiclient urllib3 django-icons-tango django-happenings
+	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
+	cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 	@echo "Installing into $(BINDIR)"
 	cp calculate_temps.py  $(BINDIR)
 	cp django_happenings.py  $(BINDIR)
 	cp process_temperatures.py $(BINDIR)
-	cp utilities/calculate_temps.py $(BINDIR)
+	cp utilities/temp_stats.py $(BINDIR)
 	cp utilities/read_redis.py $(BINDIR)
 	cp utilities/retrieve_weather.sh $(BINDIR)
 	cp utilities/parse_weather.py $(BINDIR)
@@ -20,7 +22,7 @@ install:
 	chmod 755 $(BINDIR)/*.py
 	chmod 755 $(BINDIR)/*.sh
 	@echo "Copying configuration file"
-	cp etc/pithermostat.conf $(DESTDIR)/gnuplorer/bin/
+	cp etc/pithermostat.conf /etc
 	@echo "Copying init script"
 	cp init.d/murunner.sh $(CONFIGDIR)/init.d
 	cp init.d/thermostat.sh $(CONFIGDIR)/init.d/
@@ -77,4 +79,5 @@ clean:
 	rm $(BINDIR)retrieve_weather.sh
 	rm $(BINDIR)parse_weather.py
 	rm -rf /usr/local/django
+	rm -rf /usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code
 	@echo "Removal complete"
