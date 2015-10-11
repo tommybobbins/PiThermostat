@@ -4,7 +4,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
-from lights.models import Socket, Boiler
+from lights.models import Socket
 import datetime, os
 import re
 import redis
@@ -107,21 +107,6 @@ def velux(request, openclosestate):
     if switch_status:
         redthis.rpush("attic/jobqueue", switch_status)
     return render(request, 'lights/velux.html', { 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
-
-def switch_boiler(request, switch_onoroff):
-    cb = get_object_or_404(Boiler, id=1)
-    cb.lastcheckin=timezone.now()
-    if switch_onoroff == "on":
-       cb.switch_state = True
-    elif switch_onoroff == "off":
-       cb.switch_state = False
-    cb.save()
-#    obj_list = Socket.objects(plug_id=plug_id)
-##### Make the system call###########
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    command_to_rethis = ("/usr/local/bin/drayton %s" %(switch_onoroff))
-    redthis.rpush("cellar/jobqueue", command_to_rethis)
-    return render(request, 'lights/socketlist.html', { 'action':'switching', 'switch_socket': cb.name, 'plug_id':0, 'set_id':0, 'switch_state':cb.switch_state, 'current_location':'LIFE SUPPORT', } )
 
 def socket_list(request,corortoggle):
     try:
