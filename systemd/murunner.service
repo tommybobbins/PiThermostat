@@ -1,0 +1,9 @@
+[Unit]
+Description=Read Redis Queue and implement jobs
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/read_redis.py
+
+[Install]
+WantedBy=multi-user.target

@@ -11,18 +11,16 @@ raspi433:
 	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL)
 
 adafruit:
-	@cd /home/pi
 	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
-	cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
+	sudo cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
 
-install:
+install: raspi433 adafruit
 	@echo "Installing prereqs"
 	sudo apt-get install -y python-dev
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo pip install --upgrade pytz evdev redis configparser
 	sudo pip install apiclient urllib3 django-icons-tango django-happenings
-	adafruit
 	@echo "Installing into $(BINDIR)"
 	sudo cp calculate_temps.py  $(BINDIR)
 	sudo cp django_happenings.py  $(BINDIR)
@@ -37,13 +35,13 @@ install:
 	@echo "Copying configuration file"
 	sudo cp etc/pithermostat.conf /etc
 	@echo "Copying init script"
-	sudo cp init/murunner.sh $(CONFIGDIR)/init.d/
-	sudo cp init/thermostat.sh $(CONFIGDIR)/init.d/
-	sudo cp init/redis_sensor.sh $(CONFIGDIR)/init.d/
-	@echo "Setting runlevels"
-	sudo insserv murunner.sh
-	sudo insserv thermostat.sh
-	sudo insserv redis_sensor.sh
+	sudo cp systemd/*.service /etc/systemd/system/
+	@echo "Setting systemd"
+	systemctl enable murunner.service  
+	systemctl enable redis_sensor.service
+	systemctl enable thermostat.service
+
+
 	@echo "Installing Django"
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
@@ -57,7 +55,6 @@ install:
 	(crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
-	@echo "Downloading 433 code"
 	@echo "Starting processes"
 	sudo /etc/init.d/redis_sensor.sh start
 	sudo /etc/init.d/murunner.sh start
