@@ -41,4 +41,5 @@ client_secrets.json
 sample.dat
 google_calendar.py.bak
 *.bak
-*.bak
+Raspi_433
+Adafruit-Raspberry-Pi-Python-Code

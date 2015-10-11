@@ -54,10 +54,10 @@ install: raspi433 adafruit
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	@echo "Starting processes"
-	service murunner start
-	service redis_sensor start
-	service thermostat start
-	service apache2 restart
+	sudo service murunner start
+	sudo service redis_sensor start
+	sudo service thermostat start
+	sudo service apache2 restart
 	@echo "Install complete"
 
 clean:
