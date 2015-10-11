@@ -27,6 +27,10 @@ Install i2c using raspi-config
 
 Select Advanced mode, enable i2c and then reboot
 
+Most of the Work below can now be performed using make:
+
+    make install
+
 Using django happenings for Calendaring (see Django setup below):
 
 This is now the Default behaviour:
