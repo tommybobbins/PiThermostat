@@ -37,11 +37,9 @@ install: raspi433 adafruit
 	@echo "Copying init script"
 	sudo cp systemd/*.service /etc/systemd/system/
 	@echo "Setting systemd"
-	systemctl enable murunner.service  
-	systemctl enable redis_sensor.service
-	systemctl enable thermostat.service
-
-
+	sudo systemctl enable murunner.service  
+	sudo systemctl enable redis_sensor.service
+	sudo systemctl enable thermostat.service
 	@echo "Installing Django"
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
@@ -56,10 +54,10 @@ install: raspi433 adafruit
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	@echo "Starting processes"
-	sudo /etc/init.d/redis_sensor.sh start
-	sudo /etc/init.d/murunner.sh start
-	sudo /etc/init.d/thermostat.sh start
-	sudo /etc/init.d/apache2 restart
+	service murunner start
+	service redis_sensor start
+	service thermostat start
+	service apache2 restart
 	@echo "Install complete"
 
 clean:
@@ -78,6 +76,12 @@ clean:
 	sudo insserv -r murunner.sh
 	sudo insserv -r thermostat.sh
 	sudo insserv -r redis_sensor.sh
+	sudo systemctl disable thermostat.service
+	sudo systemctl disable murunner.service
+	sudo systemctl disable redis_sensor.service
+	sudo rm /etc/systemd/system/murunner.service 
+	sudo rm /etc/systemd/system/thermostat.service 
+	sudo rm /etc/systemd/system/redis_sensor.service 
 	sudo rm /etc/init.d/murunner.sh
 	sudo rm /etc/init.d/thermostat.sh
 	sudo rm /etc/init.d/redis_sensor.sh
