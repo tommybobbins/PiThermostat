@@ -2,7 +2,7 @@
 Description=Read Redis Queue and implement jobs
 
 [Service]
-Type=oneshot
+Type=simple
 ExecStart=/usr/local/bin/read_redis.py
 
 [Install]

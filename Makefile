@@ -16,9 +16,10 @@ adafruit:
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
-	sudo apt-get install -y python-dev python-smbus
+	sudo apt-get install -y python-dev python-smbus 
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
+	sudo apt-get install -y sqlite3
 	sudo pip install --upgrade pytz evdev redis configparser
 	sudo pip install apiclient urllib3 django-icons-tango django-happenings
 	@echo "Installing into $(BINDIR)"
