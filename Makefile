@@ -16,7 +16,7 @@ adafruit:
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
-	sudo apt-get install -y python-dev
+	sudo apt-get install -y python-dev python-smbus
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo pip install --upgrade pytz evdev redis configparser
@@ -27,6 +27,7 @@ install: raspi433 adafruit
 	sudo cp process_temperatures.py $(BINDIR)
 	sudo cp utilities/temp_stats.py $(BINDIR)
 	sudo cp utilities/read_redis.py $(BINDIR)
+	sudo cp utilities/redis_sensor.py $(BINDIR)
 	sudo cp utilities/retrieve_weather.sh $(BINDIR)
 	sudo cp utilities/parse_weather.py $(BINDIR)
 	@echo "Setting executable permissions"
