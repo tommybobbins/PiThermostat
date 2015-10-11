@@ -47,6 +47,9 @@ install: raspi433 adafruit
 	sudo chmod 666 /usr/local/django/home.db
 	@echo "Modifying hosts file"
 	sudo sed -i "s/raspberrypi/raspberrypi 433board 433host/g" /etc/hosts
+	@echo "Modifying redis-server to listen on all ports"
+	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
+	sudo service redis-server restart
 	@echo "Initialized redis queues"
 	utilities/setup_keys.sh
 	@echo "Adding cron job"
