@@ -4,6 +4,11 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" />
     <link rel="stylesheet" type="text/css" href="/static/admin/css/mansour.css" />
+{% if refresh_time %}
+<meta http-equiv="refresh" content="{{ refresh_time }}" />
+{% elif modify_value %}
+<meta http-equiv="refresh" content="5; url={{ request.META.HTTP_REFERER }}">
+{% endif %}
 </head>
 <body>
 <div id="main">

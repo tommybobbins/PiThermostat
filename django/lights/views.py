@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 from lights.models import Socket
 import datetime, os
 import re
@@ -128,7 +129,7 @@ def sockets(request):
     template_name = 'lights/togglelist.html'
     return render(request, template_name, {'sockets': socket_list})
 
-def thermostat(request,modify=None,modify_value=0.0):
+def thermostat(request,modify=None,modify_value=0.0,refresh_time=0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
@@ -172,7 +173,9 @@ def thermostat(request,modify=None,modify_value=0.0):
     if (modify == "damoclesrepair"):
         redthis.rpush("attic/jobqueue","/etc/init.d/sensortag.sh restart")
     elif (modify == "android"):
-        thermostat_template = 'lights/thermostat_android.html'
+        refresh_time=60
+    elif (modify == "refresh"):
+        refresh_time=float(refresh_time)
     modify_value=float(modify_value)
     if (modify_value > 0.0):
         required_temp = float(modify_value)
@@ -180,10 +183,11 @@ def thermostat(request,modify=None,modify_value=0.0):
         #If user selects a temperature, take it out of holiday mode too
         redthis.expire("holiday_countdown",0)
         redirect_required = True
+#        return HttpResponseRedirect(reverse('polls:results', args=(p.id,))) 
     else:
         required_temp = float(required_temp)
         redirect_required = False
-    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT' })
+    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, })
 
 
 def holding_page(request):
