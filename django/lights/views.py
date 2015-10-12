@@ -129,7 +129,8 @@ def sockets(request):
     template_name = 'lights/togglelist.html'
     return render(request, template_name, {'sockets': socket_list})
 
-def thermostat(request,modify=None,modify_value=0.0,refresh_time=0):
+def thermostat(request,modify=None,modify_value=0.0):
+    refresh_time=0
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     outside_temp=round(float(redthis.get("temperature/weather")),1)
     outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
@@ -175,7 +176,7 @@ def thermostat(request,modify=None,modify_value=0.0,refresh_time=0):
     elif (modify == "android"):
         refresh_time=60
     elif (modify == "refresh"):
-        refresh_time=float(refresh_time)
+        refresh_time=float(modify_value)
     modify_value=float(modify_value)
     if (modify_value > 0.0):
         required_temp = float(modify_value)
