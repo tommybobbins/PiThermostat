@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-from lights.models import Socket
+#from lights.models import Socket
+from lights.models import Socket,ESP8266
 import datetime, os
 import re
 import redis
@@ -226,3 +227,17 @@ def holiday(request,modify=None,modify_value=12.0):
                                                    'switch_status': modify,
                                                    })
 
+def esp_sensor(request, device='00:11:22:33:44:55', reading=15.0):
+# /checkin/18:fe:34:f4:d2:77/temperature/20.1875/
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    try:
+        cb = get_object_or_404(ESP8266, macaddress=device)
+        redthis.set("temperature/%s/sensor" % cb.name,reading)
+        redthis.expire("temperature/%s/sensor" % cb.name, cb.expirytime)
+        redthis.set("temperature/%s/multiplier" % cb.name, cb.multiplier)
+        redthis.expire("temperature/%s/multiplier" % cb.name, cb.expirytime)
+        redthis.set("temperature/%s/zone" % cb.name, cb.location)
+        redthis.expire("temperature/%s/zone" % cb.name, cb.expirytime)
+        return render(request,'lights/allok.html')
+    except:
+        print ("Unable to set set")
