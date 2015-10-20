@@ -6,14 +6,10 @@
 <div id="lcars_output">
 <h2>ARMED: {{ switch_state }}</h2>
 </div>
-<div id="readout_right">
-    <ul id="buttons">
-        <li><a href="/catcannon/on/" class="redbadge">On</a></li>
-    </ul>
-</div>
-<div id="readout_right">
-    <ul id="buttons">
-        <li><a href="/catcannon/off/" class="bluebadge">Off</a></li>
+<div id="readout_left">
+    <ul>
+        <li id="redbadge"><a href="/catcannon/on/">On</a></li>
+        <li id="bluebadge"><a href="/catcannon/off/">Off</a></li>
     </ul>
 </div>
 {% endblock %}

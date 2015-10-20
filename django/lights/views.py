@@ -132,49 +132,47 @@ def sockets(request):
 
 def thermostat(request,modify=None,modify_value=0.0):
     refresh_time=0
+    left_column={}
+    right_column={}
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    outside_temp=round(float(redthis.get("temperature/weather")),1)
-    outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
-#    required_temp=round(float(redthis.get("temperature/userrequested")),1)
+    try: 
+        calendar_temp=round(float(redthis.get("temperature/calendar")),1)
+        outside_temp=round(float(redthis.get("temperature/weather")),1)
+        outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
+        int_weighted_mean=round(float(redthis.get("temperature/inside/weightedmean")),2)
+        ext_weighted_mean=round(float(redthis.get("temperature/outside/weightedmean")),2)
+        boiler_req=(redthis.get("boiler/req"))
+        left_column['Calendar']=calendar_temp
+        right_column['Weather']=outside_temp
+        right_column['Ext. Roll']=outside_rollingmean
+#        left_column['Int.W.Mean']=int_weighted_mean
+#        right_column['Ext.W.Mean']=ext_weighted_mean
+        left_column['Boiler']=boiler_req
+    except:
+        left_column['Missing values']="N/A"
     try:
         required_temp=round(float(redthis.get("holiday_countdown")),3)
     except:
         required_temp=round(float(redthis.get("temperature/userrequested")),1)
+    regex_temp = re.compile(r'^temperature\/(.*)\/sensor$')
+    # Find all the keys matching temperature/*/sensor
+    # For each key find, the sensor value and store
+    # in temperatures
+    all_tempkeys=(redthis.keys(pattern="temperature/*/sensor"))
+    for tempkey in all_tempkeys:
+        match = regex_temp.search(tempkey)
+        location=match.group(1)
+        zonelocation=(redthis.get('temperature/%s/zone' % location))
+        value=float(redthis.get(tempkey))
+        if (zonelocation != "outside"):
+            print ("Adding %s %d inside" % (location, value))
+            left_column[location]=value
+        elif (zonelocation == "outside"):
+            print ("Adding %s %d outside " % (location, value))
+            right_column[location]=value
 
-    try: 
-        attic_sensor_temp=round(float(redthis.get("temperature/attic/sensor")),2)
-    except:
-        attic_sensor_temp=""
-    try:
-        barab_sensor_temp=round(float(redthis.get("temperature/barab/sensor")),2)    
-    except:
-        barab_sensor_temp=""
-    try:
-        cellar_sensor_temp=round(float(redthis.get("temperature/cellar/sensor")),2)
-    except:
-        cellar_sensor_temp=""
-    try:
-        damo_sensor_temp=round(float(redthis.get("temperature/damocles/sensor")),2)
-    except:
-        damo_sensor_temp=""
-#    damo_sensor_press=round(float(redthis.get("pressure/damocles/sensor")),3)
-#    damo_sensor_humid=round(float(redthis.get("humidity/damocles/sensor")),3)
-    try:
-        eden_sensor_temp=round(float(redthis.get("temperature/eden/sensor")),2)
-    except:
-        eden_sensor_temp=""
-    try:
-        forno_sensor_temp=round(float(redthis.get("temperature/forno/sensor")),2)
-    except:
-        forno_sensor_temp=""
-    int_weighted_mean=round(float(redthis.get("temperature/inside/weightedmean")),2)
-    ext_weighted_mean=round(float(redthis.get("temperature/outside/weightedmean")),2)
-    calendar_temp=round(float(redthis.get("temperature/calendar")),1)
-    boiler_req=(redthis.get("boiler/req"))
     thermostat_template = 'lights/thermostat_mobile.html'
-    if (modify == "damoclesrepair"):
-        redthis.rpush("attic/jobqueue","/etc/init.d/sensortag.sh restart")
-    elif (modify == "android"):
+    if (modify == "android"):
         refresh_time=60
     elif (modify == "refresh"):
         refresh_time=float(modify_value)
@@ -189,7 +187,8 @@ def thermostat(request,modify=None,modify_value=0.0):
     else:
         required_temp = float(required_temp)
         redirect_required = False
-    return render(request,thermostat_template,{'outside': outside_temp,'required':required_temp,'int_weighted_mean':int_weighted_mean,'barab_sensor':barab_sensor_temp,'attic_sensor':attic_sensor_temp,'cellar_sensor':cellar_sensor_temp,'calendar':calendar_temp,'boiler':boiler_req,'modify':modify, 'modify_value':modify_value, 'damo_sensor':damo_sensor_temp, 'eden_sensor':eden_sensor_temp,'forno_sensor':forno_sensor_temp,'outside_rollingmean':outside_rollingmean, 'ext_weighted_mean':ext_weighted_mean, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, })
+    left_column['Required']=required_temp
+    return render(request,thermostat_template,{'modify':modify, 'modify_value':modify_value, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, 'left_column':left_column, 'right_column':right_column,'int_weighted_mean':int_weighted_mean,'ext_weighted_mean':ext_weighted_mean,'Boiler':boiler_req,  })
 
 
 def holding_page(request):
@@ -224,7 +223,7 @@ def holiday(request,modify=None,modify_value=12.0):
                                                    'seconds': holiday_time,
                                                    'days': days,
                                                    'current_location': 'TRANSPORT',
-                                                   'switch_status': modify,
+                                                   'modify_value': modify,
                                                    })
 
 def esp_sensor(request, device='00:11:22:33:44:55', reading=15.0):

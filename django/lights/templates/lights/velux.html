@@ -8,37 +8,28 @@
         <h2>MODIFY: {{ switch_state }}</h2>
     </div>
 {% endif %}
+
 <div id="readout_left">
-<table>
-<tr>
-<td class="internal"><a href="/velux/toggleseason/" class="massive">{{season}}</a></td>
-</tr>
-<tr>
-<td class="internal">HALL</td><td class="internal">{{velux3_state}}</td>
-</tr>
-<tr>
-<td class="external">BED 1</td><td class="external">{{velux1_state}}</td>
-</tr>
-<tr>
-<td class="internal">BED 2</td><td class="internal">{{velux2_state}}</td>
-</tr>
-<tr>
-<td class="external">TEMP</td><td class="external">{{attic_temp}}</td>
-</tr>
-</table>
+<ul>
+    <li id="inside_valuesalt"><a href="/velux/toggleseason/">Toggle Season: {{ season }}</a></li>
+    <li id="inside_values">Hall: {{  velux3_state }}</li>
+    <li id="inside_valuesalt">Bed1: {{  velux1_state }}</li>
+    <li id="inside_values">Bed2: {{  velux2_state }}</li>
+    <li id="inside_valuesalt">TEMP: {{  attic_temp }}</li>
+</ul>
 </div>
-<div id="readout_right">
+<div id="readout_left">
     <ul id="buttons">
-        <li><a href="/velux/open/" class="redbadge">Hall Open</a></li>
-        <li><a href="/velux/half/" class="redbadge">Hall Half</a></li>
-        <li><a href="/velux/close/" class="redbadge">Hall Close</a></li>
+        <li id="redbadge"><a href="/velux/open/">H.Open</a></li>
+        <li id="redbadge"><a href="/velux/half/">H.Half </a></li>
+        <li id="redbadge"><a href="/velux/close/">H.Close</a></li>
     </ul>
 </div>
-<div id="readout_right">
+<div id="readout_left">
     <ul id="buttons">
-        <li><a href="/velux/allopen/" class="bluebadge">All Open</a></li>
-        <li><a href="/velux/allhalf/" class="bluebadge">All Half</a></li>
-        <li><a href="/velux/allclose/" class="bluebadge">All Close</a></li>
+        <li id="bluebadge"><a href="/velux/allopen/">A.Open</a></li>
+        <li id="bluebadge"><a href="/velux/allhalf/">A.Half</a></li>
+        <li id="bluebadge"><a href="/velux/allclose/">A.Close</a></li>
     </ul>
 </div>
 {% endblock %}

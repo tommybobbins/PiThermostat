@@ -7,7 +7,11 @@
 {% if refresh_time %}
 <meta http-equiv="refresh" content="{{ refresh_time }}" />
 {% elif modify_value %}
-<meta http-equiv="refresh" content="5; url={{ request.META.HTTP_REFERER }}">
+          {% if "required" in request.META.HTTP_REFERER %}
+          <meta http-equiv="refresh" content="0.2; url={% url 'lights.views.thermostat' %}">
+          {% else %}
+          <meta http-equiv="refresh" content="0.2; url={{ request.META.HTTP_REFERER }}">
+          {% endif %}
 {% endif %}
 </head>
 <body>

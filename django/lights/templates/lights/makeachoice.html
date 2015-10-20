@@ -9,12 +9,12 @@
 </div>
 {% endif %}
 <div id="readout_left">
-<table class="medfont">
-<tr><td class="external"><a href="/thermostat/">Life Support<a/></td></tr>
-<tr><td class="internal"><a href="/socketlist/toggle/">Power</a></td></tr>
-<tr><td class="external"><a href="/catcannon/status/">Cat Cannon</a></td></tr>
-<tr><td class="internal"><a href="/velux/status/">Velux</a></td></tr>
-<tr><td class="external"><a href="/holiday/">Transport</a></td></tr>
-</table>
+<ul>
+    <li id="inside_values"><a href="/thermostat/">Life Support<a/></li>
+    <li id="inside_valuesalt"><a href="/catcannon/status">Cat Cannon<a/></li>
+    <li id="inside_values"><a href="/velux/status">Velux<a/></li>
+    <li id="inside_valuesalt"><a href="/holiday/">Transport<a/></li>
+    <li id="inside_values"><a href="/socketlist/toggle/">Power<a/></li>
+</ul>
 </div>
 {% endblock %}
