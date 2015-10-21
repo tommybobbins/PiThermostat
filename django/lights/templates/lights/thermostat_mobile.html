@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% load sort %}
 {% block content %}
+{% if current_location %}
     <div id="lcars_command">
         <h2>{{ current_location }}</h2>
     </div>
+{% endif %}
 {% if modify_value %}
     <div id="lcars_output">
         <h2>MODIFY {{ modify_value }}</h2>
@@ -12,9 +14,9 @@
     <div id="readout_left">
         <table>
                 {% if Boiler == "True" %} 
-                <tr><td id="inside_values">Int.W.Mean:</td><td id="inside_valueson">{{ int_weighted_mean }}</td></tr>
+                <tr><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean }}</td></tr>
                 {% else %} 
-                <tr><td id="inside_values">Int.W.Mean:</td><td id="inside_values">{{ int_weighted_mean }}</td></tr>
+                <tr><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean }}</td></tr>
                 {% endif %}
                 {% for k, v in left_column.items|sort %}
                 <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
@@ -24,7 +26,7 @@
 
     <div id="readout_left">
         <table>
-               <tr><td id="outside_values">Ext.W.Mean:</td><td id="outside_values">{{ ext_weighted_mean }}</td></tr>
+               <tr><td id="outside_values">External</td><td id="outside_values">{{ ext_weighted_mean }}</td></tr>
                {% for k, v in right_column.items|sort %}
                <tr><td id="outside_values">{{ k }}</td><td id="outside_values">{{ v }}</td></tr>
                {% endfor %}

@@ -13,7 +13,7 @@ body {
    position: relative;
    font-size: 140%;
    top: 15px;
-   left: 70px;
+   left: 80px;
 }
 
 #lcars_command {
@@ -76,36 +76,34 @@ a:visited, a:link, a:hover {
 #readout_left {
     position: relative;
     left: 15%;
-    padding: 0px;
+    padding: 5px;
     top: 20px;
+    margin: 5px;
     float: left;
+    border: 2px solid #fff;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
 }
 
-#readout_left li {
+#readout_left li, td {
     color: #fff;
-    padding: 15px 25px;                                            
+    padding: 15px 15px;                                            
     list-style-type: none;
     font-size: 140%;
     margin: 0px;
-    border: 5px solid #fff;
-    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
-    margin: 0px 0px 0px 0px;
-}
-
-#readout_left td {
-    color: #fff;
-    padding: 10px 10px;                                            
-    list-style-type: none;
-    font-size: 200%;
-    margin: 0px;
     border: 0px solid #fff;
-    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+    border-radius: 22px; /* one half of ( (border * 2) + height + padding ) */
     margin: 0px 0px 0px 0px;
 }
 
 #readout_left li:hover, td:hover {
     color: #fff;
     background-color: #dde;                                
+}
+
+#readout_left ul {
+
+    padding: 0px;
+
 }
 
 #readout_right {
@@ -154,7 +152,7 @@ a:visited, a:link, a:hover {
     padding: 15px;
     text-align: center;
     list-style-type: none; 
-    padding: 25p;
+    padding: 25px;
     margin: 2px;
 }
 
