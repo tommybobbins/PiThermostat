@@ -14,12 +14,12 @@
     <div id="readout_left">
         <table>
                 {% if Boiler == "True" %} 
-                <tr><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean }}</td></tr>
+                <tr><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean|floatformat:1 }}</td></tr>
                 {% else %} 
-                <tr><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean }}</td></tr>
+                <tr><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean|floatformat:1 }}</td></tr>
                 {% endif %}
                 {% for k, v in left_column.items|sort %}
-                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
+                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v|floatformat:1 }}</td></tr>
                 {% endfor %}
         </table>
     </div>

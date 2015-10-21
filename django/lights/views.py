@@ -136,11 +136,11 @@ def thermostat(request,modify=None,modify_value=0.0):
     right_column={}
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     try: 
-        calendar_temp=round(float(redthis.get("temperature/calendar")),1)
-        outside_temp=round(float(redthis.get("temperature/weather")),1)
-        outside_rollingmean=round(float(redthis.get("temperature/outside/rollingmean")),1)
-        int_weighted_mean=round(float(redthis.get("temperature/inside/weightedmean")),2)
-        ext_weighted_mean=round(float(redthis.get("temperature/outside/weightedmean")),2)
+        calendar_temp=float(redthis.get("temperature/calendar"))
+        outside_temp=float(redthis.get("temperature/weather"))
+        outside_rollingmean=float(redthis.get("temperature/outside/rollingmean"))
+        int_weighted_mean=float(redthis.get("temperature/inside/weightedmean"))
+        ext_weighted_mean=float(redthis.get("temperature/outside/weightedmean"))
         boiler_req=(redthis.get("boiler/req"))
         left_column['Calendar']=calendar_temp
         right_column['Weather']=outside_temp
@@ -151,9 +151,9 @@ def thermostat(request,modify=None,modify_value=0.0):
     except:
         left_column['Missing values']="N/A"
     try:
-        required_temp=round(float(redthis.get("holiday_countdown")),3)
+        required_temp=float(redthis.get("holiday_countdown"))
     except:
-        required_temp=round(float(redthis.get("temperature/userrequested")),1)
+        required_temp=float(redthis.get("temperature/userrequested"))
     regex_temp = re.compile(r'^temperature\/(.*)\/sensor$')
     # Find all the keys matching temperature/*/sensor
     # For each key find, the sensor value and store
@@ -203,7 +203,7 @@ def current(request):
 def holiday(request,modify=None,modify_value=12.0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     try:  
-        holiday_temp=round(float(redthis.get("holiday_countdown")),2)
+        holiday_temp=float(redthis.get("holiday_countdown"))
         holiday_time=redthis.ttl("holiday_countdown")
     except:
         holiday_temp=7.0
@@ -218,7 +218,7 @@ def holiday(request,modify=None,modify_value=12.0):
         redthis.set("holiday_countdown",7.0)
         holiday_temp = 7.0
         redthis.expire("holiday_countdown",holiday_time)
-    days = round(float (holiday_time / (24.0 * 60.0 * 60.0)),2)
+    days = float (holiday_time / (24.0 * 60.0 * 60.0))
     return render(request, 'lights/holiday.html', {'holiday_temp': holiday_temp,
                                                    'seconds': holiday_time,
                                                    'days': days,
