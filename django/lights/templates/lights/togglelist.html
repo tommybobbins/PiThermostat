@@ -12,9 +12,9 @@
         <ul>
 	{% for number in sockets %}
 	{% ifequal number.switch_state True %}
-	<li id="inside_valueson"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">{{number.name}}{{number.lastcheckin}}</a></li>
+	<li id="redbadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">{{number.name}}{{number.lastcheckin}}</a></li>
 	{% else %}
-	<li id="inside_values"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
+	<li id="bluebadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
 	{{ number.name }}
         {{ number.lastcheckin }}</a>
 	{% endifequal %}
