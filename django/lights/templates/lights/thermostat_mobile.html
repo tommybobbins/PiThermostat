@@ -10,25 +10,25 @@
     </div>
 {% endif %}
     <div id="readout_left">
-        <ul>
+        <table>
                 {% if Boiler == "True" %} 
-                <li id="inside_valueson">Int.W.Mean: {{ int_weighted_mean }} </li>
+                <tr><td id="inside_values">Int.W.Mean:</td><td id="inside_valueson">{{ int_weighted_mean }}</td></tr>
                 {% else %} 
-                <li id="inside_values">Int.W.Mean: {{ int_weighted_mean }} </li>
+                <tr><td id="inside_values">Int.W.Mean:</td><td id="inside_values">{{ int_weighted_mean }}</td></tr>
                 {% endif %}
                 {% for k, v in left_column.items|sort %}
-                <li id="inside_values">{{ k }} : {{ v }} </li>
+                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
                 {% endfor %}
-        </ul>
+        </table>
     </div>
 
     <div id="readout_left">
-        <ul>
-               <li id="outside_values">Ext.W.Mean: {{ ext_weighted_mean }} </li>
+        <table>
+               <tr><td id="outside_values">Ext.W.Mean:</td><td id="outside_values">{{ ext_weighted_mean }}</td></tr>
                {% for k, v in right_column.items|sort %}
-               <li id="outside_values">{{ k }} : {{ v }} </li>
+               <tr><td id="outside_values">{{ k }}</td><td id="outside_values">{{ v }}</td></tr>
                {% endfor %}
-       </ul>
+       </table>
     </div>
 
     <div id="readout_left">

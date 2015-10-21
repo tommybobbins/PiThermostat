@@ -92,7 +92,18 @@ a:visited, a:link, a:hover {
     margin: 0px 0px 0px 0px;
 }
 
-#readout_left li:hover {
+#readout_left td {
+    color: #fff;
+    padding: 10px 10px;                                            
+    list-style-type: none;
+    font-size: 200%;
+    margin: 0px;
+    border: 0px solid #fff;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+    margin: 0px 0px 0px 0px;
+}
+
+#readout_left li:hover, td:hover {
     color: #fff;
     background-color: #dde;                                
 }
