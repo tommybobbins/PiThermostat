@@ -19,16 +19,20 @@
                 <tr><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean|floatformat:1 }}</td></tr>
                 {% endif %}
                 {% for k, v in left_column.items|sort %}
+                {% if v == "False"  or v == "True" %}
+                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
+                {% else %}
                 <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v|floatformat:1 }}</td></tr>
+                {% endif %}
                 {% endfor %}
         </table>
     </div>
 
     <div id="readout_left">
         <table>
-               <tr><td id="outside_values">External</td><td id="outside_values">{{ ext_weighted_mean }}</td></tr>
+               <tr><td id="outside_values">External</td><td id="outside_values">{{ ext_weighted_mean|floatformat:1 }}</td></tr>
                {% for k, v in right_column.items|sort %}
-               <tr><td id="outside_values">{{ k }}</td><td id="outside_values">{{ v }}</td></tr>
+               <tr><td id="outside_values">{{ k }}</td><td id="outside_values">{{ v|floatformat:1 }}</td></tr>
                {% endfor %}
        </table>
     </div>
