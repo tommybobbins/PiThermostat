@@ -6,7 +6,7 @@ Central heating system using a Raspberry Pi and optinally an LCD touchscreen req
 
 More details about the 433 sender board used can be found https://github.com/tommybobbins/Raspi_433
 
-![](icons/pi_therm_process.jpg)
+![](icons/pi_therm_process.png)
 
 The file structure of this project is as follows:
      
