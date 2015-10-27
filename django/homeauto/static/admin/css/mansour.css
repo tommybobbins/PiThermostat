@@ -144,16 +144,15 @@ a:visited, a:link, a:hover {
 }
 
 #buttons li {
-    font-size: 160%;
+    font-size: 400%;
     border: 2px solid white;
     border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
     box-shadow: 1px 1px 1px white;
     color: white;
-    padding: 15px;
+    padding: 25px 5px;
     text-align: center;
     list-style-type: none; 
-    padding: 25px;
-    margin: 2px;
+    margin: 4px;
 }
 
 #buttons li:hover {
