@@ -47,6 +47,8 @@ install: raspi433 adafruit
 	sudo cp -rp django/* /usr/local/django/
 	sudo python /usr/local/django/manage.py syncdb
 	sudo chmod 666 /usr/local/django/home.db
+	sudo chown www-data:www-data /usr/local/django/
+	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
 	sudo sed -i "s/raspberrypi/raspberrypi 433board 433host/g" /etc/hosts
 	@echo "Modifying redis-server to listen on all ports"
