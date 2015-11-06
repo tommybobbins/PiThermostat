@@ -9,6 +9,9 @@
 # Modified 24-June-2015
 # tng@chegwin.org
 # Move to django_happenings
+# Modified 27-Sep-2015
+# tng@chegwin.org/jon@rosslug.org.uk
+# Modularised, added config file, made generic
 
 from sys import path
 from ConfigParser import SafeConfigParser
@@ -17,6 +20,7 @@ from time import sleep
 import redis
 #from google_calendar import google_calendar
 from django_happenings import parse_calendar
+from calculate_temps import calculate_temps,calculate_weighted_mean
 import re
 parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')
@@ -36,37 +40,6 @@ temp={}
 multiplier={}
 external_temp={}
 external_multiplier={}
-
-def calculate_weighted_mean(incoming_multiplier,incoming_temp):
-    numerator = 0
-    denominator = 0
-    running_mean = 14.666
-    for item in incoming_multiplier.keys():
-        try:
-            numerator += incoming_multiplier[item]*incoming_temp[item] 
-            denominator += incoming_multiplier[item] 
-            running_mean =  float(numerator/denominator)
-            if Debug:
-                print ("Running mean %f " % running_mean)
-        except:
-            print ("Something went wrong\n")
-            running_mean = 14.665
-            if Debug:
-                print ("numerator = %i" % numerator)
-                print ("denominator = %i" % denominator)
-    return(running_mean) 
-
-def find_sensor_data(incoming_sensor):
-    try:
-        redis_temp = ('temperature/'+incoming_sensor+'/sensor')
-        redis_mult = ('temperature/'+incoming_sensor+'/multiplier')
-        temp=float(redthis.get(redis_temp))
-        mult=float(redthis.get(redis_mult))
-#        print ("For incoming %s, we have temp=%f , mult = %f" % (incoming_sensor,temp,mult))
-    except:
-        temp =  0
-        mult =  0
-    return (temp, mult)
 
 def send_call_boiler(on_or_off):
     if Debug:
@@ -93,12 +66,13 @@ def send_call_boiler(on_or_off):
 
 def read_temps():
     try:
-        # First of all we grab google calendar. If the internet is down 
+        # First of all we grab google/Django happenings calendar. 
+        # If the internet is down 
         # we set the value to 6.999
 #        calendar_temp=float(google_calendar())
         calendar_temp=float(parse_calendar())
     except:
-        print ("Google down")
+        print ("Google down or Django happenings not happening")
         calendar_temp=6.999
     try:
         #Read in all the previous settings
@@ -114,13 +88,12 @@ def read_temps():
         time_to_live=290
         failover_temp = 14.663
         previous_calendar_temp=calendar_temp
-    (temp['attic'],multiplier['attic']) = find_sensor_data('attic') 
-    (temp['barab'],multiplier['barab']) = find_sensor_data('barab') 
-    (temp['cellar'],multiplier['cellar']) = find_sensor_data('cellar') 
-    (temp['damocles'],multiplier['damocles']) = find_sensor_data('damocles') 
-    (external_temp['eden'],external_multiplier['eden']) = find_sensor_data('eden')
-    (external_temp['forno'],external_multiplier['forno']) = find_sensor_data('forno')
-    (external_temp['outside'],external_multiplier['outside']) = (weather_temp,5) 
+
+    try:
+        (mean_temp, mean_external_temp) = calculate_temps()
+    except:
+        mean_temp=15.623
+        mean_external_temp=10.123
     try:
         outside_rolling_mean=float(redthis.get("temperature/outside/rollingmean"))
     except:
@@ -141,12 +114,6 @@ def read_temps():
     if Debug: 
         print ("Found weather %f" % weather_temp)
         print ("Found user requested %f" % userreq_temp)
-        print ("Found Barab %f" % temp['barab'])
-        print ("Found Cellar %f" % temp['cellar'])
-        print ("Found Attic %f" % temp['attic'])
-        print ("Found Damocles %f" % temp['damocles'])
-        print ("Found Eden %f" % external_temp['eden'])
-        print ("Found Forno %f" % external_temp['forno'])
         print ("Found calendar %f" % calendar_temp)
         print ("Time until boiler needs poking = %i" % time_to_live)
         print ("Previous calendar = %f" % previous_calendar_temp)
@@ -163,8 +130,6 @@ def read_temps():
             print ("Unable to update redis")
     if Debug:
         print ("User Requested is now %f" % userreq_temp)
-    mean_temp = calculate_weighted_mean(multiplier,temp)
-    mean_external_temp = calculate_weighted_mean(external_multiplier,external_temp)
     redthis.set("temperature/inside/weightedmean", mean_temp)
     redthis.set("temperature/outside/weightedmean", mean_external_temp)
     if Debug:

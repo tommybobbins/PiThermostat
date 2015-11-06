@@ -31,8 +31,9 @@ try:
     damocles_sensor_temp=(0.0)
     eden_sensor_temp=float(redthis.get("temperature/eden/sensor"))
     forno_sensor_temp=float(redthis.get("temperature/forno/sensor"))
+    boiler_req=(redthis.get("boiler/req"))
 except:
     outside_temp = 0
     sensor_temp = 0
     required_temp = 0
-logging.info ("%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f" % (dt,outside_temp,barab_sensor_temp,required_temp, attic_sensor_temp, cellar_sensor_temp, damocles_sensor_temp, eden_sensor_temp, forno_sensor_temp ))
+logging.info ("%s\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%s" % (dt,outside_temp,barab_sensor_temp,required_temp, attic_sensor_temp, cellar_sensor_temp, damocles_sensor_temp, eden_sensor_temp, forno_sensor_temp, boiler_req ))

@@ -9,21 +9,17 @@
 </div>
 {% endif %}
 <div id="readout_left">
-	<table class="medfont">
+        <ul>
 	{% for number in sockets %}
-	<tr>
 	{% ifequal number.switch_state True %}
-	<td class="tablecol2">
-	<a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">
+	<li id="redbadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">{{number.name}}{{number.lastcheckin}}</a></li>
 	{% else %}
-	<td class="tablecol6">
-	<a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
+	<li id="bluebadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
+	{{ number.name }}
+        {{ number.lastcheckin }}</a>
 	{% endifequal %}
-	{{ number.name }}</a>
-	</td> 
-        <td class="tablecol6">{{ number.lastcheckin }}</td>
-	</tr>
+	</li>
 	{% endfor %}
-	</table>
+        </ul>
 </div>
 {% endblock %}

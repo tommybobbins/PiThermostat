@@ -2,17 +2,12 @@
 
 {% block content %}
 <div id="readout_left">
-	<table>
-	<tr>
-	<td class="tablecol5">
-	{{ switch_socket }}</td>
-	<td class="tablecol6">
-	{{plug_id}}</td>
-	<td class="tablecol7">
-	{{ switch_state }}</td></tr>
-        <tr>
-	<td class="tablecol5"><a href="/socketlist/toggle/">STATUS</a></td>
-        </tr>
-        </table>
+        <ul>
+	<li id="inside_values">{{ switch_socket }}
+	{{plug_id}}
+	{{ switch_state }}
+	<a href="/socketlist/toggle/">STATUS</a></li>
+        <li id="bluebadge"><a href="/socketlist/toggle/">Return</a></li>
+        </ul>
 </div>
 {% endblock %}

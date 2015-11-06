@@ -1,67 +1,56 @@
 {% extends "base.html" %}
+{% load sort %}
 {% block content %}
+{% if current_location %}
     <div id="lcars_command">
         <h2>{{ current_location }}</h2>
     </div>
+{% endif %}
 {% if modify_value %}
-<div id="lcars_output">
-<h2>MODIFY {{ modify_value }}</h2>
-</div>
+    <div id="lcars_output">
+        <h2>MODIFY {{ modify_value }}</h2>
+    </div>
 {% endif %}
-<div id="readout_left">
-<table> 
-<tr><th>Device</th><th>Reading</th><th>Device</th><th>Reading</th></tr>
-<tbody>
-<tr>
-<td class="tablecol5">Attic</td><td class="tablecol5"> {{ attic_sensor }}</td>
-<td class="tablecol6">Eden</td><td class="tablecol6"> {{ eden_sensor }}</td>
-</tr>
-<tr>
-<td class="tablecol6">Barab</td><td class="tablecol6"> {{ barab_sensor }}</td>
-<td class="tablecol5">Forno</td><td class="tablecol5"> {{ forno_sensor }}</td>
-</tr>
-<tr>
-<td class="tablecol5">Cellar</td><td class="tablecol5"> {{ cellar_sensor }}</td>
-<td class="tablecol6">Mean Int.</td><td class="tablecol6"> {{ int_weighted_mean }}</td>
-</tr>
-<tr>
-{% if damo_sensor %}
-<td class="tablecol6">Damocles</td><td class="tablecol6"> {{ damo_sensor }}</td>
-<!--<tr><td class="tablecol5">Damocles</td><td class="tablecol5"><a href="/thermostat/damoclesrepair/">Repair</a></td>-->
-{% else %}
-<td class="tablecol5">Damocles</td><td class="tablecol5">N/A</td>
-{% endif %}
-<td class="tablecol5">Mean Ext.</td><td class="tablecol5"> {{ ext_weighted_mean }}</td>
-</tr>
-<tr>
-<td class="tablecol5">Outside</td><td class="tablecol5">{{ outside }}</td>
-<td class="tablecol6">RollExt</td><td class="tablecol6"> {{ outside_rollingmean }}</td>
-</tr>
-<tr>
-<td class="tablecol6">Calendar</td><td class="tablecol6">{{ calendar }}</td>
-<td class="tablecol5">Required</td><td class="tablecol5">{{ required }}</td>
-</tr>
-<tr><td class="tablecol5">Boiler</td><td class="tablecol5">{{ boiler }}</td><td></td><td></td></tr>
-</tbody>
-</table>
-</div>
+    <div id="readout_left">
+        <table>
+                {% if Boiler == "True" %} 
+                <tr><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean|floatformat:1 }}</td></tr>
+                {% else %} 
+                <tr><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean|floatformat:1 }}</td></tr>
+                {% endif %}
+                {% for k, v in left_column.items|sort %}
+                {% if v == "False"  or v == "True" %}
+                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
+                {% else %}
+                <tr><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v|floatformat:1 }}</td></tr>
+                {% endif %}
+                {% endfor %}
+        </table>
+    </div>
 
-<div id="readout_right">
-    <ul id="buttons">
-        <li><a href="/thermostat/required/22.0/" class="redbadge">22</a></li>
-        <li><a href="/thermostat/required/20.0/" class="redbadge">20</a></li>
-        <li><a href="/thermostat/required/18.0/" class="redbadge">18</a></li>
-        <li><a href="/thermostat/required/16.0/" class="redbadge">16</a></li>
-        <li><a href="/thermostat/required/12.0/" class="redbadge">12</a></li>
-    </ul>
-</div>
-<div id="readout_right">
-    <ul id="buttons">
-        <li><a href="/thermostat/required/26.0/" class="bluebadge">26</a></li>
-        <li><a href="/thermostat/required/24.0/" class="bluebadge">24</a></li>
-        <li><a href="/thermostat/required/21.0/" class="bluebadge">21</a></li>
-        <li><a href="/thermostat/required/14.0/" class="bluebadge">14</a></li>
-        <li><a href="/thermostat/required/8.0/" class="bluebadge">08</a></li>
-    </ul>
-</div>
+    <div id="readout_left">
+        <table>
+               <tr><td id="outside_values">External</td><td id="outside_values">{{ ext_weighted_mean|floatformat:1 }}</td></tr>
+               {% for k, v in right_column.items|sort %}
+               <tr><td id="outside_values">{{ k }}</td><td id="outside_values">{{ v|floatformat:1 }}</td></tr>
+               {% endfor %}
+       </table>
+    </div>
+
+    <div id="readout_left">
+        <ul id="buttons">
+            <li id="redbadge"><a href="/thermostat/required/22.0/" >22</a></li>
+            <li id="redbadge"><a href="/thermostat/required/20.0/" >20</a></li>
+            <li id="redbadge"><a href="/thermostat/required/18.0/" >18</a></li>
+            <li id="redbadge"><a href="/thermostat/required/16.0/" >16</a></li>
+            <li id="redbadge"><a href="/thermostat/required/12.0/" >12</a></li>
+        </ul>
+        <ul id="buttons">
+            <li id="bluebadge"><a href="/thermostat/required/26.0/" >26</a></li>
+            <li id="bluebadge"><a href="/thermostat/required/24.0/" >24</a></li>
+            <li id="bluebadge"><a href="/thermostat/required/21.0/" >21</a></li>
+            <li id="bluebadge"><a href="/thermostat/required/14.0/" >14</a></li>
+            <li id="bluebadge"><a href="/thermostat/required/8.0/" >08</a></li>
+        </ul>
+    </div>
 {% endblock %}

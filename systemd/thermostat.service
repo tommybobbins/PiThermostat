@@ -1,0 +1,9 @@
+[Unit]
+Description=Thermostat read temperatures and calendar
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/process_temperatures.py
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Read from TMP102 and feed result into redis
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/redis_sensor.py
+
+[Install]
+WantedBy=multi-user.target

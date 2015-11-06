@@ -1,0 +1,4 @@
+@xset s off
+@xset -dpms
+@xset s noblank
+@/usr/bin/epiphany-browser http://localhost/thermostat/

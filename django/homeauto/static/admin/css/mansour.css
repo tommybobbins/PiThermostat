@@ -3,25 +3,26 @@ p {
 }
 
 body {
-   font-size: 140%;
+/*   font-size: 140%;*/
    margin: 0px;
+   color: #fff;
    background: #000 url(../img/lcars_background.png) no-repeat;
 }
 
 #lcars_home a{
    position: relative;
+   font-size: 140%;
    top: 15px;
-   left: 70px;
-   color: #fff;
+   left: 80px;
 }
 
 #lcars_command {
    position: absolute;
-   color: #fff;
    top: -10px;
    left: 220px;
    border: 5px, solid, transparent;
 }
+
 
 #lcars_output {
    position: absolute;
@@ -39,26 +40,12 @@ left: 0px;
 top: 0px;
 }
 
-.redbadge {
-    font-size: 160%;
+#redbadge {
     background-color: #cd5c5c;
-    border: 2px solid white;
-    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
-    box-shadow: 1px 1px 1px white;
-    color: white;
-    padding: 15px;
-    text-align: center;
 }
 
-.bluebadge {
-    font-size: 160%;
+#bluebadge {
     background-color: #ff8c00;
-    border: 2px solid white;
-    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
-    box-shadow: 1px 1px 1px white;
-    color: white;
-    padding: 15px;
-    text-align: center;
 }
 
 tr {
@@ -86,88 +73,90 @@ a:visited, a:link, a:hover {
       color: #fff;
 }
 
-.readout a,td,th {                                            
-    color: #fff;                                              
-    background-color: #9999ff;                                
-    border: 15px solid transparent;                            
-    padding: 5px;                                            
-    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
-} 
-
 #readout_left {
-    left: 150px;
-    float: left;
     position: relative;
-    top: 2px;
-    border 5px;
+    left: 20%;
+    padding: 5px;
+    top: 20px;
+    margin: 5px;
+    float: left;
+    border: 2px solid #fff;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+#readout_left li, td {
+    color: #fff;
+    padding: 15px 15px;                                            
+    list-style-type: none;
+    font-size: 140%;
+    margin: 0px;
+    border: 0px solid #fff;
+    border-radius: 22px; /* one half of ( (border * 2) + height + padding ) */
+    margin: 0px 0px 0px 0px;
+}
+
+#readout_left li:hover, td:hover {
+    color: #fff;
+    background-color: #dde;                                
+}
+
+#readout_left ul {
+
+    padding: 0px;
+
 }
 
 #readout_right {
+    position: relative;
     float: left;
-    position: relative;
-    left: 150px;
+    right: 0%;
     top: 0px;
+    padding: 5px;
+    margin: 0px;
+    border: 0px;
 }
 
-.readout h2 { 
-    border: 2px solid blue;
-    color: #000; }
-
-.tablecol1 {
-    background-color: #cc6666;
-}
-.tablecol2 {
-    background-color: #ff8c00;
-}
-.tablecol3 {
-    background-color: #ff9966;
-    color: #000;
-}
-.tablecol4 {
-    background-color: #ffcc99;
-    color: #000;
+#inside_values {
+    margin: 20px;
+    background-color: #669;                                
 }
 
-.tablecol3 a{
-    color: #000;
-}
-.tablecol4 a{
-    color: #000;
+#inside_valuesalt {
+    padding: 20px;
+    background-color: #aae;                                
 }
 
-.tablecol5 {
-    background-color: #ff9966;
-    color: #fff;
+#inside_valueson {
+    padding: 20px;
+    background-color: #d99;                                
 }
 
-.tablecol6 {
-    background-color: #9999cc;
-    color: #fff;
-}
-
-.tablecol7 {
-    background-color: #9999ff;
-    color: #fff;
-}
-
-#interface {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    background-color: #0f0;
+#outside_values {
+    padding: 20px;
+    background-color: #396;                                
 }
 
 #buttons {
     float: left;
-    padding: 0px;
+    padding: 10px;
     margin: 0px;
     top: 20px;
 }
 
 #buttons li {
+    font-size: 400%;
+    border: 2px solid white;
+    border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+    box-shadow: 1px 1px 1px white;
+    color: white;
+    padding: 20px 5px;
+    text-align: center;
     list-style-type: none; 
-    padding: 25px 0px 25px 0px;
-    margin: 5px;
+    margin: 4px;
+}
+
+#buttons li:hover {
+    background-color: #ccc;
 }
 
 a:hover {

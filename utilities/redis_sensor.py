@@ -23,6 +23,8 @@ redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 # Find location from pithermostat.conf
 room_location=parser.get('locale','location')
+# Will generally be inside/outside
+zone_location=parser.get('locale','zone')
 
 
 time_to_live = 3600
@@ -31,14 +33,17 @@ time_to_live = 3600
 ###### determines how much weighting this sensor
 ###### if used at an extreme point in the house (say cellar), set to 1
 ###### if used centrally (living room), set to 3 or 4
-multiplier = 3
+# Now set in /etc/pithemostat.conf
+zone_multiplier=parser.get('locale','multiplier')
 #import crankers
 sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 from Adafruit_I2C import Adafruit_I2C
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
+zone_name="temperature/"+room_location+"/zone"
 #print ("Sensor name is %s" % sensor_name)
 #print ("Multiplier name is %s" % mult_name)
+#print ("Zone name is %s" % zone_name)
 
 class Tmp102:
   i2c = None
@@ -83,9 +88,11 @@ while True:
         floattemp = mytemp.readTemperature()
 #        print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
-        redthis.set(mult_name,multiplier)
+        redthis.set(mult_name,zone_multiplier)
+        redthis.set(zone_name,zone_location)
         redthis.expire(sensor_name,time_to_live)
         redthis.expire(mult_name,time_to_live)
+        redthis.expire(zone_name,time_to_live)
     except:
         print ("Unable to retrieve temperature")
     time.sleep(120)

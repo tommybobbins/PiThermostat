@@ -3,40 +3,35 @@
     <div id="lcars_command">
         <h2>{{ current_location }}</h2>
     </div>
-{% if switch_status %}
-<div id="lcars_output">
-<h2>MODIFY: {{ switch_status }}</h2>
-</div>
+{% if modify_value %}
+    <div id="lcars_output">
+        <h2>MODIFY {{ modify_value }}</h2>
+    </div>
 {% endif %}
 
-<div id="readout_left">
-<table> 
-<tr><th class="tablecol7">Trip</th><th class="tablecol7">Value</th></tr>
-<tbody>
-<tr><td class="tablecol5">Num. Days</td><td class="tablecol5"> {{ days }}</td></tr>
-<td class="tablecol6">Min. Temp</td><td class="tablecol6">{{ holiday_temp }}</td>
-</tr>
-</table>
-</div>
-<div id="readout_right">
-    <ul id="buttons">
-        <li><a href="/holiday/days/0/" class="redbadge">End</a></li>
-        <li><a href="/holiday/days/2.0/" class="redbadge">2d</a></li>
-        <li><a href="/holiday/days/3.0/" class="redbadge">3d</a></li>
-        <li><a href="/holiday/days/7.0/" class="redbadge">7d</a></li>
-        <li><a href="/holiday/days/10.0/" class="redbadge">10d</a></li>
-        <li><a href="/holiday/days/14.0/" class="redbadge">14d</a></li>
-    </ul>
-</div>
 
-<div id="readout_right">
+<div id="readout_left">
+<ul>
+    <li id="inside_values">Number of days holiday {{ days|floatformat:3 }}</li>
+    <li id="inside_valuesalt">Maintain this Temperature {{holiday_temp|floatformat:0}}C</li>
+</ul>
+</div>
+<div id="readout_left">
     <ul id="buttons">
-        <li><a href="/holiday/temp/7.0/" class="bluebadge">7.0C</a></li>
-        <li><a href="/holiday/temp/10.0/" class="bluebadge">10.0C</a></li>
-        <li><a href="/holiday/temp/15.0/" class="bluebadge">15.0C</a></li>
-        <li><a href="/holiday/temp/18.0/" class="bluebadge">15.0C</a></li>
-        <li><a href="/holiday/temp/20.0/" class="bluebadge">20.0C</a></li>
-        <li><a href="/holiday/temp/22.0/" class="bluebadge">22.0C</a></li>
+        <li id="redbadge"><a href="/holiday/days/0/">End</a></li>
+        <li id="redbadge"><a href="/holiday/days/1.0/">1d</a></li>
+        <li id="redbadge"><a href="/holiday/days/2.0/">2d</a></li>
+        <li id="redbadge"><a href="/holiday/days/6.0/">6d</a></li>
+        <li id="redbadge"><a href="/holiday/days/9.0/">9d</a></li>
+        <li id="redbadge"><a href="/holiday/days/13.0/">13d</a></li>
+    </ul>
+    <ul id="buttons">
+        <li id="bluebadge"><a href="/holiday/temp/7.0/">7.0C</a></li>
+        <li id="bluebadge"><a href="/holiday/temp/10.0/">10.0C</a></li>
+        <li id="bluebadge"><a href="/holiday/temp/15.0/">15.0C</a></li>
+        <li id="bluebadge"><a href="/holiday/temp/18.0/">18.0C</a></li>
+        <li id="bluebadge"><a href="/holiday/temp/20.0/">20.0C</a></li>
+        <li id="bluebadge"><a href="/holiday/temp/22.0/">22.0C</a></li>
     </ul>
 </div>
 {% endblock %}
