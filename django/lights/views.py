@@ -237,6 +237,6 @@ def esp_sensor(request, device='00:11:22:33:44:55', reading=15.0):
         redthis.expire("temperature/%s/multiplier" % cb.name, cb.expirytime)
         redthis.set("temperature/%s/zone" % cb.name, cb.location)
         redthis.expire("temperature/%s/zone" % cb.name, cb.expirytime)
-        return render(request,'lights/allok.html')
+        return HttpResponse("Temp receive OK")
     except:
-        print ("Unable to set set")
+        return HttpResponse("Temp receive FAILED")
