@@ -60,6 +60,8 @@ install: raspi433 adafruit
 	(crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
+        @echo "Modifying KeepAlive Off"
+        sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 	@echo "Starting processes"
 	sudo service murunner start
 	sudo service redis_sensor start
