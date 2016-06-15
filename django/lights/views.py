@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 #from lights.models import Socket
-from lights.models import Socket,ESP8266
+from lights.models import Socket,ESP8266,WirelessTemp
 import datetime, os
 import re
 import redis
@@ -240,3 +240,26 @@ def esp_sensor(request, device='00:11:22:33:44:55', reading=15.0):
         return HttpResponse("Temp receive OK")
     except:
         return HttpResponse("Temp receive FAILED")
+
+def wireless_sensor(request, device='DD', temp_or_voltage="temperature", reading=15.0):
+# /checkinwt/DD/temperature/20.1875/
+# /checkinwt/DD/voltage/2.875/
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    try:
+        cb = get_object_or_404(WirelessTemp, macaddress=device)
+        if (temp_or_voltage == "temperature"):   
+            redthis.set("temperature/%s/sensor" % cb.name,reading)
+            redthis.expire("temperature/%s/sensor" % cb.name, cb.expirytime)
+            redthis.set("temperature/%s/multiplier" % cb.name, cb.multiplier)
+            redthis.expire("temperature/%s/multiplier" % cb.name, cb.expirytime)
+            redthis.set("temperature/%s/zone" % cb.name, cb.location)
+            redthis.expire("temperature/%s/zone" % cb.name, cb.expirytime)
+            return HttpResponse("Temp received OK")
+        elif (temp_or_voltage == "voltage"):
+            redthis.set("voltage/%s/sensor" % cb.name,reading)
+            redthis.expire("voltage/%s/sensor" % cb.name, cb.expirytime)
+            return HttpResponse("Voltage received OK")
+        else:
+            return HttpResponse("No temperature or Voltage received")
+    except:
+        return HttpResponse("Temp or Voltage receive FAILED")
