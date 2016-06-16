@@ -1,0 +1,10 @@
+[Unit]
+Description=Wireless Things serial to cURL interface for https://github.com/tommybobbins/PiThermostat
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/wt_sensor.py
+
+[Install]
+WantedBy=multi-user.target
+
