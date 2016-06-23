@@ -257,7 +257,9 @@ def wireless_sensor(request, device='DD', temp_or_voltage="temperature", reading
             return HttpResponse("Temp received OK")
         elif (temp_or_voltage == "voltage"):
             redthis.set("voltage/%s/sensor" % cb.name,reading)
-            redthis.expire("voltage/%s/sensor" % cb.name, cb.expirytime)
+            # Voltages need to hang around in redis longer
+            vexpiry = cb.expirytime*24
+            redthis.expire("voltage/%s/sensor" % cb.name, vexpiry)
             return HttpResponse("Voltage received OK")
         else:
             return HttpResponse("No temperature or Voltage received")
