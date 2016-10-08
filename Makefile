@@ -50,7 +50,7 @@ install: raspi433 adafruit
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	sudo echo "127.0.0.1 433board 433host" >> /etc/hosts
+	echo $'\n127.0.0.1 433board 433host' | sudo tee -a /etc/hosts > /dev/null
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
