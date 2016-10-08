@@ -16,7 +16,7 @@ adafruit:
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
-	sudo apt-get install -y python-dev python-smbus 
+	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo apt-get install -y sqlite3
@@ -50,7 +50,7 @@ install: raspi433 adafruit
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	sudo sed -i "s/raspberrypi/raspberrypi 433board 433host/g" /etc/hosts
+	sudo echo "127.0.0.1 433board 433host" >> /etc/hosts
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
@@ -60,8 +60,8 @@ install: raspi433 adafruit
 	(crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
-        @echo "Modifying KeepAlive Off"
-        sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
+	@echo "Modifying KeepAlive Off"
+	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 	@echo "Starting processes"
 	sudo service murunner start
 	sudo service redis_sensor start
