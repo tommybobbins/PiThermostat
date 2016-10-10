@@ -50,7 +50,7 @@ install: raspi433 adafruit
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	echo $'\n127.0.0.1 433board 433host' | sudo tee -a /etc/hosts > /dev/null
+	printf '\n127.0.0.1 433board 433host\n' | sudo tee -a /etc/hosts > /dev/null
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
@@ -70,6 +70,8 @@ install: raspi433 adafruit
 	@echo "Install complete"
 
 clean:
+	sudo rm -rf Raspi_433
+	sudo rm -rf Adafruit-Raspberry-Pi-Python-Code
 	sudo rm $(BINDIR)calculate_temps.py
 	sudo rm $(BINDIR)django_happenings.py
 	sudo rm $(BINDIR)process_temperatures.py
@@ -77,8 +79,6 @@ clean:
 	sudo rm $(BINDIR)read_redis.py
 	sudo rm $(BINDIR)retrieve_weather.sh
 	sudo rm $(BINDIR)parse_weather.py
-	sudo rm -rf Adafruit-Raspberry-Pi-Python-Code
-	sudo rm -rf Raspi_433
 	sudo rm /etc/pithermostat.conf 
 	sudo rm -rf /usr/local/django
 	sudo rm -rf /usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code
