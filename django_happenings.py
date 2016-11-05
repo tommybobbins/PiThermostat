@@ -7,7 +7,7 @@ import datetime
 import time
 from email.utils import parsedate
 import urllib2
-target_temp=14
+target_temp=14.3141
 #calendar_file='/tmp/tempschedule.txt'
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
@@ -25,7 +25,7 @@ apacheport=int(parser.get('apache','port'))
 
 
 def parse_calendar():
-     target_temp = 14;
+     target_temp = 14.3141;
      calendar_url = ("http://%s:%i/current/" % (apacheaddress,apacheport))
 #     print ("Calendar url = %s\n" % calendar_url)
      response = urllib2.urlopen(calendar_url)
@@ -38,11 +38,11 @@ def parse_calendar():
             target_temp = float(match.group(1))
 #            print ("We got match %s " % target_temp);
             return(target_temp);
-     if (target_temp == 14):
+     if (target_temp == 14.3141):
         print ("Error");
         return (16.99999);
 
          
 
 desired_temp=parse_calendar()
-#print ("%f" % desired_temp)
+print ("%f" % desired_temp)
