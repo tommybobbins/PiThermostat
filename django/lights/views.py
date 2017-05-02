@@ -117,6 +117,8 @@ def socket_list(request,corortoggle):
         raise Http404()
     if corortoggle == 'toggle':
         template_name = 'lights/togglelist.html'
+    if corortoggle == 'comms':
+        template_name = 'lights/comms.html'
     else: 
         template_name = 'lights/togglelist.html'
     return render(request, template_name, {'sockets': socket_list,
@@ -137,13 +139,13 @@ def thermostat(request,modify=None,modify_value=0.0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     try: 
         calendar_temp=float(redthis.get("temperature/calendar"))
-        outside_temp=float(redthis.get("temperature/weather"))
+#        outside_temp=float(redthis.get("temperature/weather"))
         outside_rollingmean=float(redthis.get("temperature/outside/rollingmean"))
         int_weighted_mean=float(redthis.get("temperature/inside/weightedmean"))
         ext_weighted_mean=float(redthis.get("temperature/outside/weightedmean"))
         boiler_req=(redthis.get("boiler/req"))
         left_column['Calendar']=calendar_temp
-        right_column['Weather']=outside_temp
+#        right_column['Weather']=outside_temp
         right_column['Ext. Roll']=outside_rollingmean
 #        left_column['Int.W.Mean']=int_weighted_mean
 #        right_column['Ext.W.Mean']=ext_weighted_mean
