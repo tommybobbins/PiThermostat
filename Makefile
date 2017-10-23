@@ -16,7 +16,7 @@ adafruit:
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
-	sudo apt-get install -y python-dev python-smbus 
+	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo apt-get install -y sqlite3
@@ -50,7 +50,7 @@ install: raspi433 adafruit
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	sudo sed -i "s/raspberrypi/raspberrypi 433board 433host/g" /etc/hosts
+	printf '\n127.0.0.1 433board 433host\n' | sudo tee -a /etc/hosts > /dev/null
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
@@ -60,8 +60,8 @@ install: raspi433 adafruit
 	(crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
-        @echo "Modifying KeepAlive Off"
-        sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
+	@echo "Modifying KeepAlive Off"
+	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 	@echo "Starting processes"
 	sudo service murunner start
 	sudo service redis_sensor start
@@ -70,6 +70,8 @@ install: raspi433 adafruit
 	@echo "Install complete"
 
 clean:
+	sudo rm -rf Raspi_433
+	sudo rm -rf Adafruit-Raspberry-Pi-Python-Code
 	sudo rm $(BINDIR)calculate_temps.py
 	sudo rm $(BINDIR)django_happenings.py
 	sudo rm $(BINDIR)process_temperatures.py
@@ -77,8 +79,6 @@ clean:
 	sudo rm $(BINDIR)read_redis.py
 	sudo rm $(BINDIR)retrieve_weather.sh
 	sudo rm $(BINDIR)parse_weather.py
-	sudo rm -rf Adafruit-Raspberry-Pi-Python-Code
-	sudo rm -rf Raspi_433
 	sudo rm /etc/pithermostat.conf 
 	sudo rm -rf /usr/local/django
 	sudo rm -rf /usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code
