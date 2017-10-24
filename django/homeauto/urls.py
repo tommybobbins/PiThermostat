@@ -15,14 +15,14 @@ urlpatterns = patterns('',
     (r'^holiday/$', holiday ),
     (r'^holiday/(temp)/(\S+)/$', holiday ),
     (r'^holiday/(days)/(\S+)/$', holiday ),
+    (r'^holiday/(boost)/(\S+)/$', holiday ),
     (r'^calendar/', include('happenings.urls', namespace='calendar')),
     (r'^current/$', current ),
     (r'^checkin/(\S+)/temperature/(\S+)/$', esp_sensor ),
     (r'^checkinwt/(\S+)/(\S+)/(\S+)/$', wireless_sensor ),
-    (r'^socketlist/(toggle)/$', socket_list ),
+    (r'^socketlist/(\S+)/$', socket_list ),
     (r'^catcannon/(\w+)/$', catcannon ),
     (r'^velux/(\w+)/$', velux ),
-    (r'^socketlist/(correct)/$', socket_list ),
 )
 
 
