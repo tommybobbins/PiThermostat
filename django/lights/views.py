@@ -156,6 +156,10 @@ def thermostat(request,modify=None,modify_value=0.0):
         required_temp=float(redthis.get("holiday_countdown"))
     except:
         required_temp=float(redthis.get("temperature/userrequested"))
+    try:
+        boosted=float(redthis.get("boosted"))
+    except:
+        boosted=0
     regex_temp = re.compile(r'^temperature\/(.*)\/sensor$')
     # Find all the keys matching temperature/*/sensor
     # For each key find, the sensor value and store
@@ -190,19 +194,14 @@ def thermostat(request,modify=None,modify_value=0.0):
         required_temp = float(required_temp)
         redirect_required = False
     left_column['Required']=required_temp
-    return render(request,thermostat_template,{'modify':modify, 'modify_value':modify_value, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, 'left_column':left_column, 'right_column':right_column,'int_weighted_mean':int_weighted_mean,'ext_weighted_mean':ext_weighted_mean,'Boiler':boiler_req,  })
+    return render(request,thermostat_template,{'modify':modify, 'modify_value':modify_value, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, 'left_column':left_column, 'right_column':right_column,'int_weighted_mean':int_weighted_mean,'ext_weighted_mean':ext_weighted_mean,'Boiler':boiler_req,'boosted':boosted,  })
 
 
 def holding_page(request):
     return render(request,'lights/holdingpage.html')
 
 def makeachoice(request):
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    try:  
-        boosted=int(redthis.ttl("boosted"))
-    except:
-        boosted=0
-    return render(request, 'lights/makeachoice.html', {'boosted': boosted})
+    return render(request, 'lights/makeachoice.html')
 
 def current(request):
     return render(request,'lights/current_happenings.html')

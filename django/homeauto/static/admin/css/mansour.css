@@ -131,6 +131,12 @@ a:visited, a:link, a:hover {
     background-color: #933;                                
 }
 
+#inside_valuesboost {
+    padding: 20px;
+    background-color: #ff5; 
+    color: #000;
+}
+
 #outside_values {
     padding: 20px;
     background-color: #396;                                
