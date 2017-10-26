@@ -197,7 +197,12 @@ def holding_page(request):
     return render(request,'lights/holdingpage.html')
 
 def makeachoice(request):
-    return render(request,'lights/makeachoice.html')
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    try:  
+        boosted=int(redthis.ttl("boosted"))
+    except:
+        boosted=0
+    return render(request, 'lights/makeachoice.html', {'boosted': boosted})
 
 def current(request):
     return render(request,'lights/current_happenings.html')
@@ -216,8 +221,12 @@ def holiday(request,modify=None,modify_value=12.0):
         redthis.expire("holiday_countdown",holiday_time)
     elif (modify == "boost"):
         holiday_time = 3600
+        holiday_temp = float(parser.get('locale','boost_temp'))
+        holiday_temp = float(modify_value)
         redthis.set("holiday_countdown",holiday_temp)
         redthis.expire("holiday_countdown",holiday_time)
+        redthis.set("boosted",holiday_temp)
+        redthis.expire("boosted",holiday_time)
     elif (modify == "days"):
         days = (float(modify_value))
         holiday_time = int(days * 24 * 60 * 60)

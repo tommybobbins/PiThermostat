@@ -16,7 +16,12 @@
     <li id="inside_valuesalt"><a href="/holiday/">Transport<a/></li>
     <li id="inside_values"><a href="/socketlist/toggle/">Power<a/></li>
     <li id="inside_valuesalt"><a href="/socketlist/comms/">Comms<a/></li>
+    {% if boosted  > 0 %} 
+    <li id="inside_valueson"><a href="/holiday/boost/23.0/">Overdrive {{ boosted }}<a/></li>
+    {% else %} 
     <li id="inside_values"><a href="/holiday/boost/23.0/">Overdrive<a/></li>
+    {% endif %}
+
 </ul>
 </div>
 {% endblock %}
