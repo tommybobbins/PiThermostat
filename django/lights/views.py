@@ -171,10 +171,10 @@ def thermostat(request,modify=None,modify_value=0.0):
         zonelocation=(redthis.get('temperature/%s/zone' % location))
         value=float(redthis.get(tempkey))
         if (zonelocation != "outside"):
-            print ("Adding %s %d inside" % (location, value))
+            #print ("Adding %s %d inside" % (location, value))
             left_column[location]=value
         elif (zonelocation == "outside"):
-            print ("Adding %s %d outside " % (location, value))
+            #print ("Adding %s %d outside " % (location, value))
             right_column[location]=value
 
     thermostat_template = 'lights/thermostat_mobile.html'
