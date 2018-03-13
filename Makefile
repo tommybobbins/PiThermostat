@@ -11,7 +11,7 @@ raspi433:
 	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL)
 
 adafruit:
-        pip install Adafruit_GPIO
+	pip install Adafruit_GPIO
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
