@@ -13,9 +13,10 @@ import datetime
 from time import sleep
 import re
 #sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit/I2C")
-sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
+#sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
 #print sys.path
-from Adafruit_I2C import Adafruit_I2C
+#/master/Adafruit_GPIO/I2C.py) in the Python GPIO library.  Import with `import Adafruit_GPIO.I2C as I2C` and create an instance of `I2C.Device` instead of the old `Adafruit_I2C` class
+import Adafruit_GPIO.I2C as I2C
 import logging, datetime
 dt = datetime.datetime.now()
 
@@ -26,7 +27,7 @@ class Tmp102:
 
   # Constructor
   def __init__(self, address=0x48, mode=1, debug=False):
-    self.i2c = Adafruit_I2C(address, debug=debug)
+    self.i2c = I2C.Device(address, busnum=1)
 
     self.address = address
     self.debug = debug

@@ -11,8 +11,7 @@ raspi433:
 	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL)
 
 adafruit:
-	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
-	sudo cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
+        pip install Adafruit_GPIO
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"

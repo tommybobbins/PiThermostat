@@ -36,8 +36,8 @@ time_to_live = 3600
 # Now set in /etc/pithemostat.conf
 zone_multiplier=parser.get('locale','multiplier')
 #import crankers
-sys.path.append("/usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code/Adafruit_I2C/")
-from Adafruit_I2C import Adafruit_I2C
+import Adafruit_GPIO.I2C as I2C
+
 sensor_name="temperature/"+room_location+"/sensor"
 mult_name="temperature/"+room_location+"/multiplier"
 zone_name="temperature/"+room_location+"/zone"
@@ -50,8 +50,7 @@ class Tmp102:
 
   # Constructor
   def __init__(self, address=0x48, mode=1, debug=False):
-    self.i2c = Adafruit_I2C(address, debug=debug)
-
+    self.i2c = I2C.Device(address, busnum=1)
     self.address = address
     self.debug = debug
     # Make sure the specified mode is in the appropriate range
@@ -86,7 +85,7 @@ while True:
     try: 
         mytemp = Tmp102(address=0x48)
         floattemp = mytemp.readTemperature()
-#        print ("Float temp = %f" % floattemp)
+        #print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
         redthis.set(mult_name,zone_multiplier)
         redthis.set(zone_name,zone_location)
