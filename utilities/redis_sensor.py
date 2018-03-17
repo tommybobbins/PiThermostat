@@ -12,6 +12,7 @@ from time import sleep
 import re
 import redis
 from ConfigParser import SafeConfigParser
+floattemp = 0
 
 parser = SafeConfigParser()
 parser.read('/etc/pithermostat.conf')

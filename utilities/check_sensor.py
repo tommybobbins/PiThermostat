@@ -19,6 +19,7 @@ import re
 import Adafruit_GPIO.I2C as I2C
 import logging, datetime
 dt = datetime.datetime.now()
+floattemp=0
 
 logging.basicConfig(filename='/home/pi/temp_sensor.log',level=logging.INFO)
 
