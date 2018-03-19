@@ -23,6 +23,10 @@ try:
                               db=redisdb, 
                               socket_timeout=redistimeout)
 except:
+    import inkyphat
+    inkyphat.set_border(inkyphat.BLACK)
+    inkyphat.text((36, 12), "No WiFi", inkyphat.WHITE, font=font)
+    inkyphat.show()
     exit("Unable to read from /etc/pithermostat.conf")
 
 try:
@@ -96,7 +100,6 @@ try:
     mean_temperature = float(redthis.get("temperature/inside/weightedmean"))
     outside_temperature = float(redthis.get("temperature/outside/weightedmean"))
     boiler_state = (redthis.get("boiler/req"))
-    print boiler_state
 except:
     local_temperature=0
     mean_temperature=0
@@ -104,6 +107,7 @@ except:
     boiler_state = False
 
 weather_icon = None
+bob_icon = None
 
 if "channel" in weather["query"]["results"]:
     results = weather["query"]["results"]["channel"]
@@ -129,10 +133,7 @@ for icon in glob.glob("resources/icon-*.png"):
 font = ImageFont.truetype(inkyphat.fonts.FredokaOne, 20)
 
 # Load our backdrop image
-if boiler_state == "True":
-    inkyphat.set_image("resources/backdrop_bob.png")
-else:
-    inkyphat.set_image("resources/backdrop.png")
+inkyphat.set_image("resources/backdrop.png")
 
 
 # Let's draw some lines!
@@ -158,6 +159,12 @@ if weather_icon is not None:
 
 else:
     inkyphat.text((28, 36), "?", inkyphat.RED, font=font)
+
+if boiler_state == "True":
+    bob_name = "resources/bob_2colour.png"
+    bob_image = Image.open(bob_name)
+    bob_mask = inkyphat.create_mask(bob_image)
+    inkyphat.paste(bob_image, (180, 36), bob_mask)
 
 # And show it!
 inkyphat.show()
