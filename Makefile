@@ -11,12 +11,12 @@ raspi433:
 	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL)
 
 adafruit:
-	git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
-	sudo cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
+	sudo apt-get update
+	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
+	pip install Adafruit_GPIO
 
 install: raspi433 adafruit
 	@echo "Installing prereqs"
-	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo apt-get install -y sqlite3
@@ -45,7 +45,8 @@ install: raspi433 adafruit
 	@echo "Installing Django"
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
-	sudo python /usr/local/django/manage.py syncdb
+	sudo cp -rp utilities/happenings_url.py /usr/local/lib/python2.7/dist-packages/happenings/urls.py
+	sudo python /usr/local/django/manage.py migrate
 	sudo chmod 666 /usr/local/django/home.db
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/

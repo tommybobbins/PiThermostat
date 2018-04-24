@@ -18,8 +18,7 @@ The file structure of this project is as follows:
 
 Requires the Adafruit libraries to read from the TMP102:
 
-    git clone https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code
-    cp -rp Adafruit-Raspberry-Pi-Python-Code /usr/local/lib/python2.7/site-packages/
+    pip install Adafruit_GPIO
 
 Install i2c using raspi-config
  
