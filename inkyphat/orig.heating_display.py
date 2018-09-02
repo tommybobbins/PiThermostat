@@ -131,42 +131,40 @@ for icon in glob.glob("resources/icon-*.png"):
 
 # Load the built-in FredokaOne font
 font = ImageFont.truetype(inkyphat.fonts.FredokaOne, 20)
-font2 = ImageFont.truetype(inkyphat.fonts.FredokaOne, 18)
 
 # Load our backdrop image
 inkyphat.set_image("resources/backdrop.png")
 
 
 # Let's draw some lines!
-#inkyphat.line((69, 36, 69, 81)) # Vertical line
-#inkyphat.line((31, 35, 184, 35)) # Horizontal top line
-#inkyphat.line((69, 58, 174, 58)) # Horizontal middle line
-#inkyphat.line((169, 58, 169, 58), 2) # Red seaweed pixel :D
+inkyphat.line((69, 36, 69, 81)) # Vertical line
+inkyphat.line((31, 35, 184, 35)) # Horizontal top line
+inkyphat.line((69, 58, 174, 58)) # Horizontal middle line
+inkyphat.line((169, 58, 169, 58), 2) # Red seaweed pixel :D
 
 # And now some text
 
-#datetime = time.strftime("%d/%b/%Y")
-datetime = time.strftime("%d %b %Y")
+datetime = time.strftime("%d/%b/%Y")
 
-inkyphat.text((50, 3), datetime, inkyphat.WHITE, font=font2)
+inkyphat.text((36, 12), datetime, inkyphat.WHITE, font=font)
 
-inkyphat.text((160, 24), u"{:.1f}°".format(local_temperature), inkyphat.WHITE if local_temperature < WARNING_TEMP else inkyphat.RED, font=font)
-inkyphat.text((165, 48), u"{:.1f}°".format(mean_temperature), inkyphat.WHITE if mean_temperature < WARNING_TEMP else inkyphat.RED, font=font2)
+inkyphat.text((72, 34), u"{:.1f}°".format(local_temperature), inkyphat.WHITE if local_temperature < WARNING_TEMP else inkyphat.RED, font=font)
+inkyphat.text((122, 34), u"{:.1f}°".format(mean_temperature), inkyphat.WHITE if mean_temperature < WARNING_TEMP else inkyphat.RED, font=font)
 
-inkyphat.text((1, 72), u"{:.1f}°".format(outside_temperature), inkyphat.WHITE, font=font2)
+inkyphat.text((72, 58), u"{:.1f}°".format(outside_temperature), inkyphat.WHITE, font=font)
 
 # Draw the current weather icon over the backdrop
 if weather_icon is not None:
-    inkyphat.paste(icons[weather_icon], (1, 1), masks[weather_icon])
+    inkyphat.paste(icons[weather_icon], (28, 36), masks[weather_icon])
 
 else:
-    inkyphat.text((1 ,1), "?", inkyphat.RED, font=font)
+    inkyphat.text((28, 36), "?", inkyphat.RED, font=font)
 
 if boiler_state == "True":
-    bob_name = "resources/bob_2colour_tiny.png"
+    bob_name = "resources/bob_2colour.png"
     bob_image = Image.open(bob_name)
     bob_mask = inkyphat.create_mask(bob_image)
-    inkyphat.paste(bob_image, (50, 55), bob_mask)
+    inkyphat.paste(bob_image, (180, 36), bob_mask)
 
 # And show it!
 inkyphat.show()
