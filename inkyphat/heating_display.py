@@ -104,10 +104,10 @@ inkyphat.set_image("resources/backdrop.png")
 
 
 # Let's draw some lines!
-inkyphat.line((69, 36, 69, 81)) # Vertical line
-inkyphat.line((31, 35, 184, 35)) # Horizontal top line
-inkyphat.line((69, 58, 174, 58)) # Horizontal middle line
-inkyphat.line((169, 58, 169, 58), 2) # Red seaweed pixel :D
+#inkyphat.line((69, 36, 69, 81)) # Vertical line
+#inkyphat.line((31, 35, 184, 35)) # Horizontal top line
+#inkyphat.line((69, 58, 174, 58)) # Horizontal middle line
+#inkyphat.line((169, 58, 169, 58), 2) # Red seaweed pixel :D
 
 # And now some text
 
@@ -123,10 +123,10 @@ inkyphat.text((1, 72), u"{:.1f}°".format(outside_temperature), inkyphat.WHITE, 
 inkyphat.text((1, 1), "?", inkyphat.RED, font=font)
 
 if boiler_state == "True":
-    bob_name = "resources/bob_2colour.png"
+    bob_name = "resources/bob_2colour_tiny.png"
     bob_image = Image.open(bob_name)
     bob_mask = inkyphat.create_mask(bob_image)
-    inkyphat.paste(bob_image, (180, 36), bob_mask)
+    inkyphat.paste(bob_image, (50, 55), bob_mask)
 
 # And show it!
 inkyphat.show()
