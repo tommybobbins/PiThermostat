@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ### For a given temperature/external/mean, populate a rolling redis list temperature/external/rollingtemp
-### with 24 entries on. Then calculate the mean and populate temperature/external/rollingmean
+### with 48 entries on. Then calculate the mean and populate temperature/external/rollingmean
 ### Used to determine whether it is Summer or Winter
 import redis
 from time import sleep
@@ -27,7 +27,7 @@ try:
 except:
     print ("Something went wrong with redis")
     exit(0)
-if (length_of_list > 24):
+if (length_of_list > 48):
     redthis.lpop("temperature/outside/rollingtemp")
 else:
     print ("Length of list = %i" % length_of_list)

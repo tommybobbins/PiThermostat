@@ -36,6 +36,7 @@ redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 hysteresis_temp=0.5
 summer_temp=float(parser.get('weather','summer_temp'))
+summer_offset=float(parser.get('weather','summer_offset'))
 #print ("Summer temp = %f" % summer_temp)
 temp={}
 multiplier={}
@@ -105,7 +106,7 @@ def read_temps():
     time_to_live=int(redthis.ttl("boiler/req"))
     # Store our google calendar temperature for future reference
     if (outside_rolling_mean >= summer_temp):
-        calendar_temp += -4.0
+        calendar_temp += -summer_offset
         if Debug:
             print ("Calendar temp = %f" % calendar_temp)
             print ("Outside Rolling mean temp = %f" % outside_rolling_mean)
