@@ -15,7 +15,7 @@ adafruit:
 	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
 	pip install Adafruit_GPIO
 
-install: raspi433 adafruit
+install: adafruit
 	@echo "Installing prereqs"
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
@@ -58,7 +58,7 @@ install: raspi433 adafruit
 	@echo "Initialized redis queues"
 	utilities/setup_keys.sh
 	@echo "Adding cron job"
-	(crontab -u pi -l; cat utilities/crontab) | crontab -u pi -
+	(crontab -u tng -l; cat utilities/crontab) | crontab -u tng -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	@echo "Modifying KeepAlive Off"

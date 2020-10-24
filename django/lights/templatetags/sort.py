@@ -1,12 +1,12 @@
 from django import template
-from django.utils.datastructures import SortedDict
+from collections import OrderedDict
 
 register = template.Library()
 
 @register.filter(name='sort')
 def listsort(value):
     if isinstance(value, dict):
-        new_dict = SortedDict()
+        new_dict = collections.OrderedDict()
         key_list = sorted(value.keys())
         for key in key_list:
             new_dict[key] = value[key]
