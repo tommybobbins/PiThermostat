@@ -30,6 +30,7 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/all_open.sh',
                 '/usr/local/bin/all_close.sh',
                 '/usr/local/bin/all_half.sh',
+                '/usr/local/bin/switch_tradfri.sh',
                 '/usr/local/bin/full_close.sh']
 while True:
     try:
