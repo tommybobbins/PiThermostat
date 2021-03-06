@@ -17,6 +17,8 @@ adafruit:
 
 install: adafruit
 	@echo "Installing prereqs"
+	sudo apt-get update
+        sudo apt-get -y upgrade
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y python-django libapache2-mod-wsgi
 	sudo apt-get install -y sqlite3
@@ -58,7 +60,7 @@ install: adafruit
 	@echo "Initialized redis queues"
 	utilities/setup_keys.sh
 	@echo "Adding cron job"
-	(crontab -u tng -l; cat utilities/crontab) | crontab -u tng -
+	(crontab -u $(USER) -l; cat utilities/crontab) | crontab -u $(USER) -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	@echo "Modifying KeepAlive Off"

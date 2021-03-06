@@ -23,7 +23,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = [ '433board', 'django', 'homeauto', ]
+ALLOWED_HOSTS = [ '433board', 'django', 'homeauto', 'hotf' ]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -115,25 +115,50 @@ WSGI_APPLICATION = 'homeauto.wsgi.application'
 #    '/usr/local/django/lights/templates/lights',
 #)
 
+#TEMPLATES = [
+#    {
+#        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#        'APP_DIRS': True,
+#        'DIRS': [
+#        '/usr/local/django/lights/templates',
+#        '/usr/local/django/lights/templates/lights',],
+#    },
+#]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
         'DIRS': [
-        '/usr/local/django/lights/templates',
-        '/usr/local/django/lights/templates/lights',],
+            # insert your TEMPLATE_DIRS here
+            '/usr/local/django/lights/templates',
+            '/usr/local/django/lights/templates/lights',
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
     },
 ]
 
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-        'django.contrib.auth.context_processors.auth',
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.core.context_processors.request",
-        )
-
+#TEMPLATE_CONTEXT_PROCESSORS = (
+#        'django.contrib.auth.context_processors.auth',
+#        "django.core.context_processors.debug",
+#        "django.core.context_processors.i18n",
+#        "django.core.context_processors.media",
+#        "django.core.context_processors.request",
+#        )
+#
 
 INSTALLED_APPS = (
     'django.contrib.auth',
