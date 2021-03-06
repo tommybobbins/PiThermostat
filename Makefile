@@ -13,8 +13,6 @@ raspi433:
 adafruit:
 	sudo apt-get update
 	sudo apt-get install -y python-dev python-smbus python-pip python3-pip
-	git clone https://github.com/adafruit/Adafruit_Python_GPIO.git 
-	cd Adafruit_Python_GPIO && /usr/bin/python3 setup.py install
 
 install: adafruit
 	@echo "Installing prereqs"
