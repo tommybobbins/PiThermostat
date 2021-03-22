@@ -2,7 +2,7 @@ PiThermostat
 ============
 
 
-Central heating system using a Raspberry Pi and optinally an LCD touchscreen requires at least one TMP102 to make a thermostat. Integrates with Google calendar or Django Happenings to find required temperature. Works with 433MHz sender board to make a complete boiler control. Currently works with British Gas and Drayton gas boilers.
+Central heating system and/or Hot water system using a Raspberry Pi and optionally an LCD touchscreen. This project requires at least one TMP102 to make a thermostat. Integrates with Google calendar or Django Schedule to find required temperature. Works with 433MHz sender board to make a complete boiler control system or Shelly relays. Currently works with British Gas and Drayton gas boilers for 433, but Shelly Relays should work for any boiler.
 
 More details about the 433 sender board used can be found https://github.com/tommybobbins/Raspi_433
 
@@ -14,6 +14,7 @@ The file structure of this project is as follows:
     utilities - useful associated scripts, but may not be required in all cases.
     init - init scripts to be moved to /etc/init.d/
     icons - graphics used by thermostat_gui.py. Can be moved, but icon_dir in thermostat_gui.py will need updating.
+    bin - main utilities for running thermostat.
     utilities/433PlanB - to be used in the event of redis/thermostat_gui.py dying.
 
 Requires the Adafruit libraries to read from the TMP102:
@@ -60,7 +61,7 @@ The summary of all events in the calendar should be of the form
 
      Temp=20.0
 
-Note that django-happenings has supplanted Google Calendar as the default. Uncomment line 88 if you wish to use Google Calendar.
+Note that Django-Schedule has supplanted Google Calendar as the default. Uncomment line 88 if you wish to use Google Calendar.
 
 Installation of redis
 =====================
@@ -90,7 +91,7 @@ Copy the init script to /etc/init.d/temp.sh
 
 /etc/hosts should contain the name/location of the redis server:
     
-    echo "192.168.1.223       433board" >>/etc/hosts
+    echo "192.168.1.223     hotf  433board" >>/etc/hosts
 
 To make redis listen on all available ports, edit /etc/redis/redis.conf:
 
