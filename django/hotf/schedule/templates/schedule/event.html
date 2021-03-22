@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n scheduletags %}
+
+{% block body %}
+<div class="navigation">
+  <a class="btn btn-primary gradient" href="{% url "day_calendar" event.calendar.slug %}{% querystring_for_date event.start 3 %}">
+    {% trans "Day" %}
+  </a>
+  <a class="btn btn-primary gradient" href="{% url "month_calendar" event.calendar.slug %}{% querystring_for_date event.start 2 %}">
+    {% trans "Month" %}
+  </a>
+  <a class="btn btn-primary gradient" href="{% url "year_calendar" event.calendar.slug %}{% querystring_for_date event.start 1 %}">
+    {% trans "Year" %}
+  </a>
+</div>
+
+<div class="event_actions" align="center">
+  {% if back_url %}
+  <a href="{{ back_url }}">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+  </a>
+  &nbsp;
+  {% endif %}
+  <a href="{% url "edit_event" event.calendar.slug event.id %}">
+   {% trans "Edit" %} <span class="glyphicon glyphicon-pencil"></span>
+  </a>
+  &nbsp;
+  <a href="{% url "delete_event" event.id %}">
+   {% trans "Delete" %} <span class="glyphicon glyphicon-remove"></span>
+  </a>
+</div>
+<h2 align="center">{{event.title}}</h2>
+<table align="center" class="table table-hover">
+<tr>
+<td>{% trans "Starts" %}</td>
+<td>{% blocktrans with event.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}</td>
+</tr>
+<tr>
+<td>{% trans "Ends" %}</td>
+<td>{% blocktrans with event.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+</tr>
+<tr>
+<td>{% trans "Reoccurs" %}</td>
+{% if event.rule %}
+<td>{{ event.rule.name }} {% trans "until" %} {% blocktrans with event.end_recurring_period|date:_("DATETIME_FORMAT") as end_recurring_date %}{{ end_recurring_date }}{% endblocktrans %}</td>
+{% else %}
+<td>{% trans "Never. This is a 'one time only' event." %}</td>
+{% endif %}
+</tr></table>
+{% if event.description %}
+<h3>{% trans "Description" %}</h3>
+<p>{{event.description}}</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block body %}
+
+<h1>{% trans "Calendar metadata" %}</h1>
+
+<p>{% trans "Name:" %} {{calendar_name}} </p>
+<p>{% trans "Slug:" %} {{calendar_slug}} </p>
+<p>{% trans "Event count:" %} {{events_count}} </p>
+
+<div>
+    <p>{% trans "See as:" %}</p>
+    <ul>
+        <li><a href="{% url "compact_calendar" calendar.slug %}">{% trans "Small Month" %}</a></li>
+        <li><a href="{% url "month_calendar" calendar.slug %}">{% trans "1 Month" %}</a></li>
+        <li><a href="{% url "tri_month_calendar" calendar.slug %}">{% trans "3 Months" %}</a></li>
+        <li><a href="{% url "year_calendar" calendar.slug %}">{% trans "This Year" %}</a></li>
+        <li><a href="{% url "week_calendar" calendar.slug %}">{% trans "Weekly" %}</a></li>
+        <li><a href="{% url "day_calendar" calendar.slug %}">{% trans "Daily" %}</a></li>
+        <li><a href="{% url "upcoming_events_feed" calendar_id=calendar.id %}">{% trans "Feed" %}</a></li>
+    </ul>
+</div>
+
+<div><i>{% trans "Now see docstring for schedule.views.calendar" %}</i></div>
+
+{% endblock %}

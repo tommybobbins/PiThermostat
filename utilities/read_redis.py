@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import redis
 import subprocess
 from time import sleep
-from ConfigParser import SafeConfigParser
-parser = SafeConfigParser()
+import configparser
+parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
@@ -41,9 +41,9 @@ while True:
             #            print ("Sleeping because we have a shared/jobqueue")
             sleep(5)
             continue 
-        job_to_run = redthis.lpop('cellar/jobqueue') 
-#        job_to_run = redthis.lindex('attic/jobqueue', 0) 
-       # print ("Job to run is %s" % job_to_run)
+        job_to_run = (redthis.lpop('cellar/jobqueue')).decode('UTF-8')
+#        job_to_run = redthis.lindex('attic/jobqueue', 0) decode('UTF-8')
+        print ("Job to run is %s" % job_to_run)
         if (job_to_run):
             #print ("We have a job to run")
             job_running = redthis.set('shared/jobqueue', 'True')
@@ -51,12 +51,12 @@ while True:
             job_to_run = job_to_run.split() # We only want the binary name, not the arguments
             if job_to_run[0]  in allowed_jobs:
                 # We do have permission
-#                print ("Shellscript to run is %s \n" % job_to_run[0]) 
+                print ("Shellscript to run is %s \n" % job_to_run[0]) 
                 subprocess.call(job_to_run) 
                 sleep(2)
                 job_running = redthis.delete('shared/jobqueue')
             else: 
-#                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
+                print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
                 job_running = redthis.delete('shared/jobqueue')
                 continue
         else:

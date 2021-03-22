@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Modified 30-Oct-2013
 # tng@chegwin.org
 # Retrieve: 
@@ -12,10 +12,10 @@ from time import sleep
 import re
 import redis
 import smbus
-from ConfigParser import SafeConfigParser
+import configparser
 floattemp = 0
 
-parser = SafeConfigParser()
+parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
@@ -91,7 +91,7 @@ while True:
     try: 
         mytemp = read_temp(i2c_address=0x48)
         floattemp = float(mytemp)
-        print ("Float temp = %f" % floattemp)
+        #print ("Float temp = %f" % floattemp)
         redthis.set(sensor_name,floattemp)
         redthis.set(mult_name,zone_multiplier)
         redthis.set(zone_name,zone_location)

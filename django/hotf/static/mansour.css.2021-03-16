@@ -1,0 +1,172 @@
+/* class . */
+/* id # */
+
+p {
+   color: #ccc;
+}
+
+body {
+/*   font-size: 140%;*/
+   margin: 10px;
+   font-size: 250%;
+   color: #fff;
+   background-color: #000;
+/*   font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace; */
+   font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+
+}
+
+.topnav {
+   float: top;
+   background-color: #aae;
+   height: 50px;
+/*   width: 100%; */
+   font-size: 60%;
+   margin: 0%;
+   padding: 2px;
+   border: 2px solid #fff;
+   border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+ul {
+   list-style-type: none;
+   margin: 5px;
+   text-align: center;
+} 
+
+.lc1 {
+   float: left;
+   color: #00f;
+   padding: 5px; 
+/*   width: 20%; */
+   background-color: #669;
+   border: 2px solid #fff;
+   border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+.lc2 {
+   float: left;
+   color: #000;
+   padding: 5px;
+/*   width: 20%; */
+   background-color: #aae;
+   border: 2px solid #fff;
+   border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+.lc3 {
+   float: left;
+   color: #00f;
+   padding: 5px;
+/*   width: 20%; */
+   background-color: #669;
+   border: 2px solid #fff;
+   border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+.lc4 {
+   float: right;
+   color: #ddf;
+   padding: 5px;
+/*   width: 20%; */
+   font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+}
+
+.lc5 {
+   float: left;
+   color: #00f;
+   padding: 5px;
+/*   width: 20%; */
+   background-color: #669;
+   border: 2px solid #fff;
+   border-radius: 12px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+#redbadge {
+    padding: 20px;
+    background-color: #cd5c5c;
+    border: 2px solid #fff;
+    border-radius: 42px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+#bluebadge {
+    padding: 20px;
+    background-color: #ff8c00;
+    border: 2px solid #fff;
+    border-radius: 42px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+.lcars_circle {
+    width: 40%;
+    text-align: center;
+    height: 30px;
+    color: #fff;
+}
+
+
+#main {
+      width: 100%;
+}
+
+a:visited, a:link, a:hover {
+      text-decoration: none;
+      color: #fff;
+}
+
+#readout_left {
+    position: relative;
+    float: left;
+/*    width: 20%; */
+    top: 40px;
+    color: #f00;
+    text-align: center;
+}
+
+
+#readout_right {
+    position: relative;
+    float: right;
+    top: 40px;
+    padding: 0px;
+    list-style-type: none;
+}
+
+#inside_values {
+    padding: 5px;
+    background-color: #669;
+}
+
+#inside_valuesalt {
+    padding: 5px;
+    background-color: #aae; 
+}
+
+#inside_buttons {
+    padding: 5px;
+    background-color: #669;
+    border: 2px solid #fff;
+    border-radius: 22px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+#inside_buttonsalt {
+    width: 20%;
+    padding: 20px;
+    background-color: #aae; 
+    border: 2px solid #fff;
+    border-radius: 22px; /* one half of ( (border * 2) + height + padding ) */
+}
+
+#inside_valueson {
+    background-color: #933;                                
+}
+
+#inside_valuesboost {
+    background-color: #ff5; 
+}
+
+#outside_values {
+    background-color: #396;                                
+}
+
+
+

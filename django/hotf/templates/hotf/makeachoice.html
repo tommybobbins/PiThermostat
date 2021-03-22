@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="readout_left">
+        <table>
+                <tr class="lcars_circle"><td id="redbadge"><a href="/thermostat/status">Life Support</a></td></tr>
+                <tr class="lcars_circle"><td id="bluebadge"><a href="/catcannon/status">Cat Cannon</a></td></tr>
+                <tr class="lcars_circle"><td id="redbadge"><a href="/velux/status">Velux</a></td></tr>
+                <tr class="lcars_cirlce"><td id="bluebadge"><a href="/holiday/status">Transport</a></td></tr>
+                <tr class="lcars_cirlce"><td id="redbadge"><a href="/bork/0/0">Bork</a></td></tr>
+       </table>
+    </div>
+    <div id="readout_right">
+
+    <table>
+                <tr class="lcars_circle"><td id="bluebadge"><a href="/holiday/boost/23.0/">Overdrive {{ boosted }}</a></td></tr>
+
+    </table>
+    </div>
+
+
+{% endblock %}

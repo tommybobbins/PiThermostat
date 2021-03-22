@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body %}
+<h1>{% trans "Delete" %}</h1>
+{% trans "Are you sure that you really want to cancel this occurrence?" %}
+
+<form action="" method="post">{% csrf_token %}
+  <h2>{{ occurrence.title }}</h2>
+  {% blocktrans with start_date=occurrence.start|date:_("DATETIME_FORMAT") end_date=occurrence.end|date:_("DATETIME_FORMAT") %}
+  <strong>From</strong> {{ start_date }}
+  <strong>to</strong> {{ end_date }}<br>
+  {% endblocktrans %}
+  <input type="submit" value="Confirm">
+  <input type="submit" name="cancel" value="Cancel">
+</form>
+{% endblock %}

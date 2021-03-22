@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Modified 30-Oct-2013
 # tng@chegwin.org
 # Retrieve: 
@@ -13,11 +13,10 @@ import redis
 import datetime
 from time import sleep
 import fileinput, re
-from ConfigParser import SafeConfigParser
-from django_happenings import parse_calendar
+import configparser
 weather_file='/tmp/weather_conditions.txt'
 
-parser = SafeConfigParser()
+parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')

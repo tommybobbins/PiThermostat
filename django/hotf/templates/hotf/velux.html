@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <div id="readout_left">
+        <table>
+                <tr class="lcars_circle"><td id="inside_valuesalt">Season</td><td id="inside_values"><a href="/velux/toggleseason/">{{ season }}</a></td></tr>
+                <tr class="lcars_circle"><td id="inside_values">Hall</td><td id="inside_valuesalt">{{  velux3_state }}</a></td></tr>
+                <tr class="lcars_circle"><td id="inside_valuesalt">Bed1</td><td id="inside_values">{{  velux1_state }}</td></tr>
+                <tr class="lcars_circle"><td id="inside_values">Bed2</td><td id="inside_valuesalt">{{  velux2_state }}</td></tr>
+                <tr class="lcars_circle"><td id="inside_valuesalt">TEMP</td><td id="inside_values">{{  attic_temp }}</td></tr>
+        </table>
+    </div>
+
+    <div id="readout_left">
+      <table>
+      <tr class="lcars_circle">
+          <td id="greenbadge"><a href="/velux/open/">H.Open</a></td>
+          <td id="greenbadge"><a href="/velux/allopen/">A.Open</a></td>
+      </tr>
+      <tr class="lcars_circle">
+          <td id="bluebadge"><a href="/velux/half/">H.Half</a></td>
+          <td id="bluebadge"><a href="/velux/allhalf/">A.Half</a></td>
+      </tr>
+      <tr class="lcars_circle">
+          <td id="redbadge"><a href="/velux/close/">H.Close</a></td>
+          <td id="redbadge"><a href="/velux/allclose/">A.Close</a></td>
+      </tr>
+      <tr class="lcars_circle">
+          <td id="bluebadge" colspan="2"><a href="/velux/toggleseason/">{{ season }}</a></td>
+      </tr>
+      </table>
+    </div>
+{% endblock %}

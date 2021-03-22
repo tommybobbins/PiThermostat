@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Modified 23-May-2016
 # tng@chegwin.org
 # Parse all temperatures and store in /home/pi/LOGGING for later analysis

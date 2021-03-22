@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load scheduletags i18n %}
+
+{% block body %}
+
+{% include "schedule/_dialogs.html" %}
+
+<div class="row row-centered">
+  <a href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
+    {% trans "Month" %}
+  </a>
+  <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
+    {% trans "Year" %}
+  </a>
+</div>
+
+<div class="row row-centered">
+    <div>{{ calendar.name }}</div>
+    {% prevnext "week_calendar" calendar period "\W\e\ek W, M Y" %}
+    <div class="now">
+      <a href="{% url "week_calendar" calendar.slug %}">
+        {% trans "This week" %}
+      </a>
+    </div>
+</div>
+
+<div class="row row-centered">
+  {% for day in period.get_days %}
+    <div class="col-md-3">
+      <div class="row row-centered">
+        <a href="{% url "day_calendar" calendar.slug %}{% querystring_for_date day.start 3 %}">
+          {{day.start|date:"l, d"}}
+        </a>
+      </div>
+      {% if forloop.first %}
+          {% daily_table day %}
+      {% else %}
+          {% daily_table day %}
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

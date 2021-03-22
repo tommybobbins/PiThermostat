@@ -19,19 +19,19 @@ install: adafruit
 	sudo apt-get update
         sudo apt-get -y upgrade
 	sudo apt-get install -y redis-server python-redis weather-util apache2
-	sudo apt-get install -y python-django libapache2-mod-wsgi
-	sudo apt-get install -y sqlite3
-	sudo pip install --upgrade pytz evdev redis configparser
-	sudo pip install apiclient urllib3 django-icons-tango django-happenings
+	sudo apt-get install -y libapache2-mod-wsgi-py3
+	sudo apt-get install -y sqlite3 pypy-bs4
 	@echo "Installing into $(BINDIR)"
-	sudo cp calculate_temps.py  $(BINDIR)
-	sudo cp django_happenings.py  $(BINDIR)
-	sudo cp process_temperatures.py $(BINDIR)
+        sudo cp bin/relay_state.py $(BINDIR)
+	sudo cp bin/calculate_temps.py  $(BINDIR)
+	sudo cp bin/heating_water_cal.py  $(BINDIR)
+	sudo cp bin/process_temperatures.py $(BINDIR)
 	sudo cp utilities/temp_stats.py $(BINDIR)
 	sudo cp utilities/read_redis.py $(BINDIR)
 	sudo cp utilities/redis_sensor.py $(BINDIR)
 	sudo cp utilities/retrieve_weather.sh $(BINDIR)
 	sudo cp utilities/parse_weather.py $(BINDIR)
+	sudo cp utilities/switch_tradfri.sh $(BINDIR)
 	@echo "Setting executable permissions"
 	sudo chmod 755 $(BINDIR)/*.py
 	sudo chmod 755 $(BINDIR)/*.sh
@@ -44,6 +44,10 @@ install: adafruit
 	sudo systemctl enable redis_sensor.service
 	sudo systemctl enable thermostat.service
 	@echo "Installing Django"
+        sudo python3 -m pip install django
+        sudo python3 -m pip install redis
+	sudo python3 -m pip install pytz evdev
+	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-happenings
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
 	sudo cp -rp utilities/happenings_url.py /usr/local/lib/python2.7/dist-packages/happenings/urls.py
@@ -70,6 +74,7 @@ install: adafruit
 	sudo service thermostat start
 	sudo service apache2 restart
 	@echo "Install complete"
+	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
 clean:
 	sudo rm -rf Raspi_433
@@ -81,9 +86,9 @@ clean:
 	sudo rm $(BINDIR)read_redis.py
 	sudo rm $(BINDIR)retrieve_weather.sh
 	sudo rm $(BINDIR)parse_weather.py
+	sudo rm $(BINDIR)switch_tradfri.sh
 	sudo rm /etc/pithermostat.conf 
 	sudo rm -rf /usr/local/django
-	sudo rm -rf /usr/local/lib/python2.7/site-packages/Adafruit-Raspberry-Pi-Python-Code
 	sudo insserv -r murunner.sh
 	sudo insserv -r thermostat.sh
 	sudo insserv -r redis_sensor.sh

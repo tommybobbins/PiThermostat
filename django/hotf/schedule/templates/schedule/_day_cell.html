@@ -1,0 +1,17 @@
+{% load scheduletags %}
+{% if day.start.month != month.start.month %}
+  <td class="muted"></td>
+{% else %}
+  {% if day.has_occurrences %}
+    <td class="btn-primary gradient">
+  {% else %}
+    <td>
+  {% endif %}
+  <a href="{% url "day_calendar" calendar.slug %}{% querystring_for_date day.start 3 %}">
+    <strong>{{day.start.day}}</strong>
+  </a>
+  {% if size != "small" %}
+    {% include "schedule/_day_cell_big.html" %}
+  {% endif %}
+</td>
+{% endif %}

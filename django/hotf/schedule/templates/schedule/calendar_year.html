@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load scheduletags i18n %}
+{% block body %}
+<div class="tablewrapper">
+    <div class="calendarname">{{ calendar.name }}</div>
+    {% prevnext "year_calendar" calendar period "Y" %}
+    <div class="content">
+      {% for month in period.get_months %}
+        <div class="col-md-3">
+          <div class="row row-centered">
+            <button class="btn btn-custom active" href="{% url "month_calendar" calendar.slug %}{% querystring_for_date month.start 2 %}">{{month.name}}</button>
+          </div>
+          <div>
+            {% month_table calendar month "small" %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+<div class="navigation">
+  <a href="{% url "month_calendar" calendar.slug %}">
+    {% trans "Current Month Calendar" %}
+  </a>
+  <a href="{% url "year_calendar" calendar.slug %}">
+    {% trans "Current Year Calendar" %}
+  </a>
+</div>
+{% endblock %}

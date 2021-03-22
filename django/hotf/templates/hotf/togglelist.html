@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% endif %}
+<div id="readout_left">
+        <ul>
+	{% for number in sockets %}
+	{% ifequal number.switch_state True %}
+	<li id="redbadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/off/">{{number.name}}{{number.lastcheckin}}</a></li>
+	{% else %}
+	<li id="bluebadge"><a href="/switchsocket/{{number.plug_type}}/{{number.set_id}}/{{number.plug_id}}/on/">
+	{{ number.name }}
+        {{ number.lastcheckin }}</a>
+	{% endifequal %}
+	</li>
+	{% endfor %}
+        </ul>
+</div>
+{% endblock %}
