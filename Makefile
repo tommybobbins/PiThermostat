@@ -47,11 +47,11 @@ install: adafruit
 	sudo python3 -m pip install django
 	sudo python3 -m pip install redis
 	sudo python3 -m pip install pytz evdev
-	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-happenings
+	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-scheduler
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
 	sudo python3 /usr/local/django/hotf/manage.py migrate
-	sudo chmod 666 /usr/local/django/hotf/home.db
+	sudo chmod 666 /usr/local/django/hotf/db.sqlite3
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
