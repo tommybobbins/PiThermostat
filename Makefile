@@ -18,9 +18,9 @@ install: adafruit
 	@echo "Installing prereqs"
 	sudo apt-get update
 	sudo apt-get -y upgrade
-	sudo apt-get install -y redis-server python-redis weather-util apache2
+	sudo apt-get install -y redis-server python3-redis weather-util apache2
 	sudo apt-get install -y libapache2-mod-wsgi-py3
-	sudo apt-get install -y sqlite3 pypy-bs4
+	sudo apt-get install -y sqlite3 pypy-bs4 python3-dateutil
 	@echo "Installing into $(BINDIR)"
 	sudo cp bin/relay_state.py $(BINDIR)
 	sudo cp bin/calculate_temps.py  $(BINDIR)
