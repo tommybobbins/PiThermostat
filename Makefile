@@ -17,12 +17,12 @@ adafruit:
 install: adafruit
 	@echo "Installing prereqs"
 	sudo apt-get update
-        sudo apt-get -y upgrade
+	sudo apt-get -y upgrade
 	sudo apt-get install -y redis-server python-redis weather-util apache2
 	sudo apt-get install -y libapache2-mod-wsgi-py3
 	sudo apt-get install -y sqlite3 pypy-bs4
 	@echo "Installing into $(BINDIR)"
-        sudo cp bin/relay_state.py $(BINDIR)
+	sudo cp bin/relay_state.py $(BINDIR)
 	sudo cp bin/calculate_temps.py  $(BINDIR)
 	sudo cp bin/heating_water_cal.py  $(BINDIR)
 	sudo cp bin/process_temperatures.py $(BINDIR)
@@ -44,8 +44,8 @@ install: adafruit
 	sudo systemctl enable redis_sensor.service
 	sudo systemctl enable thermostat.service
 	@echo "Installing Django"
-        sudo python3 -m pip install django
-        sudo python3 -m pip install redis
+	sudo python3 -m pip install django
+	sudo python3 -m pip install redis
 	sudo python3 -m pip install pytz evdev
 	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-happenings
 	sudo mkdir -p /usr/local/django
@@ -56,7 +56,7 @@ install: adafruit
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	printf '\n127.0.0.1 433board 433host\n' | sudo tee -a /etc/hosts > /dev/null
+	printf '\n127.0.0.1 433board 433host hotf\n' | sudo tee -a /etc/hosts > /dev/null
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
