@@ -50,8 +50,8 @@ install: adafruit
 	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-happenings
 	sudo mkdir -p /usr/local/django
 	sudo cp -rp django/* /usr/local/django/
-	sudo python /usr/local/django/manage.py migrate
-	sudo chmod 666 /usr/local/django/home.db
+	sudo python3 /usr/local/django/hotf/manage.py migrate
+	sudo chmod 666 /usr/local/django/hotf/home.db
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
