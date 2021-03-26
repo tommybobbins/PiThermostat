@@ -90,7 +90,10 @@ def send_call_water():
         water_state="Lost"
 #        try:
         expiry_time=int(redthis.ttl("water/req"))
-        water_req=str(redthis.get("water/req"))
+        if redthis.get("water/req"):
+           water_req=str(redthis.get("water/req").decode("utf-8"))
+        else:
+           water_req=str(redthis.get("water/req"))
         water_cal=parse_calendar(2).lower()
         redthis.set("water/calendar", water_state)
 #        except:
@@ -206,6 +209,7 @@ def read_temps():
     if (time_to_live <= (int(rotation_time / 9))): 
         if Debug:
             print ("Time to live is <= 35 seconds")
+            print ("Time to live is %i" % (int(rotation_time/9)))
         working_temp = userreq_temp + hysteresis_temp
         # e.g. 21.3 = 20.0 + 1.3
         if (mean_temp <= userreq_temp):
@@ -229,12 +233,16 @@ def read_temps():
                  print ("Switching Wrong")
     else:
         sleep(int(rotation_time/10))
+        if Debug:
+           print ("Sleeping %i" % (rotation_time/10))
         #We are in the loop but can sleep until ttl<35
 
 if __name__ == "__main__":
    while True:
+       if Debug:
+          print ("Looping")
        read_temps() 
        update_relayinfo()
        send_call_water()
-       sleep(int(rotation_time/10))
+       sleep(1)
    

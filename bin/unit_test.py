@@ -1,4 +1,4 @@
-usr/bin/python3
+#!/usr/bin/python3
 
 import unittest
 import urllib3
@@ -25,7 +25,7 @@ class TestSum(unittest.TestCase):
         self.assertEqual(r.status, 200, "Should be 200")
         print ("cal test done")
 
-    def water_redis_value(self):
+    def waterredisvalue(self):
         print ("In water")
         water_value=self.redthis.get("water/req").decode('utf-8')
         self.assertEqual(water_value,r'^on|off$' , "on or off")
