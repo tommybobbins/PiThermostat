@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import sys, pygame,operator, os, time
 from pygame.locals import *
 import random
@@ -7,9 +7,9 @@ import time
 import pyganim
 import redis
 
-from ConfigParser import SafeConfigParser
+import configparser 
 
-parser = SafeConfigParser()
+parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
