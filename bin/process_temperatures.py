@@ -203,7 +203,7 @@ def read_temps():
         if Debug:
             print ("Not in holiday Mode")
 
-    if (time_to_live <= (int((rotation_time / 10) + 10))): 
+    if (time_to_live <= (int(rotation_time / 9))): 
         if Debug:
             print ("Time to live is <= 35 seconds")
         working_temp = userreq_temp + hysteresis_temp
