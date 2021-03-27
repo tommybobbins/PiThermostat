@@ -6,15 +6,13 @@ AUTOMAKE ?= automake --add-missing
 ACLOCAL ?= aclocal
 MAKE ?=make
 
-raspi433:
-	git clone https://github.com/tommybobbins/Raspi_433
-	cd Raspi_433/TRANSMITTER && $(MAKE_INSTALL)
+.PHONY: install raspi433 i2c osd daemons binaries django
 
-i2c:
+i2c: 
 	@echo "Allowing I2C"
 	sudo cat /dev/null > /etc/modprobe.d/raspi-blacklist.conf
-        sudo echo "i2c-dev" >> /etc/modules
-        sudo modprobe i2c-dev
+	sudo echo "i2c-dev" >> /etc/modules
+	sudo modprobe i2c-dev
 
 os: 
 	@echo "Installing prereqs"
@@ -24,8 +22,6 @@ os:
 	sudo apt-get install -y libapache2-mod-wsgi-py3
 	sudo apt-get install -y sqlite3 pypy-bs4 python3-dateutil
 	sudo apt-get install -y python-dev python3-smbus python3-pip 
-	@echo "Modifying hosts file"
-	printf '\n127.0.0.1 433board 433host hotf\n' | sudo tee -a /etc/hosts > /dev/null
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo service redis-server restart
@@ -38,8 +34,7 @@ os:
 	@echo "Modifying KeepAlive Off"
 	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 
-binaries:
-
+binaries: 
 	@echo "Installing into $(BINDIR)"
 	sudo cp bin/relay_state.py $(BINDIR)
 	sudo cp bin/calculate_temps.py  $(BINDIR)
@@ -59,7 +54,7 @@ binaries:
 	@echo "Copying systemd script"
 	sudo cp systemd/*.service /etc/systemd/system/
 
-django:
+django: 
 	@echo "Installing Django"
 	sudo python3 -m pip install django
 	sudo python3 -m pip install redis
@@ -72,9 +67,10 @@ django:
 	sudo chown www-data:www-data /usr/local/django/
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
-	printf '\n127.0.0.1 433board 433host hotf\n' | sudo tee -a /etc/hosts > /dev/null
+	sudo hostnamectl set-hostname hotf
+	sudo utilities/edit_file.sh /etc/hosts 127.0.0.1 433board 433host hotf
 
-daemons:
+daemons: 
 	@echo "Starting processes"
 	sudo systemctl enable apache2 --now
 	sudo systemctl enable murunner --now
