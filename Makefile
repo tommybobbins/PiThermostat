@@ -72,6 +72,7 @@ django:
 
 daemons: 
 	@echo "Starting processes"
+	sudo systemctl daemon-reload
 	sudo systemctl enable apache2 --now
 	sudo systemctl enable murunner --now
 	sudo systemctl enable redis_sensor --now
