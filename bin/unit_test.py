@@ -25,7 +25,7 @@ class TestSum(unittest.TestCase):
 
     def test_redis_water_value(self):
         water_value=redthis.get("water/req").decode('utf-8')
-        self.assertRegex(water_value, "on" , "on or off")
+        self.assertRegex(water_value, r'^on|off$' , "on or off")
 
     def test_redis_water_ttl(self):
         water_time=redthis.ttl("water/req")
