@@ -24,19 +24,7 @@ os:
 	sudo apt-get install -y libapache2-mod-wsgi-py3
 	sudo apt-get install -y sqlite3 pypy-bs4 python3-dateutil
 	sudo apt-get install -y python-dev python3-smbus python3-pip 
-	@echo "Modifying hosts file"
-	printf '\n127.0.0.1 433board 433host hotf\n' | sudo tee -a /etc/hosts > /dev/null
-	@echo "Modifying redis-server to listen on all ports"
-	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
-	sudo service redis-server restart
-	@echo "Initialized redis queues"
-	utilities/setup_keys.sh
-	@echo "Adding cron job"
-	(crontab -u $(USER) -l; cat utilities/crontab) | crontab -u $(USER) -
-	@echo "Copying apache2 configuration"
-	sudo cp -rp etc/apache2/* /etc/apache2/
-	@echo "Modifying KeepAlive Off"
-	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
+	@echo "Installing into $(BINDIR)"
 
 binaries:
 
@@ -64,6 +52,8 @@ binaries:
 	sudo systemctl enable thermostat.service
 
 django:
+
+install: os i2c binaries django
 	@echo "Installing Django"
 	sudo python3 -m pip install django
 	sudo python3 -m pip install redis
@@ -77,15 +67,22 @@ django:
 	sudo chmod g+w /usr/local/django/
 	@echo "Modifying hosts file"
 	printf '\n127.0.0.1 433board 433host hotf\n' | sudo tee -a /etc/hosts > /dev/null
-
-daemons:
+	@echo "Modifying redis-server to listen on all ports"
+	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
+	sudo service redis-server restart
+	@echo "Initialized redis queues"
+	utilities/setup_keys.sh
+	@echo "Adding cron job"
+	(crontab -u $(USER) -l; cat utilities/crontab) | crontab -u $(USER) -
+	@echo "Copying apache2 configuration"
+	sudo cp -rp etc/apache2/* /etc/apache2/
+	@echo "Modifying KeepAlive Off"
+	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 	@echo "Starting processes"
-	sudo systemctl enable apache2 --now
-	sudo systemctl enable murunner --now
-	sudo systemctl enable redis_sensor --now
-	sudo systemctl enable thermostat --now
-
-install: os i2c binaries django process daemons
+	sudo service murunner start
+	sudo service redis_sensor start
+	sudo service thermostat start
+	sudo service apache2 restart
 	@echo "Install complete"
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
