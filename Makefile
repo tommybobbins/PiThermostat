@@ -58,10 +58,6 @@ binaries:
 	sudo cp etc/pithermostat.conf /etc
 	@echo "Copying systemd script"
 	sudo cp systemd/*.service /etc/systemd/system/
-	@echo "Setting systemd"
-	sudo systemctl enable murunner.service  
-	sudo systemctl enable redis_sensor.service
-	sudo systemctl enable thermostat.service
 
 django:
 	@echo "Installing Django"
