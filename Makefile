@@ -77,9 +77,14 @@ daemons:
 	sudo systemctl enable redis_sensor --now
 	sudo systemctl enable thermostat --now
 
-install: os i2c binaries django process daemons
+test:
+	sudo bin/unit_test.py
+
+
+install: os i2c binaries django process daemons test
 	@echo "Install complete"
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
+
 
 clean:
 	sudo rm $(BINDIR)/relay_state.py
