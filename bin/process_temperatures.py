@@ -88,21 +88,22 @@ def send_call_boiler(on_or_off):
 def send_call_water():
         water_req="Lost"
         water_state="Lost"
-#        try:
-        expiry_time=int(redthis.ttl("water/req"))
-        if redthis.get("water/req"):
-           water_req=str(redthis.get("water/req").decode("utf-8"))
-        else:
-           water_req=str(redthis.get("water/req"))
-        water_cal=parse_calendar(2).lower()
-        redthis.set("water/calendar", water_state)
-#        except:
-        print ("Lost one of %i, %s %s" % (expiry_time, water_req, water_cal))
-           # redthis.set("water/calendar", "Lost")
-        if Debug:
-           print ("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_cal))
+        expiry_time=rotation_time/10
+        try:
+          expiry_time=int(redthis.ttl("water/req"))
+          if redthis.get("water/req"):
+             water_req=str(redthis.get("water/req").decode("utf-8"))
+          else:
+             water_req=str(redthis.get("water/req"))
+          water_cal=parse_calendar(2).lower()
+          redthis.set("water/calendar", water_cal)
+        except:
+          redthis.set("water/calendar", water_state)
+          if Debug:
+             print ("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_cal))
+             print ("Lost one of %i, %s %s" % (expiry_time, water_req, water_cal))
         if ( expiry_time <= 60 ):
-           # Water has not been manually boosted and we set to calendar
+             # Water has not been manually boosted and we set to calendar
            try:
               print ("Water temp = %s" % water_state)
               redthis.set("water/req", water_cal)
