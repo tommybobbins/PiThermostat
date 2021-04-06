@@ -56,7 +56,7 @@ binaries:
 
 django: 
 	@echo "Installing Django"
-	sudo python3 -m pip install django
+	sudo python3 -m pip install django bs4
 	sudo python3 -m pip install redis
 	sudo python3 -m pip install pytz evdev
 	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-scheduler
