@@ -10,7 +10,7 @@ MAKE ?=make
 
 i2c: 
 	@echo "Allowing I2C"
-	sudo cat /dev/null > /etc/modprobe.d/raspi-blacklist.conf
+	sudo > /etc/modprobe.d/raspi-blacklist.conf
 	sudo echo "i2c-dev" >> /etc/modules
 	sudo modprobe i2c-dev
 
