@@ -89,11 +89,11 @@ test:
 	sudo bin/unit_test.py
 
 
-install: os i2c binaries django process daemons test
+install: os i2c binaries django daemons test
 	@echo "Install complete"
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
-upgrade: binaries django test restart_daemon
+upgrade: binaries django test restart_daemons
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
 clean:
