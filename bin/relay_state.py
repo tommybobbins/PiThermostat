@@ -45,7 +45,7 @@ def get_relay(relay):
      if Debug:
         print ("Relay url for %s = %s\n" % (relay,my_url))
      try:
-        response = http.request('GET', my_url)
+        response = http.request('GET', my_url,timeout=10)
         data=(json.loads(response.data.decode('utf-8')))
         #print (data)
         return (data["ison"])
@@ -67,7 +67,7 @@ def send_relay(relay,onoroff):
          relay_url = ("http://%s/relay/0?turn=%s" % (this_relay,onoroff))
          if Debug:
             print ("Changing Relay url = %s" % relay_url)
-         response = http.request('GET', relay_url)
+         response = http.request('GET', relay_url,timeout=10)
          data=(json.loads(response.data.decode('utf-8')))
          return (data["ison"])
      else:

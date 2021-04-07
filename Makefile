@@ -85,6 +85,18 @@ restart_daemons:
 	sudo systemctl restart redis_sensor
 	sudo systemctl restart thermostat
 
+tradfri: 
+	@echo "Building tradfri"
+	git clone --recursive https://github.com/obgm/libcoap.git
+	cd libcoap
+	git checkout dtls
+	git submodule update --init --recursive
+	./autogen.sh
+	./configure --disable-documentation --disable-shared
+	make
+	sudo make install
+
+
 test:
 	sudo bin/unit_test.py
 
