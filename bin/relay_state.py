@@ -77,9 +77,9 @@ def send_relay(relay,onoroff):
          return ("Nochange")
          
 
-boiler_onoff=get_relay("boiler")
-water_onoff=get_relay("water")
-print ("Boiler = %s" % boiler_onoff)
-print ("Water = %s" % water_onoff)
+#boiler_onoff=get_relay("boiler")
+#water_onoff=get_relay("water")
+#print ("Boiler = %s" % boiler_onoff)
+#print ("Water = %s" % water_onoff)
 #send_relay("water","off")
 #send_relay("boiler","off")
