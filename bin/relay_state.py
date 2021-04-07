@@ -45,7 +45,7 @@ def get_relay(relay):
      if Debug:
         print ("Relay url for %s = %s\n" % (relay,my_url))
      try:
-        response = http.request('GET', my_url,timeout=10)
+        response = http.request('GET', my_url, timeout=urllib3.Timeout(connect=1.0))
         data=(json.loads(response.data.decode('utf-8')))
         #print (data)
         return (data["ison"])
@@ -67,7 +67,8 @@ def send_relay(relay,onoroff):
          relay_url = ("http://%s/relay/0?turn=%s" % (this_relay,onoroff))
          if Debug:
             print ("Changing Relay url = %s" % relay_url)
-         response = http.request('GET', relay_url,timeout=10)
+         response = http.request('GET', relay_url, timeout=urllib3.Timeout(connect=1.0))
+
          data=(json.loads(response.data.decode('utf-8')))
          return (data["ison"])
      else:
@@ -76,9 +77,9 @@ def send_relay(relay,onoroff):
          return ("Nochange")
          
 
-#boiler_onoff=get_relay("boiler")
-#water_onoff=get_relay("water")
-#print ("Boiler = %s" % boiler_onoff)
-#print ("Water = %s" % water_onoff)
+boiler_onoff=get_relay("boiler")
+water_onoff=get_relay("water")
+print ("Boiler = %s" % boiler_onoff)
+print ("Water = %s" % water_onoff)
 #send_relay("water","off")
 #send_relay("boiler","off")
