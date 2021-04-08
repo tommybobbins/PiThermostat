@@ -39,7 +39,7 @@ while True:
         if job_running:
             # We don't have permission
             #            print ("Sleeping because we have a shared/jobqueue")
-            sleep(5)
+            sleep(2)
             continue 
         job_to_run = (redthis.lpop('cellar/jobqueue')).decode('UTF-8')
 #        job_to_run = redthis.lindex('attic/jobqueue', 0) decode('UTF-8')
@@ -53,7 +53,7 @@ while True:
                 # We do have permission
                 print ("Shellscript to run is %s \n" % job_to_run[0]) 
                 subprocess.call(job_to_run) 
-                sleep(2)
+                sleep(1)
                 job_running = redthis.delete('shared/jobqueue')
             else: 
                 print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
@@ -64,4 +64,4 @@ while True:
             sleep(1)
     except:
        #     print ("Unable to read from redis")
-            sleep(10)
+            sleep(1)
