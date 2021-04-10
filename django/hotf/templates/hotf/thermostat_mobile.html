@@ -14,7 +14,7 @@
                 {% if v|floatformat:1 %}
                 <tr class="lcars_circle"><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v|floatformat:1 }}</td></tr>
                 {% else %}
-                <tr class="lcars_circle"><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v }}</td></tr>
+                <tr class="lcars_circle"><td id="inside_values">{{ k }}</td><td id="inside_values">{{ v|title }}</td></tr>
                 {% endif %}
                 {% endfor %}
         </table>
