@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+
     <div id="readout_left">
         <table>
-                {% if boosted > 0 %} 
+                {% if boiler_relay == "Error" %} 
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_valuesboost">{{ int_weighted_mean|floatformat:1 }}</td></tr>
-                {% elif Boiler %}
+                {% elif boiler_relay == "On" %}
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean|floatformat:1 }}</td></tr>
                 {% else %} 
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean|floatformat:1 }}</td></tr>
