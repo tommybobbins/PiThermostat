@@ -5,7 +5,7 @@
         <table>
                 {% if boiler_relay == "Error" %} 
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_valuesboost">{{ int_weighted_mean|floatformat:1 }}</td></tr>
-                {% elif boiler_relay == "On" %}
+                {% elif boiler_relay == "True" %}
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_valueson">{{ int_weighted_mean|floatformat:1 }}</td></tr>
                 {% else %} 
                 <tr class="lcars_circle"><td id="inside_values">Internal</td><td id="inside_values">{{ int_weighted_mean|floatformat:1 }}</td></tr>
