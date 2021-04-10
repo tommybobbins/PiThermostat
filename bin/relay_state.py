@@ -55,7 +55,7 @@ def get_relay(relay):
 def send_relay(relay,onoroff):
 #$ curl http://192.168.1.203/relay/0?turn=off
 #{"ison":false, "has_timer":false}
-
+     onoroff=onoroff.lower()
      current_state=str(get_relay(relay))
      if Debug:
         print ("Current state of %s is %s" % (relay, current_state))
