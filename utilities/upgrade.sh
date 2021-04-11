@@ -8,5 +8,5 @@ then
    exit 0
 else
    echo "Git pull out is ${GIT_PULL_OUT}"
-   make django binaries restart_daemons	
+   make upgrade
 fi

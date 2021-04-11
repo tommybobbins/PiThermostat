@@ -12,9 +12,7 @@ MAKE ?=make
 
 i2c: 
 	@echo "Allowing I2C"
-	sudo > /etc/modprobe.d/raspi-blacklist.conf
-	sudo echo "i2c-dev" >> /etc/modules
-	sudo modprobe i2c-dev
+	utilities/add_i2c.sh
 
 os: 
 	@echo "Installing prereqs"
@@ -56,6 +54,9 @@ binaries:
 locale:
 	@echo "Copying configuration file"
 	sudo cp etc/pithermostat.conf /etc
+	sudo cp django_db/db.sqlite3 $(DJANGODIR)hotf/
+	sudo chmod 666 $(DJANGODIR)/hotf/db.sqlite3
+	sudo chown www-data:www-data $(DJANGODIR)
 	@echo "Modifying hosts file"
 	sudo hostnamectl set-hostname hotf
 	sudo utilities/edit_file.sh /etc/hosts 127.0.0.1 433board 433host hotf
@@ -111,7 +112,7 @@ backup:
 upgrade: backup binaries django test restart_daemons
 	@echo "Upgrade done"
 
-install: os i2c daemons locale tradfri upgrade
+install: os i2c daemons locale upgrade
 	@echo "Install complete"
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
