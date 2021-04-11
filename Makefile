@@ -108,8 +108,10 @@ test:
 
 backup:
 	sudo tar zvcf /var/tmp/backup_$(DOW).tgz $(BINDIR) /etc/pithermostat.conf $(DJANGODIR)
+	sudo cp $(DJANGODIR)hotf/hotf/settings.py /var/tmp/
 
 upgrade: backup binaries django test restart_daemons
+	sudo cp /var/tmp/settings.py $(DJANGODIR)/hotf/hotf/
 	@echo "Upgrade done"
 
 install: os i2c daemons locale upgrade
