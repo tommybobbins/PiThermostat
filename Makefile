@@ -1,7 +1,9 @@
 BINDIR ?=/usr/local/bin/
 CONFIGDIR ?=/etc
+DJANGODIR ?=/usr/local/django/
 CONFIGURE ?=./configure
 MAKE_INSTALL ?=sudo make install
+DOW :=$(shell date +%a)
 AUTOMAKE ?= automake --add-missing
 ACLOCAL ?= aclocal
 MAKE ?=make
@@ -45,14 +47,18 @@ binaries:
 	sudo cp utilities/redis_sensor.py $(BINDIR)
 	sudo cp utilities/retrieve_weather.sh $(BINDIR)
 	sudo cp utilities/parse_weather.py $(BINDIR)
-	sudo cp utilities/switch_tradfri.sh $(BINDIR)
 	@echo "Setting executable permissions"
 	sudo chmod 755 $(BINDIR)/*.py
 	sudo chmod 755 $(BINDIR)/*.sh
-	@echo "Copying configuration file"
-	sudo cp etc/pithermostat.conf /etc
 	@echo "Copying systemd script"
 	sudo cp systemd/*.service /etc/systemd/system/
+
+locale:
+	@echo "Copying configuration file"
+	sudo cp etc/pithermostat.conf /etc
+	@echo "Modifying hosts file"
+	sudo hostnamectl set-hostname hotf
+	sudo utilities/edit_file.sh /etc/hosts 127.0.0.1 433board 433host hotf
 
 django: 
 	@echo "Installing Django"
@@ -61,14 +67,11 @@ django:
 	sudo python3 -m pip install pytz evdev
 	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-scheduler
 	sudo mkdir -p /usr/local/django
-	sudo cp -rp django/* /usr/local/django/
-	sudo python3 /usr/local/django/hotf/manage.py migrate
-	sudo chmod 666 /usr/local/django/hotf/db.sqlite3
-	sudo chown www-data:www-data /usr/local/django/
-	sudo chmod g+w /usr/local/django/
-	@echo "Modifying hosts file"
-	sudo hostnamectl set-hostname hotf
-	sudo utilities/edit_file.sh /etc/hosts 127.0.0.1 433board 433host hotf
+	sudo cp -rp django/* $(DJANGODIR)
+	sudo python3 $(DJANGODIR)hotf/manage.py migrate
+	sudo chmod 666 $(DJANGODIR)/hotf/db.sqlite3
+	sudo chown www-data:www-data $(DJANGODIR)
+	sudo chmod g+w $(DJANGODIR)
 
 daemons: 
 	@echo "Starting processes"
@@ -80,6 +83,7 @@ daemons:
 
 restart_daemons: 
 	@echo "Restarting processes"
+	sudo systemctl daemon-reload
 	sudo systemctl restart apache2
 	sudo systemctl restart murunner
 	sudo systemctl restart redis_sensor
@@ -87,6 +91,7 @@ restart_daemons:
 
 tradfri: 
 	@echo "Building tradfri"
+	sudo cp utilities/switch_tradfri.sh $(BINDIR)
 	git clone --recursive https://github.com/obgm/libcoap.git
 	cd libcoap
 	git checkout dtls
@@ -100,12 +105,14 @@ tradfri:
 test:
 	sudo bin/unit_test.py
 
+backup:
+	sudo tar zvcf /var/tmp/backup_$(DOW).tgz $(BINDIR) /etc/pithermostat.conf $(DJANGODIR)
 
-install: os i2c binaries django daemons test
+upgrade: backup binaries django test restart_daemons
+	@echo "Upgrade done"
+
+install: os i2c daemons locale tradfri upgrade
 	@echo "Install complete"
-	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
-
-upgrade: binaries django test restart_daemons
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
 clean:
@@ -120,7 +127,7 @@ clean:
 	sudo rm $(BINDIR)/parse_weather.py
 	sudo rm $(BINDIR)/switch_tradfri.sh
 	sudo rm /etc/pithermostat.conf 
-	sudo rm -rf /usr/local/django
+	sudo rm -rf $(DJANGODIR)
 	sudo insserv -r murunner.sh
 	sudo insserv -r thermostat.sh
 	sudo insserv -r redis_sensor.sh
