@@ -120,8 +120,8 @@ def thermostat(request,modify=None,modify_value=0.0):
         left_column['BoilCal']=calendar_temp
         left_column['BoilReq'] = boiler_req
         left_column['BoilOn'] = boiler_relay
-        left_column['H2OCal']=water_req
-        left_column['H2OOn'] = water_relay
+        #left_column['H2OCal']=water_req
+        #left_column['H2OOn'] = water_relay
         right_column['ExtTemp']=outside_rollingmean
     except:
         left_column['Missing values']="N/A"
