@@ -95,6 +95,38 @@ a:visited, a:link, a:hover {
     border-radius: 42px; /* one half of ( (border * 2) + height + padding ) */
 }
 
+.reddot {
+  height: 25px;
+  width: 25px;
+  color: #a33;
+  background-color: #a33;
+  margin: 20px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.blackdot {
+  height: 25px;
+  width: 25px;
+  color: #000;
+  background-color: #000;
+  margin: 20px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+
+#redcircle {
+    padding: 10px 10px;
+    margin: 20px;
+    color: #a33;
+    height: 25px;
+    width: 25px;
+    border: 2px solid fff;
+    border-radius: 50% /* one half of ( (border * 2) + height + padding ) */
+}
+
+
 #bluebadge {
     padding: 20px;
     background-color: #339;
@@ -141,6 +173,24 @@ a:visited, a:link, a:hover {
     padding: 0px;
     list-style-type: none;
 }
+
+#readout_right2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    float: right;
+    text-align: center;
+    font-size: 100%;
+    border: 2px solid #fff;
+    border-radius: 22px; /* one half of ( (border * 2) + height + padding ) */
+    color: #fff;
+    top: 40px;
+    padding: 40px;
+    list-style-type: none;
+}
+
 
 #inside_values {
     padding: 5px;

@@ -98,6 +98,10 @@ def thermostat(request,modify=None,modify_value=0.0):
         water_temp = "On"
         redthis.set("water/req",water_temp)
         redthis.expire("water/req",boosted_time)
+    elif (modify == "wboostoff"):
+        water_temp = "Off"
+        redthis.set("water/req",water_temp)
+        redthis.expire("water/req",10)
     try:
         boiler_relay=redthis.get("relay/boiler").decode('UTF-8')
         water_relay=redthis.get("relay/water").decode('UTF-8')
@@ -175,7 +179,12 @@ def holding_page(request):
     return render(request,'holdingpage.html')
 
 def makeachoice(request):
-    return render(request, 'makeachoice.html',{'current_location':"SELECT"})
+    try:  
+        redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+        water_relay=redthis.get("relay/water").decode('UTF-8')
+    except:
+        water_relay="Error"
+    return render(request, 'makeachoice.html',{'current_location':"SELECT", 'water_relay':water_relay,})
 
 def current(request):
     return render(request,'current_happenings.html')
