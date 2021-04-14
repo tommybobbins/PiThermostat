@@ -112,7 +112,7 @@ backup:
 
 upgrade: backup binaries django test restart_daemons
 	sudo cp /var/tmp/settings.py $(DJANGODIR)/hotf/hotf/
-        chown -R www-data:www-data $(DJANGODIR)
+	sudo chown -R www-data:www-data $(DJANGODIR)
 	@echo "Upgrade done"
 
 install: os i2c daemons locale upgrade
