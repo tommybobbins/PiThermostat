@@ -117,9 +117,10 @@ def thermostat(request,modify=None,modify_value=0.0):
         int_weighted_mean=float(redthis.get("temperature/inside/weightedmean"))
         ext_weighted_mean=float(redthis.get("temperature/outside/weightedmean"))
         boiler_req=redthis.get("boiler/req").decode('UTF-8')
-        left_column['BoilCal']=calendar_temp
-        left_column['BoilReq'] = boiler_req
-        left_column['BoilOn'] = boiler_relay
+        #left_column['Internal']=calendar_temp
+        left_column['Boiler'] = boiler_relay
+        left_column['Calendar'] = calendar_temp
+        left_column['Required'] = boiler_req
         #left_column['H2OCal']=water_req
         #left_column['H2OOn'] = water_relay
         right_column['ExtTemp']=outside_rollingmean
