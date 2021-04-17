@@ -78,7 +78,7 @@ def send_light(light,requested_onoff,requested_brightness):
 #boiler_onoff=get_relay("boiler")
 #water_onoff=get_relay("water")
 (lighton,lightbright)=get_light("livinglight")
-print ("Light is = %s on/off and Brightness=%i" % lighton,lightbright)
+print ("Light is = %s on/off and Brightness=%i" % (lighton,lightbright))
 send_light("light","False",100)
 #print ("Boiler = %s" % boiler_onoff)
 #print ("Water = %s" % water_onoff)
