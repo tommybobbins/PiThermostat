@@ -37,6 +37,7 @@ os:
 binaries: 
 	@echo "Installing into $(BINDIR)"
 	sudo cp bin/relay_state.py $(BINDIR)
+	sudo cp bin/light_state.py $(BINDIR)
 	sudo cp bin/calculate_temps.py  $(BINDIR)
 	sudo cp bin/heating_water_cal.py  $(BINDIR)
 	sudo cp bin/process_temperatures.py $(BINDIR)
@@ -121,6 +122,7 @@ install: os i2c daemons locale upgrade
 
 clean:
 	sudo rm $(BINDIR)/relay_state.py
+	sudo rm $(BINDIR)/light_state.py
 	sudo rm $(BINDIR)/calculate_temps.py
 	sudo rm $(BINDIR)/heating_water_cal.py
 	sudo rm $(BINDIR)/process_temperatures.py

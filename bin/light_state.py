@@ -40,7 +40,6 @@ def get_light(light):
 
 
 
-def send_relay(light,onoroff,brightness):
 
 #$ curl http://192.168.0.77/light/0/?brightness=20
 #{"ison":false,"source":"http","has_timer":false,"timer_started":0,"timer_duration":0,"timer_remaining":0,"mode":"white","brightness":20}
@@ -53,20 +52,21 @@ def send_relay(light,onoroff,brightness):
 #$ curl http://192.168.0.77/light/0/?turn=on
 #{"ison":true,"source":"http","has_timer":false,"timer_started":0,"timer_duration":0,"timer_remaining":0,"mode":"white","brightness":20}
 
-     onoroff=onoroff.lower()
-     current_state=str(get_relay(relay))
+def send_light(light,requested_onoff,requested_brightness):
+     this_url = livinglight_url[light]
+     requested_onoff=onoroff.lower()
+     requested_brightness=int(requested_brightness)
+     (current_onoff,current_brightness)=(get_light(light))
      if Debug:
-        print ("Current state of %s is %s" % (relay, current_state))
-        print ("Requested state of %s is %s" % (relay, onoroff))
-     this_relay=config.get('relays',relay)
-     if ( current_state == "False" and onoroff == "on" ) or ( current_state == "True" and onoroff == "off"): 
+        print ("Current state of %s is %s = %i" % (relay, current_onoff, current_brightness))
+        print ("Requested state of %s is %s" % (light, requested_onoff, requested_brightness))
+     if ( current_onoff != requested_onoff ):
          if Debug:
-            print ("Need a change because current_state=%s and onoroff=%s" % (current_state,onoroff))
-         relay_url = ("http://%s/relay/0?turn=%s" % (this_relay,onoroff))
+            print ("Need a change because current_onoff=%s and requested_onoff=%s" % (current_onoff,requested_onoff))
+         light_url = ("http://%s/light/0?turn=%s" % (this_url,requested_onoff))
          if Debug:
-            print ("Changing Relay url = %s" % relay_url)
-         response = http.request('GET', relay_url, timeout=urllib3.Timeout(connect=1.0))
-
+            print ("Changing Light url = %s" % this_url)
+         response = http.request('GET', light_url, timeout=urllib3.Timeout(connect=1.0))
          data=(json.loads(response.data.decode('utf-8')))
          return (data["ison"])
      else:
@@ -79,7 +79,7 @@ def send_relay(light,onoroff,brightness):
 #water_onoff=get_relay("water")
 (lighton,lightbright)=get_light("livinglight")
 print ("Light is = %s on/off and Brightness=%i" % lighton,lightbright)
+send_light("light","False",100)
 #print ("Boiler = %s" % boiler_onoff)
 #print ("Water = %s" % water_onoff)
-#send_relay("water","off")
 #send_relay("boiler","off")
