@@ -107,7 +107,7 @@ test:
 	sudo bin/unit_test.py
 
 backup:
-	sudo tar zvcf /var/tmp/backup_$(DOW).tgz $(BINDIR) /etc/pithermostat.conf $(DJANGODIR)
+	sudo tar zvcf /var/tmp/backup_$(DOW).tgz $(BINDIR) /etc/pithermostat.conf $(DJANGODIR) /etc/apache2/
 	sudo cp $(DJANGODIR)hotf/hotf/settings.py /var/tmp/
 
 upgrade: backup binaries django test restart_daemons
