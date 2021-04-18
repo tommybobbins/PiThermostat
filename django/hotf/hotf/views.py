@@ -273,25 +273,6 @@ def bork(request, device=99, onoffstate=0):
     try: 
         if device == 99:
             return render(request, 'bork.html', { 'modify':"status", 'modify_value':"STATUS", 'switch_state':onoffstate, 'current_location':'BORK', } )
-        elif device  <= 6000:
-            # Device is a Shelly
-            alldevices = json.loads(config.get("relays","dimmerlights"))
-            swdevice=alldevices[0]
-            print ("Sending swdevice %s " %swdevice)
-            if onoffstate == 0:
-               boolsend="false"
-               dimvalue=100
-            elif onoffstate == 1:
-               boolsend="true"
-               dimvalue=100
-            # Allow for 9 dimming devices
-            elif onoffstate >= 10:
-               boolsend="true"
-               dimvalue=onoffstate
-            else:
-               boolsend=false
-            switch_status = send_light(swdevice, boolsend, dimvalue)
-            return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':boolsend, 'current_location':'BORK', } )
         elif device  >= 6000:
             # Device is a Tradfi
             switch_status = "/usr/local/bin/switch_tradfri.sh %i %i" % (device, onoffstate)
@@ -306,20 +287,20 @@ def bork(request, device=99, onoffstate=0):
     except:
         return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORK', } )
 
-
 def shellybork(request, device=99, onoffstate="false", brightness=100 ):
     device = int(device)
     onoffstate=str(onoffstate)
     brightness = int(brightness)
     try: 
         if device == 99:
-            return render(request, 'bork.html', { 'modify':"status", 'modify_value':"STATUS", 'switch_state':onoffstate, 'current_location':'BORK', } )
+            return render(request, 'bork.html', { 'modify':"status", 'modify_value':"status", 'switch_state':onoffstate, 'current_location':'BORK', } )
         elif device  <= 6000:
             # Device is a Shelly
             alldevices = json.loads(config.get("relays","dimmerlights"))
             swdevice=alldevices[0]
             print ("Sending swdevice %s " %swdevice)
             switch_status = send_light(swdevice, onoffstate, brightness )
-            return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':onoffstate, 'current_location':'BORK', } )
+            return render(request, 'bork.html', { 'modify':swdevice, 'modify_value':brightness, 'switch_state':onoffstate, 'current_location':'BORK', } )
     except:
         return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORKED', } )
+
