@@ -13,6 +13,8 @@
               {% endif %}
     {% elif modify == "boost" %}
                 <meta http-equiv="refresh" content="3; url={{ request.META.HTTP_REFERER }}" />
+    {% elif modify == "shelly" %}
+                <meta http-equiv="refresh" content="3; url={{ request.META.HTTP_REFERER }}" />
     {% else %}
 <!--          Referer {{ request.META.HTTP_REFERER }}
               Refresh_time: {{ refresh_time }} Modify_value: {{ modify_value }} Modify: {{ modify }} -->
