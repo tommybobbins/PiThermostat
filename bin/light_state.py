@@ -12,8 +12,9 @@ config = configparser.ConfigParser()
 config.read('/etc/pithermostat.conf')
 
 debug=config.get('main','debug') # As string
+brightnessreset=int(config.get('relays','brightnessreset')) # As string
 Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
-Debug = True
+#Debug = True
 
 import json
 
@@ -34,52 +35,70 @@ def get_light(light):
         response = http.request('GET', my_url, timeout=urllib3.Timeout(connect=1.0))
         data=(json.loads(response.data.decode('utf-8')))
         #print (data)
-        return (data["ison"],data["brightness"])
+        if Debug:
+           ison=str(data["ison"]).lower()
+           brightness=int(data["brightness"])
+           print ("ison = %s, brightness = %i" % (ison, brightness))
+        return (str(data["ison"]),int(data["brightness"]))
      except:
         return ("Error")
 
 
-
-
-#$ curl http://192.168.0.77/light/0/?brightness=20
-#{"ison":false,"source":"http","has_timer":false,"timer_started":0,"timer_duration":0,"timer_remaining":0,"mode":"white","brightness":20}
-#$ curl http://192.168.1.203/relay/0?turn=off
-#{"ison":false, "has_timer":false}
-#$ curl http://192.168.1.203/relay/0
-#{"ison":false, "has_timer":false}
-#$ curl http://192.168.0.77/light/0/?ison=true
-#{"ison":false,"source":"http","has_timer":false,"timer_started":0,"timer_duration":0,"timer_remaining":0,"mode":"white","brightness":20}
-#$ curl http://192.168.0.77/light/0/?turn=on
-#{"ison":true,"source":"http","has_timer":false,"timer_started":0,"timer_duration":0,"timer_remaining":0,"mode":"white","brightness":20}
-
 def send_light(light,requested_onoff,requested_brightness):
      this_url = livinglight_url[light]
-     requested_onoff=onoroff.lower()
-     requested_brightness=int(requested_brightness)
+     requested_onoff=requested_onoff.lower()
+     brightness=brightnessreset # Default to 80 from /etc/pithermostat.conf
+     brightness=int(requested_brightness)
+
      (current_onoff,current_brightness)=(get_light(light))
+     current_onoff=current_onoff.lower()
+     current_brightness=int(current_brightness)
      if Debug:
-        print ("Current state of %s is %s = %i" % (relay, current_onoff, current_brightness))
-        print ("Requested state of %s is %s" % (light, requested_onoff, requested_brightness))
+        print ("Current state of %s is %s = %i" % (light, current_onoff, current_brightness))
+        print ("Requested state of %s is %s = %i" % (light, requested_onoff, brightness))
+     switchme = "off"
      if ( current_onoff != requested_onoff ):
+         requested_onoff = requested_onoff.lower()
+         if ( requested_onoff == "true" ):
+            switchme="on"
+         elif ( requested_onoff == "false" ):
+            switchme="off"
+         else:
+            switchme="off"
          if Debug:
-            print ("Need a change because current_onoff=%s and requested_onoff=%s" % (current_onoff,requested_onoff))
-         light_url = ("http://%s/light/0?turn=%s" % (this_url,requested_onoff))
+            print ( "Current onoff is not equal to requested_onoff %s" % switchme )
+         light_url = ("http://%s/light/0/?turn=%s&brightness=%i" % (this_url,switchme,brightness))
          if Debug:
-            print ("Changing Light url = %s" % light_url)
+            print (light_url)
          response = http.request('GET', light_url, timeout=urllib3.Timeout(connect=1.0))
          data=(json.loads(response.data.decode('utf-8')))
+         if Debug:
+            print (data["ison"], data["brightness"])
          return (data["ison"])
+     elif ( current_onoff == requested_onoff ):
+         if Debug:
+            print ("No need to change socket state because current_onoff=%s and requested_onoff=%s. We may need to change brightness." % (current_onoff,requested_onoff))
+         if ( current_brightness != requested_brightness ):
+            light_url = ("http://%s/light/0/?brightness=%i" % (this_url,brightness))
+            if Debug:
+               print ("We need to make a change to brightness %s" % light_url)
+            response = http.request('GET', light_url, timeout=urllib3.Timeout(connect=1.0))
+            data=(json.loads(response.data.decode('utf-8')))
+            return (data["brightness"])
+         elif ( current_onoff != requested_onoff ):
+            print ("Something went wrong as current_onoff is not requested_onoff. Wrong loop")
+         else:  
+            if Debug:
+               print ("Nothing to do")
+            return ("Nochange")
      else:
          if Debug:
             print ("Nothing to do")
          return ("Nochange")
          
 
-#boiler_onoff=get_relay("boiler")
-#water_onoff=get_relay("water")
 (lighton,lightbright)=get_light("livinglight")
 print ("Light is = %s and Brightness=%i" % (lighton,lightbright))
-#send_light("light","True",100)
-#print ("Boiler = %s" % boiler_onoff)
-#print ("Water = %s" % water_onoff)
-#send_relay("boiler","off")
+state=send_light("livinglight","true",79)
+(lighton,lightbright)=get_light("livinglight")
+print ("Light is = %s and Brightness=%i" % (lighton,lightbright))
