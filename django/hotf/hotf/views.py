@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic.list import ListView
 from django.utils import timezone
 from django import forms
+from light_state import get_light, send_light
 
 #from django.core.urlresolvers import reverse
 #from lights.models import Socket
@@ -13,7 +14,7 @@ from .models import ESP8266, WirelessTemp
 import datetime, os
 import re
 import redis
-import configparser
+import configparser, json
 
 config = configparser.ConfigParser()
 config.read('/etc/pithermostat.conf')
@@ -266,24 +267,36 @@ def wireless_sensor(request, device='DD', temp_or_voltage="temperature", reading
        return HttpResponse("Temp or Voltage receive FAILED")
 
 def bork(request, device=0, onoffstate=0):
-    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    device = int(device)
-    onoffstate = int(onoffstate)
-    try: 
-        if device == 0:
-            return render(request, 'bork.html', { 'modify':status, 'modify_value':status, 'switch_state':onoffstate, 'current_location':'BORK', } )
-        elif device  >= 1:
+        redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+        device = int(device)
+        onoffstate = int(onoffstate)
+#    try: 
+        if device == 99:
+            return render(request, 'bork.html', { 'modify':"STATUS", 'modify_value':"STATUS", 'switch_state':onoffstate, 'current_location':'BORK', } )
+        elif device  <= 6000:
+            # Device is a Shelly
+            alldevices = json.loads(config.get("relays","dimmerlights"))
+            swdevice=alldevices[0]
+            print ("Sending swdevice %s " %swdevice)
+            if onoffstate == 0:
+               boolsend="false"
+            elif onoffstate == 1:
+               boolsend="true"
+            else:
+               boolsend=false
+            switch_status = send_light(swdevice, boolsend, 100)
+            return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':boolsend, 'current_location':'BORK', } )
+        elif device  >= 6000:
+            # Device is a Tradfi
             switch_status = "/usr/local/bin/switch_tradfri.sh %i %i" % (device, onoffstate)
         else:
             return HttpResponse("No on/off received")
-#            return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORK', } )
         if switch_status:
             redthis.rpush("cellar/jobqueue", switch_status)
-#            return HttpResponse("Device %i switched  OK" % (device))
             return render(request, 'bork.html', { 'modify':"borked", 'modify_value':switch_status, 'switch_state':onoffstate, 'current_location':'BORK', } )
         else: 
             #print ("No switch status %s" % switch_status)
             return HttpResponse("No switch status")
-    except:
-        return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORK', } )
+#    except:
+#        return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORK', } )
 
