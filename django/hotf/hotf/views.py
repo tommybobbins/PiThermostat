@@ -280,11 +280,16 @@ def bork(request, device=0, onoffstate=0):
             print ("Sending swdevice %s " %swdevice)
             if onoffstate == 0:
                boolsend="false"
+               dimvalue=100
             elif onoffstate == 1:
                boolsend="true"
+               dimvalue=100
+            elif onoffstate >= 10:
+               boolsend="true"
+               dimvalue=onoffstate
             else:
                boolsend=false
-            switch_status = send_light(swdevice, boolsend, 100)
+            switch_status = send_light(swdevice, boolsend, dimvalue)
             return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':boolsend, 'current_location':'BORK', } )
         elif device  >= 6000:
             # Device is a Tradfi
