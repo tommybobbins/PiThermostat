@@ -24,18 +24,22 @@ class TestSum(unittest.TestCase):
         self.assertEqual(r.status, 200, "Should be 200")
 
     def test_redis_water_value(self):
+        water_value=redthis.set("water/req","on")
         water_value=redthis.get("water/req").decode('utf-8')
         self.assertRegex(water_value, r'^on|off$' , "on or off")
 
     def test_redis_water_ttl(self):
+        redthis.expire("water/req",290)
         water_time=redthis.ttl("water/req")
         self.assertLessEqual(water_time, 300, "Boiler time less than 300")
 
     def test_redis_boiler_value(self):
+        redthis.set("boiler/req","On")
         boiler_value=redthis.get("boiler/req").decode('utf-8')
         self.assertRegex(boiler_value,r'^On|Off$', "On or Off")
 
     def test_redis_boiler_ttl(self):
+        redthis.expire("boiler/req",290)
         boiler_time=redthis.ttl("boiler/req")
         self.assertLessEqual(boiler_time, 300, "Boiler time less than 300")
 
