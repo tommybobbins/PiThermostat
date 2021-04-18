@@ -309,7 +309,7 @@ def bork(request, device=99, onoffstate=0):
 
 def shellybork(request, device=99, onoffstate="false", brightness=100 ):
     device = int(device)
-    onoffstate = int(onoffstate)
+    onoffstate=str(onoffstate)
     brightness = brightness(onoffstate)
     try: 
         if device == 99:
@@ -318,7 +318,6 @@ def shellybork(request, device=99, onoffstate="false", brightness=100 ):
             # Device is a Shelly
             alldevices = json.loads(config.get("relays","dimmerlights"))
             swdevice=alldevices[0]
-            onoffstate=str(onoffstate)
             print ("Sending swdevice %s " %swdevice)
             switch_status = send_light(swdevice, onoffstate, brightness )
             return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':onoffstate, 'current_location':'BORK', } )
