@@ -310,7 +310,7 @@ def bork(request, device=99, onoffstate=0):
 def shellybork(request, device=99, onoffstate="false", brightness=100 ):
     device = int(device)
     onoffstate=str(onoffstate)
-    brightness = brightness(onoffstate)
+    brightness = int(brightness)
     try: 
         if device == 99:
             return render(request, 'bork.html', { 'modify':"status", 'modify_value':"STATUS", 'switch_state':onoffstate, 'current_location':'BORK', } )
