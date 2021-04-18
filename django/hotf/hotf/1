@@ -266,7 +266,7 @@ def wireless_sensor(request, device='DD', temp_or_voltage="temperature", reading
     except:
        return HttpResponse("Temp or Voltage receive FAILED")
 
-def bork(request, device=99, onoffstate=0):
+def bork(request, device=0, onoffstate=0):
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
     device = int(device)
     onoffstate = int(onoffstate)
@@ -307,20 +307,4 @@ def bork(request, device=99, onoffstate=0):
         return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORK', } )
 
 
-def shellybork(request, device=99, onoffstate="false", brightness=100 ):
-    device = int(device)
-    onoffstate = int(onoffstate)
-    brightness = brightness(onoffstate)
-    try: 
-        if device == 99:
-            return render(request, 'bork.html', { 'modify':"status", 'modify_value':"STATUS", 'switch_state':onoffstate, 'current_location':'BORK', } )
-        elif device  <= 6000:
-            # Device is a Shelly
-            alldevices = json.loads(config.get("relays","dimmerlights"))
-            swdevice=alldevices[0]
-            onoffstate=str(onoffstate)
-            print ("Sending swdevice %s " %swdevice)
-            switch_status = send_light(swdevice, onoffstate, brightness )
-            return render(request, 'bork.html', { 'modify':"shelly", 'modify_value':swdevice, 'switch_state':onoffstate, 'current_location':'BORK', } )
-     except:
-        return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORKED', } )
+def shellybork(request, device=0, onoffstate=0, ):

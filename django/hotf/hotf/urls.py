@@ -30,6 +30,7 @@ urlpatterns = [
     path('holiday/<str:modify>/<str:modify_value>/', views.holiday),
     path('holiday/',views.holiday),
     path('bork/<int:device>/<int:onoffstate>/', views.bork ),
+    path('shellybork/<int:device>/<str:onoffstate>/<int:brightness>/', views.bork ),
     path('checkinwt/<str:device>/<str:temp_or_voltage>/<str:reading>/', views.wireless_sensor ),
     path('', include('schedule.urls')),
 ]
