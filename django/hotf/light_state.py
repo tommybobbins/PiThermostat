@@ -14,7 +14,6 @@ config.read('/etc/pithermostat.conf')
 debug=config.get('main','debug') # As string
 brightnessreset=int(config.get('relays','brightnessreset')) # As string
 Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
-Debug = True
 
 import json
 
