@@ -8,14 +8,21 @@
 <!--              <h1>We are in status</h1> -->
               {% if refresh_time %}
                 <meta http-equiv="refresh" content="{{ refresh_time }}" />
+              {% elif request.path == "/" %}
+                <meta http-equiv="refresh" content="{{ refresh_time }}" />
 <!--              <h1>We have a refresh time and status/h1> -->
               {% else %}
                 <meta http-equiv="refresh" content="60" />
 <!--              <h1>We only have a refresh time/h1> -->
               {% endif %}
+    {% elif request.path == "/" %}
+                <meta http-equiv="refresh" content="10;" />
+<!-- Anything redirecting back to the main page should not be redirected -->
     {% elif modify == "boost" %}
                 <meta http-equiv="refresh" content="3; url={{ request.META.HTTP_REFERER }}" />
-<!--              <h1>We are boosted/h1> -->
+    {% elif modify == "waterboost" %}
+                <meta http-equiv="refresh" content="3; url={{ request.META.HTTP_REFERER }}" />
+<!--              <h1>We are waterboosted/h1> -->
     {% elif modify == "shelly" %}
 <!--              <h1>We are shelly/h1> -->
                 <meta http-equiv="refresh" content="0.3; url={{ request.META.HTTP_REFERER }}" />

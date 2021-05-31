@@ -91,18 +91,11 @@ def velux(request, openclosestate):
     return render(request, 'velux.html', { 'modify':openclosestate,'modify_value':openclosestate, 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
 
 def thermostat(request,modify=None,modify_value=0.0):
+    thermostat_template = 'thermostat_mobile.html'
     refresh_time=10
     left_column={}
     right_column={}
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    if (modify == "wboost"):
-        water_temp = "On"
-        redthis.set("water/req",water_temp)
-        redthis.expire("water/req",boosted_time)
-    elif (modify == "wboostoff"):
-        water_temp = "Off"
-        redthis.set("water/req",water_temp)
-        redthis.expire("water/req",10)
     try:
         boiler_relay=redthis.get("relay/boiler").decode('UTF-8')
         water_relay=redthis.get("relay/water").decode('UTF-8')
@@ -156,7 +149,6 @@ def thermostat(request,modify=None,modify_value=0.0):
             #print ("Adding %s %d outside " % (location, value))
             right_column[location]=value
 
-    thermostat_template = 'thermostat_mobile.html'
     if (modify == "status"):
         refresh_time=60.0
     elif (modify == "refresh"):
@@ -305,3 +297,25 @@ def shellybork(request, device=99, onoffstate="false", brightness=100 ):
         return render(request, 'bork.html', { 'modify_value':"shelly", 'switch_state':onoffstate, 'current_location':'BORKED',} )
 
 
+def waterboost(request,water_req=None,boosted_time=3600):
+    thermostat_template = 'allok.html'
+    refresh_time=10
+    left_column={}
+    right_column={}
+    redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+    if (water_req == "On"):
+        redthis.set("water/req",water_req)
+        redthis.expire("water/req",boosted_time)
+    elif (water_req == "Off"):
+        redthis.set("water/req",water_req)
+        boosted_time=10
+        redthis.expire("water/req",10)
+    else: 
+        water_req == "NA"
+        boosed_time=0
+    return render(request, thermostat_template, {   'water_req': water_req,
+                                                        'boosted_time': boosted_time,
+                                                        'current_location': "waterboost",
+                                                        'modify_value': boosted_time,
+                                                        'modify': "waterboost",
+                                                     })
