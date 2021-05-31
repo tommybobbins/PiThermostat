@@ -302,5 +302,6 @@ def shellybork(request, device=99, onoffstate="false", brightness=100 ):
             switch_status = send_light(swdevice, onoffstate, brightness )
             return render(request, 'bork.html', { 'modify':swdevice, 'modify_value':brightness, 'switch_state':onoffstate, 'current_location':'BORK', } )
     except:
-        return render(request, 'bork.html', { 'modify_value':device, 'switch_state':onoffstate, 'current_location':'BORKED', } )
+        return render(request, 'bork.html', { 'modify_value':"shelly", 'switch_state':onoffstate, 'current_location':'BORKED',} )
+
 
