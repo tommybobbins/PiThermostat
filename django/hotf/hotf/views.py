@@ -303,10 +303,10 @@ def waterboost(request,water_req=None,boosted_time=3600):
     left_column={}
     right_column={}
     redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-    if (water_req == "On"):
+    if (water_req == "on"):
         redthis.set("water/req",water_req)
         redthis.expire("water/req",boosted_time)
-    elif (water_req == "Off"):
+    elif (water_req == "off"):
         redthis.set("water/req",water_req)
         boosted_time=10
         redthis.expire("water/req",10)
