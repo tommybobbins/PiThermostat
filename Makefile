@@ -24,6 +24,7 @@ os:
 	sudo apt-get install -y python-dev python3-smbus python3-pip python-smbus
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
+	sudo sed -i "s/^protected-mode yes/protected-mode no/g" /etc/redis/redis.conf
 	sudo service redis-server restart
 	@echo "Initialized redis queues"
 	utilities/setup_keys.sh
