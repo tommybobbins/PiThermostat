@@ -46,6 +46,7 @@ binaries:
 	sudo cp utilities/redis_sensor.py $(BINDIR)
 	sudo cp utilities/retrieve_weather.sh $(BINDIR)
 	sudo cp utilities/parse_weather.py $(BINDIR)
+	sudo cp utilities/mean_outsidetemp.py $(BINDIR)
 	@echo "Setting executable permissions"
 	sudo chmod 755 $(BINDIR)/*.py
 	sudo chmod 755 $(BINDIR)/*.sh
@@ -131,6 +132,7 @@ clean:
 	sudo rm $(BINDIR)/retrieve_weather.sh
 	sudo rm $(BINDIR)/parse_weather.py
 	sudo rm $(BINDIR)/switch_tradfri.sh
+	sudo rm $(BINDIR)/mean_outsidetemp.py
 	sudo rm /etc/pithermostat.conf 
 	sudo rm -rf $(DJANGODIR)
 	sudo insserv -r murunner.sh
