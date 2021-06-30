@@ -15,6 +15,8 @@
                 <meta http-equiv="refresh" content="60" />
 <!--              <h1>We only have a refresh time/h1> -->
               {% endif %}
+    {% elif modify == "static" %}
+                <-- Static page. No refresh -->
     {% elif request.path == "/" %}
                 <meta http-equiv="refresh" content="10;" />
 <!-- Anything redirecting back to the main page should not be redirected -->

@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('thermostat/', views.thermostat),
     path('thermostat/status', views.thermostat),
+    path('thermostat/static', views.thermostat),
     path('thermostat/<str:modify>/', views.thermostat),
     path('thermostat/<str:modify>/<str:modify_value>/', views.thermostat),
     path('catcannon/<str:switch_onoroff>/', views.catcannon),
