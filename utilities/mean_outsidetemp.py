@@ -2,14 +2,18 @@
 ### For a given temperature/external/mean, populate a rolling redis list temperature/external/rollingtemp
 ### with 48 entries on. Then calculate the mean and populate temperature/external/rollingmean
 ### Used to determine whether it is Summer or Winter
-import redis
+
+from sys import path
+import configparser
+import datetime
 from time import sleep
-from ConfigParser import SafeConfigParser
+import redis
+
+#import redis
 import random
 numerator = 0
 
-
-parser = SafeConfigParser()
+parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
@@ -34,9 +38,9 @@ else:
 for listcounter in range(0,(length_of_list - 1)):
     temp = float(redthis.lindex('temperature/outside/rollingtemp', listcounter))
     numerator += temp
-#    print ("temp = %f " % temp ) 
-#print ("Numerator = %f " % numerator)
+    print ("temp = %f " % temp ) 
+print ("Numerator = %f " % numerator)
 denominator = length_of_list - 1
 mean_temp = numerator/denominator
 redthis.set('temperature/outside/rollingmean', mean_temp)
-#print ("Mean temp = %f " % mean_temp) 
+print ("Mean temp = %f " % mean_temp) 
