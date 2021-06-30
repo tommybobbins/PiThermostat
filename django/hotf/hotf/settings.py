@@ -25,7 +25,7 @@ SECRET_KEY = '(vy6d4mb+j*)oux8=2)_(y22ncon5yb9&=%7p0ig_ho*tn*%oi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["hotf","433board"]
+ALLOWED_HOSTS = ["hotf","433board","localhost"]
 
 
 # Application definition
