@@ -82,10 +82,10 @@ def velux(request, openclosestate):
     else:
         switch_status = False
     season = redthis.get("velux/season").decode('UTF-8')
-    velux1_state = redthis.get("velux/1")
-    velux2_state = redthis.get("velux/2")
-    velux3_state = redthis.get("velux/3")
-    attic_temp = redthis.get("temperature/attic/sensor")
+    velux1_state = redthis.get("velux/1").decode('UTF-8')
+    velux2_state = redthis.get("velux/2").decode('UTF-8')
+    velux3_state = redthis.get("velux/3").decode('UTF-8')
+    attic_temp = redthis.get("temperature/attic/sensor").decode('UTF-8')
     if switch_status:
         redthis.rpush("attic/jobqueue", switch_status)
     return render(request, 'velux.html', { 'modify':openclosestate,'modify_value':openclosestate, 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
