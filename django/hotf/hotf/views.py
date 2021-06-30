@@ -134,7 +134,8 @@ def thermostat(request,modify=None,modify_value=0.0):
     # For each key find, the sensor value and store
     # in temperatures
     all_tempkeys=(redthis.keys(pattern="temperature/*/sensor"))
-    for tempkey in all_tempkeys:
+    sorted_tempkeys = sorted(all_tempkeys)
+    for tempkey in sorted_tempkeys:
         match = regex_temp.search(tempkey.decode('utf-8'))
         #print ("Tempkey = %s" % tempkey)
         location=match.group(1)
