@@ -208,6 +208,8 @@ def holiday(request,modify=None,modify_value=None):
         holiday_time = int(days * 24 * 60 * 60)
         redthis.set("holiday_countdown",7.0)
         redthis.expire("holiday_countdown",holiday_time)
+        redthis.set("water/req","off")
+        redthis.expire("water/req",holiday_time)
     else:
         modify="status"
     days = float (holiday_time / (24.0 * 60.0 * 60.0))
@@ -309,8 +311,7 @@ def waterboost(request,water_req=None,boosted_time=3600):
         redthis.expire("water/req",boosted_time)
     elif (water_req == "off"):
         redthis.set("water/req",water_req)
-        boosted_time=10
-        redthis.expire("water/req",10)
+        redthis.expire("water/req",boosted_time)
     else: 
         water_req == "NA"
         boosed_time=0
