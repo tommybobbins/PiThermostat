@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 ### For a given temperature/external/mean, populate a rolling redis list temperature/external/rollingtemp
 ### with 48 entries on. Then calculate the mean and populate temperature/external/rollingmean
 ### Used to determine whether it is Summer or Winter
