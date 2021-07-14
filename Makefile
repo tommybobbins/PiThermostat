@@ -122,26 +122,26 @@ install: os i2c daemons locale upgrade
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 
 clean:
-	sudo rm $(BINDIR)/relay_state.py
-	sudo rm $(BINDIR)/calculate_temps.py
-	sudo rm $(BINDIR)/heating_water_cal.py
-	sudo rm $(BINDIR)/process_temperatures.py
-	sudo rm $(BINDIR)/temp_stats.py
-	sudo rm $(BINDIR)/read_redis.py
-	sudo rm $(BINDIR)/redis_sensor.py
-	sudo rm $(BINDIR)/retrieve_weather.sh
-	sudo rm $(BINDIR)/parse_weather.py
-	sudo rm $(BINDIR)/switch_tradfri.sh
-	sudo rm $(BINDIR)/mean_outsidetemp.py
-	sudo rm /etc/pithermostat.conf 
+	sudo rm -f $(BINDIR)/relay_state.py
+	sudo rm -f $(BINDIR)/calculate_temps.py
+	sudo rm -f $(BINDIR)/heating_water_cal.py
+	sudo rm -f $(BINDIR)/process_temperatures.py
+	sudo rm -f $(BINDIR)/temp_stats.py
+	sudo rm -f $(BINDIR)/read_redis.py
+	sudo rm -f $(BINDIR)/redis_sensor.py
+	sudo rm -f $(BINDIR)/retrieve_weather.sh
+	sudo rm -f $(BINDIR)/parse_weather.py
+	sudo rm -f $(BINDIR)/switch_tradfri.sh
+	sudo rm -f $(BINDIR)/mean_outsidetemp.py
+	sudo rm -f /etc/pithermostat.conf 
 	sudo rm -rf $(DJANGODIR)
-	sudo systemctl disable thermostat.service
-	sudo systemctl disable murunner.service
-	sudo systemctl disable redis_sensor.service
-	sudo rm /etc/systemd/system/murunner.service 
-	sudo rm /etc/systemd/system/thermostat.service 
-	sudo rm /etc/systemd/system/redis_sensor.service 
-	sudo rm /etc/init.d/murunner.sh
-	sudo rm /etc/init.d/thermostat.sh
-	sudo rm /etc/init.d/redis_sensor.sh
+	sudo systemctl disable --now thermostat.service
+	sudo systemctl disable --now murunner.service
+	sudo systemctl disable --now redis_sensor.service
+	sudo rm -f /etc/systemd/system/murunner.service 
+	sudo rm -f /etc/systemd/system/thermostat.service 
+	sudo rm -f /etc/systemd/system/redis_sensor.service 
+	sudo rm -f /etc/init.d/murunner.sh
+	sudo rm -f /etc/init.d/thermostat.sh
+	sudo rm -f /etc/init.d/redis_sensor.sh
 	@echo "Removal complete"
