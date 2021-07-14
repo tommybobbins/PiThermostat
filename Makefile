@@ -135,9 +135,6 @@ clean:
 	sudo rm $(BINDIR)/mean_outsidetemp.py
 	sudo rm /etc/pithermostat.conf 
 	sudo rm -rf $(DJANGODIR)
-	sudo insserv -r murunner.sh
-	sudo insserv -r thermostat.sh
-	sudo insserv -r redis_sensor.sh
 	sudo systemctl disable thermostat.service
 	sudo systemctl disable murunner.service
 	sudo systemctl disable redis_sensor.service
