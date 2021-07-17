@@ -62,3 +62,4 @@ Add a line similar to the following to retrieve the weather for your location
 
     13 0,6,12,18 * * * /usr/local/bin/retrieve_weather.sh
 ========================
+
