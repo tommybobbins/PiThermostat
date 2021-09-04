@@ -239,6 +239,8 @@ def read_temps():
         #We are in the loop but can sleep until ttl<35
 
 if __name__ == "__main__":
+   #Sleep on startup as redis needs to be online first
+   sleep(10)
    while True:
        if Debug:
           print ("Looping")
