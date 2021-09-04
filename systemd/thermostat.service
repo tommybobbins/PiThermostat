@@ -1,5 +1,6 @@
 [Unit]
 Description=Thermostat read temperatures and calendar
+After=syslog.target network.target redis-server.service
 
 [Service]
 Type=simple
