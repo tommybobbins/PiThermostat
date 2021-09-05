@@ -32,6 +32,8 @@ os:
 	(crontab -u $(USER) -l; cat utilities/crontab) | crontab -u $(USER) -
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
+	sudo cp -rp etc/apache2/.htpasswd /etc/apache2/
+        sudo chmod 600 /etc/apache2/.htpasswd
 	@echo "Modifying KeepAlive Off"
 	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 
@@ -117,7 +119,7 @@ upgrade: backup binaries django test restart_daemons
 	sudo chown -R www-data:www-data $(DJANGODIR)
 	@echo "Upgrade done"
 
-install: os i2c daemons locale upgrade
+install: os i2c binaries locale django daemons upgrade 
 	@echo "Install complete"
 	@echo "Remember to set tradfri Pass in $(BINDIR)/switch_tradfri.sh"
 

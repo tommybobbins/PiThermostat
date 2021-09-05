@@ -44,6 +44,9 @@ The scripts to copy to /usr/local/bin are as follows:
 | calculate_temps.py | Pull in the data from the temperature sensors and calculates an internal and external mean |
 
 
+Apache is protected by a username/password set in /etc/apache2/.htpasswd. This defaults to hotf/hotf.
+
+
 Using Weather (optional)
 ========================
 
