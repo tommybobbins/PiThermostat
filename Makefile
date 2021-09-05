@@ -33,7 +33,7 @@ os:
 	@echo "Copying apache2 configuration"
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	sudo cp -rp etc/apache2/.htpasswd /etc/apache2/
-        sudo chmod 600 /etc/apache2/.htpasswd
+	sudo chmod 600 /etc/apache2/.htpasswd
         sudo chown www-data:www-data /etc/apache2/.htpasswd
 	@echo "Modifying KeepAlive Off"
 	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
