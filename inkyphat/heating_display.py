@@ -13,6 +13,8 @@ try:
 
     parser = SafeConfigParser()
     parser.read('/etc/pithermostat.conf')
+    debug=parser.get('main','debug')
+    Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean   
     redishost=parser.get('redis','broker')
     redisport=int(parser.get('redis','port'))
     redisdb=parser.get('redis','db')
@@ -81,11 +83,23 @@ local_temperature = 0
 mean_temperature = 0
 
 try:
+    if Debug:
+        print ("Finding sensor name")
     sensor_name="temperature/"+room_location+"/sensor"
+    if Debug:
+        print ("Sensor name is %s" % sensor_name)
     local_temperature = float(redthis.get(sensor_name))
+    if Debug:
+        print ("Local temp = %s" % local_temperature)
     mean_temperature = float(redthis.get("temperature/inside/weightedmean"))
+    if Debug:
+        print ("Mean temp = %s" % mean_temperature)
     outside_temperature = float(redthis.get("temperature/outside/weightedmean"))
+    if Debug:
+        print ("Outside temp = %s" % outside_temperature)
     boiler_state = (redthis.get("boiler/req"))
+    if Debug:
+        print ("Boiler state = %s" % boiler_state)
 except:
     local_temperature=0
     mean_temperature=0
