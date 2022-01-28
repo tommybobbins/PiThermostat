@@ -59,6 +59,7 @@ binaries:
 locale:
 	@echo "Copying configuration file"
 	sudo cp etc/pithermostat.conf /etc
+	sudo mkdir -p $(DJANGODIR)/hotf
 	sudo cp django_db/db.sqlite3 $(DJANGODIR)hotf/
 	sudo chmod 666 $(DJANGODIR)/hotf/db.sqlite3
 	sudo chown www-data:www-data $(DJANGODIR)
@@ -72,7 +73,7 @@ django:
 	sudo python3 -m pip install redis
 	sudo python3 -m pip install pytz evdev
 	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-scheduler
-	sudo mkdir -p /usr/local/django
+	sudo mkdir -p /usr/local/django	
 	sudo cp -rp django/* $(DJANGODIR)
 	sudo python3 $(DJANGODIR)hotf/manage.py migrate
 	sudo chmod 666 $(DJANGODIR)/hotf/db.sqlite3
