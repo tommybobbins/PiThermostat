@@ -20,7 +20,7 @@ os:
 	sudo apt-get -y upgrade
 	sudo apt-get install -y redis-server python3-redis weather-util apache2
 	sudo apt-get install -y libapache2-mod-wsgi-py3
-	sudo apt-get install -y sqlite3 pypy-bs4 python3-dateutil
+	sudo apt-get install -y sqlite3 python3-bs4 python3-dateutil
 	sudo apt-get install -y python-dev python3-smbus python3-pip python-smbus
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
