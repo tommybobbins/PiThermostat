@@ -35,7 +35,7 @@ time_to_live = 3600
 ###### determines how much weighting this sensor
 ###### if used at an extreme point in the house (say cellar), set to 1
 ###### if used centrally (living room), set to 3 or 4
-# Now set in /etc/pithemostat.conf
+# Now set in /etc/pithermostat.conf
 zone_multiplier=parser.get('locale','multiplier')
 
 sensor_name="temperature/"+room_location+"/sensor"
