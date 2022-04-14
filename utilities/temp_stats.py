@@ -6,16 +6,15 @@
 from time import sleep
 import re
 import redis
-from ConfigParser import SafeConfigParser
+import configparser
+config = configparser.ConfigParser()
+config.read('/etc/pithermostat.conf')
 
-parser = SafeConfigParser()
-parser.read('/etc/pithermostat.conf')
-
-redishost=parser.get('redis','broker')
-redisport=int(parser.get('redis','port'))
-redisdb=parser.get('redis','db')
-redistimeout=float(parser.get('redis','timeout'))
-redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+redishost=config.get('redis','broker')
+redisport=int(config.get('redis','port'))
+redisdb=config.get('redis','db')
+redistimeout=float(config.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout,charset='utf-8')
 
 import logging, datetime
 dt = datetime.datetime.now()
@@ -26,7 +25,7 @@ logging_string=""
 try:
     outside_temp=float(redthis.get("temperature/weather"))
     required_temp=float(redthis.get("temperature/userrequested"))
-    boiler_req=(redthis.get("boiler/req"))
+    boiler_req=str(redthis.get("boiler/req").decode('utf-8'))
     logging_string += ("%s\t" % dt)
     logging_string += ("%f\t" % outside_temp)
     logging_string += ("%f\t" % required_temp)
@@ -34,17 +33,20 @@ try:
     # Find all the keys matching temperature/*/sensor
     # For each key find, the sensor value
     all_tempkeys=(redthis.keys(pattern="temperature/*/sensor"))
-    for tempkey in sorted(all_tempkeys):
-        try:
-            match = regex_temp.search(tempkey)
+    #print (all_tempkeys)
+    for tempkey in (sorted(all_tempkeys)):
+         #print ((tempkey).decode('utf-8'))
+         try:
+            match = regex_temp.search(tempkey.decode('utf-8'))
             location=match.group(1)
-#            print ("location = %s " % location)
-            value=float(redthis.get(tempkey))
+            #print ("location = %s " % location)
+            value=float(redthis.get(tempkey).decode('utf-8'))
             logging_string += ("\t%f" % value)
-#           print logging_string
-        except:
+            print (logging_string)
+         except:
             print ("Something went wrong!")
     logging_string += ("\t%s" % boiler_req)
+    #print (logging_string)
 except:
     outside_temp = 0
     sensor_temp = 0
