@@ -1,3 +1,3 @@
 # Weather thrice a day
 43 07,12,19 * * * /usr/local/bin/retrieve_weather.sh >/dev/null 2>&1
-#23 23       * * * /usr/local/bin/mean_outsidetemp.py
+#23 *       * * * /usr/local/bin/mean_outsidetemp.py
