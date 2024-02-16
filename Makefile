@@ -12,16 +12,13 @@ MAKE ?=make
 
 i2c: 
 	@echo "Allowing I2C"
-	utilities/add_i2c.sh
+	sudo utilities/add_i2c.sh
 
 os: 
 	@echo "Installing prereqs"
 	sudo apt-get update
 	sudo apt-get -y upgrade
-	sudo apt-get install -y redis-server python3-redis weather-util apache2
-	sudo apt-get install -y libapache2-mod-wsgi-py3
-	sudo apt-get install -y sqlite3 python3-bs4 python3-dateutil
-	sudo apt-get install -y python-dev-is-python3 python3-smbus python3-pip
+	sudo apt-get install -y redis-server python3-redis weather-util apache2  libapache2-mod-wsgi-py3 sqlite3 python3-bs4 python3-dateutil python-dev-is-python3 python3-smbus python3-pip
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo sed -i "s/^protected-mode yes/protected-mode no/g" /etc/redis/redis.conf
@@ -69,10 +66,9 @@ locale:
 
 django: 
 	@echo "Installing Django"
-	sudo python3 -m pip install django bs4
-	sudo python3 -m pip install redis
-	sudo python3 -m pip install pytz evdev
-	sudo python3 -m pip install apiclient urllib3 django-icons-tango django-scheduler
+	sudo apt -y install python3-bs4 python3-django python3-redis python3-pytzdata python3-evdev python3-urllib3
+	sudo python3 -m pip install django-scheduler --break-system-packages
+	sudo python3 -m pip install apiclient --break-system-packages
 	sudo mkdir -p /usr/local/django	
 	sudo cp -rp django/* $(DJANGODIR)
 	sudo python3 $(DJANGODIR)hotf/manage.py migrate
