@@ -21,7 +21,7 @@ os:
 	sudo apt-get install -y redis-server python3-redis weather-util apache2
 	sudo apt-get install -y libapache2-mod-wsgi-py3
 	sudo apt-get install -y sqlite3 python3-bs4 python3-dateutil
-	sudo apt-get install -y python-dev python3-smbus python3-pip
+	sudo apt-get install -y python-dev-is-python3 python3-smbus python3-pip
 	@echo "Modifying redis-server to listen on all ports"
 	sudo sed -i "s/^bind/#bind/g" /etc/redis/redis.conf
 	sudo sed -i "s/^protected-mode yes/protected-mode no/g" /etc/redis/redis.conf
