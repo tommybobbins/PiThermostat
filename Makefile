@@ -52,6 +52,8 @@ binaries:
 	sudo chmod 755 $(BINDIR)/*.sh
 	@echo "Copying systemd script"
 	sudo cp systemd/*.service /etc/systemd/system/
+	sudo python3 -m pip install bmp280 --break-system-packages
+
 
 locale:
 	@echo "Copying configuration file"
@@ -79,6 +81,7 @@ django:
 daemons: 
 	@echo "Starting processes"
 	sudo systemctl daemon-reload
+        sudo chown www-data:www-data /etc/apache2/.htpasswd
 	sudo systemctl enable apache2 --now
 	sudo systemctl enable murunner --now
 	sudo systemctl enable redis_sensor --now
