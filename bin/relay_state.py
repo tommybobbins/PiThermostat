@@ -13,6 +13,7 @@ config.read('/etc/pithermostat.conf')
 
 debug=config.get('main','debug') # As string
 Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
+#Debug = True
 
 
 redishost=config.get('redis','broker')
@@ -26,48 +27,54 @@ water_relay=config.get('relays','water')
 import json
 
 #relay_url={}
-relay_url = {
-    'boiler': config.get('relays','boiler') ,
-    'water': config.get('relays','water') 
-}
 
-def get_relay(relay):
+def relay_url (device):
 
-#$ curl http://192.168.1.203/relay/0?turn=off
-#{"ison":false, "has_timer":false}
-#$ curl http://192.168.1.203/relay/0
-#{"ison":false, "has_timer":false}
+    try:
+        relay_url = str(config.get('relays',device))
+        relay_int = int(config.get('relays',device+"_index"))
+        if Debug:
+            print (relay_url, relay_int)
+        return (relay_url, relay_int)
+    except:
+        print ("Error in relay_url")
+        return ("Error", "23")
 
-     this_url = relay_url[relay]
+
+def get_relay(device):
+
+     this_device,this_index = relay_url(device)
+     my_url = ("http://%s/relay/%i" % (this_device,this_index))
      if Debug:
-        print ("This URL = %s" % this_url)
-     my_url = ("http://%s/relay/0" % (this_url))
-     if Debug:
-        print ("Relay url for %s = %s\n" % (relay,my_url))
+        print ("Relay url for %s = %s\n" % (this_device,my_url))
      try:
         response = http.request('GET', my_url, timeout=urllib3.Timeout(connect=1.0))
         data=(json.loads(response.data.decode('utf-8')))
-        #print (data)
+        if Debug:
+            print (data["ison"])
         return (data["ison"])
      except:
+        print ("Error in get_relay")
         return ("Error")
 
-def send_relay(relay,onoroff):
-#$ curl http://192.168.1.203/relay/0?turn=off
-#{"ison":false, "has_timer":false}
-     onoroff=onoroff.lower()
-     current_state=str(get_relay(relay))
+def send_relay(device,onoroff):
+
+     print ("Inside send_relay for device=%s, turning %s" % (device,onoroff))
+     #onoroff=onoroff.lower()
+     this_device,this_index = relay_url(device)
+     current_state=str(get_relay(device))
      if Debug:
-        print ("Current state of %s is %s" % (relay, current_state))
-        print ("Requested state of %s is %s" % (relay, onoroff))
-     this_relay=config.get('relays',relay)
+        print ("Back from get_relay for device=%s with current_state=%s" % (device,current_state))
+        print ("Current state of %s is %s" % (device, current_state))
+        print ("Requested state of %s is %s" % (device, onoroff))
+        print ("Requested index of %s is %i" % (device, this_index))
      if ( current_state == "False" and onoroff == "on" ) or ( current_state == "True" and onoroff == "off"): 
          if Debug:
             print ("Need a change because current_state=%s and onoroff=%s" % (current_state,onoroff))
-         relay_url = ("http://%s/relay/0?turn=%s" % (this_relay,onoroff))
+         built_url = ("http://%s/relay/%i?turn=%s" % (this_device,this_index,onoroff))
          if Debug:
-            print ("Changing Relay url = %s" % relay_url)
-         response = http.request('GET', relay_url, timeout=urllib3.Timeout(connect=1.0))
+            print ("Changing Relay url = %s" % built_url)
+         response = http.request('GET', built_url, timeout=urllib3.Timeout(connect=1.0))
 
          data=(json.loads(response.data.decode('utf-8')))
          return (data["ison"])
@@ -76,7 +83,8 @@ def send_relay(relay,onoroff):
             print ("Nothing to do")
          return ("Nochange")
          
-
+#relay_url("water")
+#relay_url("boiler")
 #boiler_onoff=get_relay("boiler")
 #water_onoff=get_relay("water")
 #print ("Boiler = %s" % boiler_onoff)
