@@ -59,7 +59,8 @@ def get_relay(device):
 
 def send_relay(device,onoroff):
 
-     print ("Inside send_relay for device=%s, turning %s" % (device,onoroff))
+     if Debug:
+        print ("Inside send_relay for device=%s, Checking whether it is %s" % (device,onoroff))
      #onoroff=onoroff.lower()
      this_device,this_index = relay_url(device)
      current_state=str(get_relay(device))

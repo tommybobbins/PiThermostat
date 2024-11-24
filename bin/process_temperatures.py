@@ -105,7 +105,7 @@ def send_call_water():
         if ( expiry_time <= 60 ):
              # Water has not been manually boosted and we set to calendar
            try:
-              print ("Water temp = %s" % water_state)
+              #print ("Water temp = %s" % water_state)
               redthis.set("water/req", water_cal)
               redthis.expire("water/req", rotation_time)
               send_relay("water",water_cal)
