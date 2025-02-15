@@ -107,8 +107,8 @@ def calculate_temps():
     return (int_weighted_mean, ext_weighted_mean)
 
 if Debug:
-    int,ext=calculate_temps()
-    print ("##################################")
-    print (int)
-    print ("##################################")
-    print (ext)
+    internal_temp, external_temp = calculate_temps()
+    print("#" * 34)
+    print(f"Internal temperature: {internal_temp:.2f}°C")
+    print("#" * 34)
+    print(f"External temperature: {external_temp:.2f}°C")
