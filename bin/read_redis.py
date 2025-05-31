@@ -1,8 +1,13 @@
 #!/usr/bin/python3
+# Modified 27-Sep-2015
+# tng@chegwin.org
+
 import redis
 import subprocess
 from time import sleep
 import configparser
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
+
 parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
@@ -12,7 +17,6 @@ redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
-
 
 allowed_jobs = ['/usr/local/bin/bgas', 
                 '/usr/local/bin/homeeasy',
@@ -32,8 +36,25 @@ allowed_jobs = ['/usr/local/bin/bgas',
                 '/usr/local/bin/all_half.sh',
                 '/usr/local/bin/switch_tradfri.sh',
                 '/usr/local/bin/full_close.sh']
-while True:
+
+def read_redis_data():
     try:
+        debug_log("Reading Redis data")
+        while True:
+            try:
+                # Check for permission to run 
+                job_running = redthis.get('shared/jobqueue')
+                if job_running:
+                    # We don't have permission
+                    #            print ("Sleeping because we have a shared/jobqueue")
+                    sleep(2)
+                    continue 
+                job_to_run = (redthis.lpop('cellar/jobqueue')).decode('UTF-8')
+    #        job_to_run = redthis.lindex('attic/jobqueue', 0) decode('UTF-8')
+                print ("Job to run is %s" % job_to_run)
+                if (job_to_run):
+                    #print ("We have a job to run")
+                    job_running = redthis.set('shared/jobqueue', 'True')
         # Check for permission to run 
         job_running = redthis.get('shared/jobqueue')
         if job_running:

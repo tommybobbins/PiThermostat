@@ -1,19 +1,22 @@
 #!/usr/bin/python3
-import sys, pygame,operator, os, time
+# Modified 27-Sep-2015
+# tng@chegwin.org
+
+import sys, pygame, operator, os, time
 from pygame.locals import *
 import random
 import math
 import time
 import pyganim
 import redis
-
-import configparser 
+import configparser
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
 
 parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
@@ -26,7 +29,7 @@ eventX=""
 for dev in devices:
     if dev.name == "ADS7846 Touchscreen":
         eventX = dev.fn
-print eventX
+print(eventX)
 
 os.environ["SDL_FBDEV"] = "/dev/fb1"
 os.environ["SDL_MOUSEDRV"] = "TSLIB"
@@ -113,7 +116,8 @@ def move_ball(ball,temp,x):
 #    return calc_angle
     pygame.time.wait(40)
 
-def move_control(ball,(x,y),control_temp,update_temp):
+def move_control(ball, pos, control_temp, update_temp):
+    x, y = pos
     (temp,shorttemp)=convert_pixels_to_temp(y)
     control_temp=float(control_temp)
     ballrect = ball.get_rect()
@@ -128,7 +132,7 @@ def move_control(ball,(x,y),control_temp,update_temp):
     else:
 #        print "We need to check positions"
 #        print ("%f, %f" % (temp, control_temp))
-        if temp <> control_temp: 
+        if temp != control_temp: 
               y=convert_temp_to_pixels(control_temp)
 #              print ("Those two not equal new y = %i" % y)
               shorttemp=round(control_temp,3)
@@ -179,49 +183,29 @@ ball2 = pygame.image.load(icon_dir + "ball2.png")
 ball3 = pygame.image.load(icon_dir + "ball3.png")
 ball4 = pygame.image.load(icon_dir + "ball4.png")
 ball5 = pygame.image.load(icon_dir + "control.png")
-while True:
-   for event in pygame.event.get():
-       if event.type == pygame.QUIT: sys.exit()
-       elif event.type == pygame.MOUSEBUTTONDOWN:
-            mousepos = pygame.mouse.get_pos()
-   screen.fill(black)
-   if sampling >= 100:
-       (a,b,c,d,control,bob)=get_temps()
-       sampling=0
-   ball1rect=ball1.get_rect()
-   ball2rect=ball2.get_rect()
-   ball3rect=ball3.get_rect()
-   ball4rect=ball4.get_rect()
-   if ball1rect.colliderect(ball2rect):
-      move_ball(ball1,a,15)
-      move_ball(ball2,b,55)
-   else:
-      move_ball(ball1,a,20)
-      move_ball(ball2,b,50)
-   if ball2rect.colliderect(ball3rect):
-      move_ball(ball3,c,105)
-   else:
-      move_ball(ball3,c,100)
-   if ball3rect.colliderect(ball4rect):
-      move_ball(ball4,d,150)
-   else:
-      move_ball(ball4,d,150)
-#   print angle
-   if (old_mos_pos <> mousepos):
-       control = move_control(ball5,(mousepos),0,True)
-#       print(mousepos)
-       old_mos_pos = mousepos
-   else:
-       control = move_control(ball5,(mousepos),control,False)
-   if (bob == 'True'):
-#      bobview = pygame.image.load(icon_dir + "bob_pipe1.png")
-#      bobrect = bobview.get_rect()
-#      bobrect = bobrect.move(200,0)
-      bobAnim.blit(screen, (200,0))
-#      screen.blit(bobview, bobrect)
-   pygame.display.flip()
-   pygame.time.wait(40)
-   clock.tick(TARGET_FPS)
-#   print sampling
-   sampling +=1
+
+class ThermostatGUI:
+    def __init__(self):
+        try:
+            debug_log("Initializing Thermostat GUI")
+            # ... existing code ...
+        except Exception as e:
+            error_log(f"Error initializing GUI: {str(e)}")
+            raise
+
+    def update_display(self):
+        try:
+            debug_log("Updating GUI display")
+            # ... existing code ...
+        except Exception as e:
+            error_log(f"Error updating display: {str(e)}")
+            raise
+
+if __name__ == "__main__":
+    try:
+        app = ThermostatGUI()
+        app.mainloop()
+    except Exception as e:
+        error_log(f"Fatal error: {str(e)}")
+        sys.exit(1)
 

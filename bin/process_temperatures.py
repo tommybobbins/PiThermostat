@@ -23,6 +23,8 @@ from heating_water_cal import parse_calendar
 from relay_state import get_relay, send_relay
 from calculate_temps import calculate_temps,calculate_weighted_mean
 import re
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
+
 parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
 
@@ -238,14 +240,26 @@ def read_temps():
            print ("Sleeping %i" % (rotation_time/10))
         #We are in the loop but can sleep until ttl<35
 
+def process_temperatures():
+    try:
+        debug_log("Processing temperatures")
+        #Sleep on startup as redis needs to be online first
+        sleep(10)
+        while True:
+            if Debug:
+               print ("Looping")
+            read_temps() 
+            update_relayinfo()
+            send_call_water()
+            sleep(1)
+    except Exception as e:
+        error_log(f"Error in process_temperatures: {str(e)}")
+        raise
+
 if __name__ == "__main__":
-   #Sleep on startup as redis needs to be online first
-   sleep(10)
-   while True:
-       if Debug:
-          print ("Looping")
-       read_temps() 
-       update_relayinfo()
-       send_call_water()
-       sleep(1)
+    try:
+        process_temperatures()
+    except Exception as e:
+        error_log(f"Fatal error: {str(e)}")
+        sys.exit(1)
    

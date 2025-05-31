@@ -1,17 +1,24 @@
 #!/usr/bin/python3
+# Modified 27-Sep-2015
+# tng@chegwin.org
 
 import unittest
 import urllib3
-http = urllib3.PoolManager()
-import configparser 
 import redis
+import configparser
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
+import sys
+
 parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
+
 redishost=parser.get('redis','broker')
-redisport=parser.get('redis','port')
+redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
+http = urllib3.PoolManager()
 
 class TestSum(unittest.TestCase):
 
@@ -43,6 +50,17 @@ class TestSum(unittest.TestCase):
         boiler_time=redthis.ttl("boiler/req")
         self.assertLessEqual(boiler_time, 300, "Boiler time less than 300")
 
+def run_unit_tests():
+    try:
+        debug_log("Running unit tests")
+        unittest.main()
+    except Exception as e:
+        error_log(f"Error in unit tests: {str(e)}")
+        raise
 
-if __name__ == '__main__':
-    unittest.main()
+if __name__ == "__main__":
+    try:
+        run_unit_tests()
+    except Exception as e:
+        error_log(f"Fatal error: {str(e)}")
+        sys.exit(1)

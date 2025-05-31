@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+# Modified 27-Sep-2015
+# tng@chegwin.org
+
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 Google Inc.
@@ -31,6 +35,9 @@ import os
 import sys
 import pytz
 import re
+import redis
+import configparser
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
 regex_temp = re.compile(r'^Temp=(.*)')
 from datetime import datetime, timedelta
 
@@ -62,67 +69,64 @@ FLOW = client.flow_from_clientsecrets(CLIENT_SECRETS,
     ],
     message=tools.message_if_missing(CLIENT_SECRETS))
 
+parser = configparser.ConfigParser()
+parser.read('/etc/pithermostat.conf')
 
-def google_calendar():
-  # If the credentials don't exist or are invalid run through the native client
-  # flow. The Storage object will ensure that if successful the good
-  # credentials will get written back to the file.
-  storage = file.Storage('/etc/google_calendar/sample.dat')
-  credentials = storage.get()
-  return_temp = 13.6654
-  if credentials is None or credentials.invalid:
-    credentials = tools.run_flow(FLOW, storage, flags)
+redishost=parser.get('redis','broker')
+redisport=int(parser.get('redis','port'))
+redisdb=parser.get('redis','db')
+redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
 
-  # Create an httplib2.Http object to handle our HTTP requests and authorize it
-  # with our good Credentials.
-  http = httplib2.Http()
-  http = credentials.authorize(http)
+def process_google_calendar():
+    try:
+        debug_log("Processing Google Calendar")
+        # If the credentials don't exist or are invalid run through the native client
+        # flow. The Storage object will ensure that if successful the good
+        # credentials will get written back to the file.
+        storage = file.Storage('/etc/google_calendar/sample.dat')
+        credentials = storage.get()
+        return_temp = 13.6654
+        if credentials is None or credentials.invalid:
+            credentials = tools.run_flow(FLOW, storage, flags)
 
-  # Construct the service object for the interacting with the Calendar API.
-  try:
-      service = discovery.build('calendar', 'v3', http=http)
-  except: 
-      print ("Internet down. Here be dragons")
-      return(return_temp)
-  try:
-#    print "Success! Now add code here."
-    baildon_tz = pytz.timezone('Europe/London')
-    now = datetime.now(tz=baildon_tz) # timezone?
-    timeMin = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ))
-    timeMin = timeMin.isoformat()
-#    print timeMin
-    timeMax = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ) + timedelta(minutes=1))
-    timeMax = timeMax.isoformat()
-#    print timeMax
-    page_token = None
-    while True:
-      # Replace thermostat with
-      #  <something>@group.calendar.google.com
-      # where something is found from running 
-      # PiThermostat/utilities/list_calendars.py
-      events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
-      for event in events['items']:
-          tempstring = event['summary']
-#          print (tempstring)
-          match = regex_temp.search(tempstring)
-          if match:
-              target_temp = float(match.group(1))
-#              print target_temp
-              return_temp = target_temp
-          else:
-              return_temp = 13.6654
-      page_token = events.get('nextPageToken')
-      if not page_token:
-        break
-#    print return_temp
-    return return_temp
+        # Create an httplib2.Http object to handle our HTTP requests and authorize it
+        # with our good Credentials.
+        http = httplib2.Http()
+        http = credentials.authorize(http)
 
-  except client.AccessTokenRefreshError:
-     print ("The credentials have been revoked or expired, please re-run")
-     return return_temp
-  except:
-     print ("Bad stuff happened")
-     return return_temp
+        # Construct the service object for the interacting with the Calendar API.
+        service = discovery.build('calendar', 'v3', http=http)
+
+        baildon_tz = pytz.timezone('Europe/London')
+        now = datetime.now(tz=baildon_tz) # timezone?
+        timeMin = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ))
+        timeMin = timeMin.isoformat()
+        timeMax = baildon_tz.localize(datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute, second=now.second ) + timedelta(minutes=1))
+        timeMax = timeMax.isoformat()
+        page_token = None
+        while True:
+            # Replace thermostat with
+            #  <something>@group.calendar.google.com
+            # where something is found from running 
+            # PiThermostat/utilities/list_calendars.py
+            events = service.events().list(calendarId='thermostat',timeMin=timeMin, timeMax=timeMax).execute()
+            for event in events['items']:
+                tempstring = event['summary']
+                match = regex_temp.search(tempstring)
+                if match:
+                    target_temp = float(match.group(1))
+                    return_temp = target_temp
+                else:
+                    return_temp = 13.6654
+            page_token = events.get('nextPageToken')
+            if not page_token:
+                break
+        return return_temp
+
+    except Exception as e:
+        error_log(f"Error processing Google Calendar: {str(e)}")
+        raise
 
 # For more information on the Calendar API you can visit:
 #
@@ -136,4 +140,10 @@ def google_calendar():
 # For information on the Python Client Library visit:
 #
 #   https://developers.google.com/api-client-library/python/start/get_started
-google_calendar()
+
+if __name__ == "__main__":
+    try:
+        process_google_calendar()
+    except Exception as e:
+        error_log(f"Fatal error: {str(e)}")
+        sys.exit(1)

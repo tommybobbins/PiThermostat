@@ -1,26 +1,28 @@
 #!/usr/bin/python3
+# Modified 27-Sep-2015
+# tng@chegwin.org
 
-#####Processes a django-schedule calendar. Only useful if not using google calendar######
+import redis
+import configparser
+from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
 import re
 import datetime
 import time
 import urllib3
 http = urllib3.PoolManager()
 target_temp=14.3141
-import configparser
+from bs4 import BeautifulSoup
+import sys
+
 parser = configparser.ConfigParser()
 parser.read('/etc/pithermostat.conf')
-from bs4 import BeautifulSoup
-
-debug=parser.get('main','debug') # As string
-Debug = {'True': True, 'False': False}.get(debug, False) # As Boolean
-
-regex_temp = re.compile(r'<title>\w+=(\w+)</title>')
 
 redishost=parser.get('redis','broker')
 redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
+redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+
 apacheaddress=parser.get('apache','address')
 apacheport=int(parser.get('apache','port'))
 
@@ -44,7 +46,20 @@ def parse_calendar(calnum):
      except:
          return (16.99999);
 
-desired_temp=parse_calendar(1)
-print ("%s" % desired_temp)
-desired_temp=parse_calendar(2)
-print ("%s" % desired_temp)
+def calculate_heating_water():
+    try:
+        debug_log("Calculating heating water schedule")
+        desired_temp=parse_calendar(1)
+        print ("%s" % desired_temp)
+        desired_temp=parse_calendar(2)
+        print ("%s" % desired_temp)
+    except Exception as e:
+        error_log(f"Error calculating heating water schedule: {str(e)}")
+        raise
+
+if __name__ == "__main__":
+    try:
+        calculate_heating_water()
+    except Exception as e:
+        error_log(f"Fatal error: {str(e)}")
+        sys.exit(1)
