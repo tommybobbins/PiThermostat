@@ -10,6 +10,8 @@ import time
 import pyganim
 import redis
 import configparser
+import sys
+sys.path.append('/usr/local/python/lib')
 from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
 
 parser = configparser.ConfigParser()

@@ -31,7 +31,9 @@ os:
 	sudo cp -rp etc/apache2/* /etc/apache2/
 	sudo cp -rp etc/apache2/.htpasswd /etc/apache2/
 	sudo chmod 600 /etc/apache2/.htpasswd
-        sudo chown www-data:www-data /etc/apache2/.htpasswd
+	sudo chown www-data:www-data /etc/apache2/.htpasswd
+	sudo mkdir -p /usr/local/python/lib
+	sudo chmod 755 /usr/local/python/lib
 	@echo "Modifying KeepAlive Off"
 	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
 
@@ -47,6 +49,8 @@ binaries:
 	sudo cp utilities/retrieve_weather.sh $(BINDIR)
 	sudo cp utilities/parse_weather.py $(BINDIR)
 	sudo cp utilities/mean_outsidetemp.py $(BINDIR)
+	@echo "Copying python libraries"
+	sudo cp -rp pithermostat/* /usr/local/python/lib/    
 	@echo "Setting executable permissions"
 	sudo chmod 755 $(BINDIR)/*.py
 	sudo chmod 755 $(BINDIR)/*.sh

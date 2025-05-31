@@ -5,8 +5,12 @@
 from time import sleep
 import redis
 import re
+import sys
+sys.path.append('/usr/local/python/lib')
 # Modularised, added config file, made generic
 import configparser
+import sys
+sys.path.append('/usr/local/python/lib')
 from pithermostat.logging_helper import debug_log, info_log, error_log
 
 parser = configparser.ConfigParser()

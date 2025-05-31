@@ -23,6 +23,8 @@ from heating_water_cal import parse_calendar
 from relay_state import get_relay, send_relay
 from calculate_temps import calculate_temps,calculate_weighted_mean
 import re
+import sys
+sys.path.append('/usr/local/python/lib')
 from pithermostat.logging_helper import debug_log, info_log, error_log, warning_log
 
 parser = configparser.ConfigParser()
@@ -50,11 +52,13 @@ external_temp={}
 external_multiplier={}
 
 def update_relayinfo():
+   boiler_state="error"
+   water_state="error"
    try:
        boiler_state=str(get_relay("boiler"))
        water_state=str(get_relay("water"))
    except:
-       print ("Unable to get relay state")
+       debug_log("Unable to get relay state")
    try:
        redthis.set("relay/boiler", boiler_state)
        redthis.expire("relay/boiler", rotation_time)
@@ -64,8 +68,7 @@ def update_relayinfo():
        print ("Unable to set redis relay state")
 
 def send_call_boiler(on_or_off):
-    if Debug:
-        print ("On/Off = %s " % on_or_off)
+    debug_log("On/Off = %s " % on_or_off)
     if (on_or_off == "on"):
         try:
             redthis.set("boiler/req", "On")
@@ -76,6 +79,7 @@ def send_call_boiler(on_or_off):
             send_relay("boiler","on")
         except:
             print ("Unable to update redis")
+            debug_log("Unable to update redis")
     elif (on_or_off == "off"):
         try:
             redthis.set("boiler/req", "Off")
@@ -91,6 +95,7 @@ def send_call_water():
         water_req="Lost"
         water_state="Lost"
         expiry_time=rotation_time/10
+        water_cal=0
         try:
           expiry_time=int(redthis.ttl("water/req"))
           if redthis.get("water/req"):
@@ -104,6 +109,7 @@ def send_call_water():
           if Debug:
              print ("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_cal))
              print ("Lost one of %i, %s %s" % (expiry_time, water_req, water_cal))
+          water_cal="true"
         if ( expiry_time <= 60 ):
              # Water has not been manually boosted and we set to calendar
            try:
