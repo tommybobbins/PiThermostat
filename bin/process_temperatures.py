@@ -65,6 +65,7 @@ def update_relayinfo():
        redthis.set("relay/water", water_state)
        redthis.expire("relay/water", rotation_time)
    except:
+       debug_log("Unable to set redis relay state")
        print ("Unable to set redis relay state")
 
 def send_call_boiler(on_or_off):
@@ -88,6 +89,7 @@ def send_call_boiler(on_or_off):
             send_relay("boiler","off")
         except:
             print ("Unable to update redis")
+            debug_log("Unable to update redis")
     else:
         print ("Need to send on or off to send_call_boiler()")
 
@@ -106,31 +108,27 @@ def send_call_water():
           redthis.set("water/calendar", water_cal)
         except:
           redthis.set("water/calendar", water_state)
-          if Debug:
-             print ("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_cal))
-             print ("Lost one of %i, %s %s" % (expiry_time, water_req, water_cal))
+          debug_log("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_cal))
+          debug_log("Lost one of %i, %s %s" % (expiry_time, water_req, water_cal))
           water_cal="true"
         if ( expiry_time <= 60 ):
              # Water has not been manually boosted and we set to calendar
            try:
-              #print ("Water temp = %s" % water_state)
+              debug_log("Water temp = %s" % water_state)
               redthis.set("water/req", water_cal)
               redthis.expire("water/req", rotation_time)
               send_relay("water",water_cal)
            except: 
               water_state="Lost"
-              if Debug:
-                 print ("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_state))
-                 print ("Something went wrong")
+              debug_log("Expiry time of %s is %i . Calendar is %s" % (water_req,expiry_time,water_state))
+              debug_log("Something went wrong")
               redthis.set("water/req", water_cal)
               redthis.expire("water/req", rotation_time)
         elif ( expiry_time <= rotation_time ):
-           if Debug:
-              print ("Water state = %s %i" % (water_cal,expiry_time))
+              debug_log("Water state = %s %i" % (water_cal,expiry_time))
         else:
            # We are boosted
-           if Debug:
-              print ("Nothing to do, water is boosted = %s %i" % (water_req,expiry_time))
+           debug_log("Nothing to do, water is boosted = %s %i" % (water_req,expiry_time))
            send_relay("water",water_req)
 
 
@@ -142,7 +140,7 @@ def read_temps():
 #        calendar_temp=float(google_calendar())
         calendar_temp=float(parse_calendar(1))
     except:
-        print ("Google down or Django schedule not happening")
+        debug_log("Google down or Django schedule not happening")
         calendar_temp=6.999
     try:
         #Read in all the previous settings
@@ -175,75 +173,62 @@ def read_temps():
     # Store our google calendar temperature for future reference
     if (outside_rolling_mean >= summer_temp):
         calendar_temp += -summer_offset
-        if Debug:
-            print ("Calendar temp = %f" % calendar_temp)
-            print ("Outside Rolling mean temp = %f" % outside_rolling_mean)
-            print ("Summer temp = %f" % summer_temp)
+        debug_log("Calendar temp = %f" % calendar_temp)
+        debug_log("Outside Rolling mean temp = %f" % outside_rolling_mean)
+        debug_log("Summer temp = %f" % summer_temp)
 #    else:
 #        print ("It is not summer")
     redthis.set("temperature/calendar", calendar_temp)
-    if Debug: 
-        print ("Found weather %f" % weather_temp)
-        print ("Found user requested %f" % userreq_temp)
-        print ("Found calendar %f" % calendar_temp)
-        print ("Time until boiler needs poking = %i" % time_to_live)
-        print ("Previous calendar = %f" % previous_calendar_temp)
-        print ("Calendar_temp = %f" % calendar_temp)
+    debug_log("Found weather %f" % weather_temp)
+    debug_log("Found user requested %f" % userreq_temp)
+    debug_log("Found calendar %f" % calendar_temp)
+    debug_log("Time until boiler needs poking = %i" % time_to_live)
+    debug_log("Previous calendar = %f" % previous_calendar_temp)
+    debug_log("Calendar_temp = %f" % calendar_temp)
     if (previous_calendar_temp != calendar_temp):
         #Calendar appointment has changed. Reset User Requested temperature 
         userreq_temp=calendar_temp 
-        if Debug:
-            print ("Previous, current_calendar %f %f " % (previous_calendar_temp, calendar_temp))
-            print ("User Requested is not equal to calendar %f %f " % (userreq_temp, calendar_temp))
+        debug_log("Previous, current_calendar %f %f " % (previous_calendar_temp, calendar_temp))
+        debug_log("User Requested is not equal to calendar %f %f " % (userreq_temp, calendar_temp))
         try:
             redthis.set("temperature/userrequested", userreq_temp)
         except:
             print ("Unable to update redis")
-    if Debug:
-        print ("User Requested is now %f" % userreq_temp)
+    debug_log("User Requested is now %f" % userreq_temp)
     redthis.set("temperature/inside/weightedmean", mean_temp)
     redthis.set("temperature/outside/weightedmean", mean_external_temp)
-    if Debug:
-        print ("Mean temperature = %f" % mean_temp)
+    debug_log("Mean temperature = %f" % mean_temp)
 
 #   If in holiday mode, then keep userreq_temp at holiday_countdown
     try:
         userreq_temp = float(redthis.get("holiday_countdown"))
-        if Debug:
-            print ("Holiday mode: User Requested Temp = %f" % userreq_temp)
+        debug_log("Holiday mode: User Requested Temp = %f" % userreq_temp)
     except:
-        if Debug:
-            print ("Not in holiday Mode")
+        debug_log("Not in holiday Mode")
 
     if (time_to_live <= (int(rotation_time / 9))): 
-        if Debug:
-            print ("Time to live is <= 35 seconds")
-            print ("Time to live is %i" % (int(rotation_time/9)))
+        debug_log("Time to live is <= 35 seconds")
+        debug_log("Time to live is %i" % (int(rotation_time/9)))
         working_temp = userreq_temp + hysteresis_temp
         # e.g. 21.3 = 20.0 + 1.3
         if (mean_temp <= userreq_temp):
 #            e.g. Temp is 16.0
             send_call_boiler("on")
-            if Debug:
-                print ("Switching On")
+            debug_log("Switching On")
         elif (mean_temp >= working_temp):
 #            e.g. Temp is 21.3
             send_call_boiler("off")
-            if Debug:
-                print ("Switching Off")
+            debug_log("Switching Off")
         elif ((mean_temp <= working_temp) and (mean_temp >= userreq_temp)):
 #            e.g. Temp is 20.6
             send_call_boiler("on")
-            if Debug:
-                print ("Switching On")
+            debug_log("Switching On")
         else:
              print ("Something gone wrong")
-             if Debug:
-                 print ("Switching Wrong")
+             debug_log("Switching Wrong")
     else:
         sleep(int(rotation_time/10))
-        if Debug:
-           print ("Sleeping %i" % (rotation_time/10))
+        debug_log("Sleeping %i" % (rotation_time/10))
         #We are in the loop but can sleep until ttl<35
 
 def process_temperatures():
@@ -252,8 +237,7 @@ def process_temperatures():
         #Sleep on startup as redis needs to be online first
         sleep(10)
         while True:
-            if Debug:
-               print ("Looping")
+            debug_log("Looping")
             read_temps() 
             update_relayinfo()
             send_call_water()
