@@ -66,3 +66,24 @@ Add a line similar to the following to retrieve the weather for your location
     13 0,6,12,18 * * * /usr/local/bin/retrieve_weather.sh
 ========================
 
+## Using BME2x0 temperature sensor instead of a TMP102
+
+Copy the file ```utilities/bmx280.py``` to /usr/local/bin/redis_sensor.py  and restart the daemon:
+```
+cp utilities/bmx280.py /usr/local/bin/redis_sensor.py
+
+systemctl disable redis_sensor --now
+systemctl enable redis_sensor_bmx280.service --now
+systemctl status redis_sensors_bmx280
+● redis_sensor_bmx280.service - Read from BMX280 and feed result into redis
+     Loaded: loaded (/etc/systemd/system/redis_sensor_bmx280.service; enabled; preset: enabled)
+     Active: active (running) since Sun 2025-06-01 10:56:13 BST; 8min ago
+   Main PID: 1131 (redis_sensor.py)
+      Tasks: 1 (limit: 3910)
+        CPU: 477ms
+     CGroup: /system.slice/redis_sensor_bmx280.service
+             └─1131 /usr/bin/python3 /usr/local/bin/redis_sensor.py
+
+Jun 01 10:56:13 hotf systemd[1]: Started redis_sensor_bmx280.service - Read from BMX280 and feed result into redis.
+```
+
