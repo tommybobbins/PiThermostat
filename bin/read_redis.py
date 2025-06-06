@@ -57,13 +57,14 @@ def read_redis_data():
                 if (job_to_run):
                     #print ("We have a job to run")
                     job_running = redthis.set('shared/jobqueue', 'True')
+            except:
+                debug_log("Something went wrong with the jobqueue permissions")
         # Check for permission to run 
         job_running = redthis.get('shared/jobqueue')
         if job_running:
             # We don't have permission
             #            print ("Sleeping because we have a shared/jobqueue")
             sleep(2)
-            continue 
         job_to_run = (redthis.lpop('cellar/jobqueue')).decode('UTF-8')
 #        job_to_run = redthis.lindex('attic/jobqueue', 0) decode('UTF-8')
         print ("Job to run is %s" % job_to_run)
@@ -81,7 +82,7 @@ def read_redis_data():
             else: 
                 print ("Sorry, we are not allowd to run %s \n" % job_to_run[0])
                 job_running = redthis.delete('shared/jobqueue')
-                continue
+                sleep(0.2)
         else:
        #     print ("Idling")
             sleep(1)
