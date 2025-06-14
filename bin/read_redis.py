@@ -50,7 +50,6 @@ def read_redis_data():
                     # We don't have permission
                     #            print ("Sleeping because we have a shared/jobqueue")
                     sleep(2)
-                    continue 
                 job_to_run = (redthis.lpop('cellar/jobqueue')).decode('UTF-8')
     #        job_to_run = redthis.lindex('attic/jobqueue', 0) decode('UTF-8')
                 print ("Job to run is %s" % job_to_run)
