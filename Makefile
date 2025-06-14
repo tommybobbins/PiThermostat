@@ -36,6 +36,9 @@ os:
 	sudo chmod 755 /usr/local/python/lib
 	@echo "Modifying KeepAlive Off"
 	sudo sed -i "s/^KeepAlive On/KeepAlive Off/g" /etc/apache2/apache2.conf
+	sudo a2dismod mpm_event
+	sudo a2enmod mpm_prefork
+
 
 binaries: 
 	@echo "Installing into $(BINDIR)"
