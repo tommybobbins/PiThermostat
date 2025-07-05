@@ -82,10 +82,13 @@ def velux(request, openclosestate):
     else:
         switch_status = False
     season = redthis.get("velux/season").decode('UTF-8')
-    velux1_state = redthis.get("velux/1").decode('UTF-8')
-    velux2_state = redthis.get("velux/2").decode('UTF-8')
-    velux3_state = redthis.get("velux/3").decode('UTF-8')
-    attic_temp = redthis.get("temperature/attic/sensor").decode('UTF-8')
+    try:
+        velux1_state = redthis.get("velux/1").decode('UTF-8')
+        velux2_state = redthis.get("velux/2").decode('UTF-8')
+        velux3_state = redthis.get("velux/3").decode('UTF-8')
+        attic_temp = redthis.get("temperature/attic/sensor").decode('UTF-8')
+    except:
+        print ("Unable to retrieve velpi settings")
     if switch_status:
         redthis.rpush("attic/jobqueue", switch_status)
     return render(request, 'velux.html', { 'modify':openclosestate,'modify_value':openclosestate, 'action':'switching', 'switch_state':openclosestate, 'velux1_state':velux1_state, 'velux2_state':velux2_state, 'velux3_state':velux3_state, 'attic_temp':attic_temp, 'season': season, 'current_location':'VELUX', 'switch_status': switch_status, } )
@@ -106,7 +109,7 @@ def thermostat(request,modify=None,modify_value=0.0):
         water_req="Lost"
     try: 
         calendar_temp=float(redthis.get("temperature/calendar"))
-#        outside_temp=float(redthis.get("temperature/weather"))
+        outside_temp=float(redthis.get("temperature/weather"))
         outside_rollingmean=float(redthis.get("temperature/outside/rollingmean"))
         int_weighted_mean=float(redthis.get("temperature/inside/weightedmean"))
         ext_weighted_mean=float(redthis.get("temperature/outside/weightedmean"))
@@ -167,7 +170,7 @@ def thermostat(request,modify=None,modify_value=0.0):
         required_temp = float(required_temp)
         redirect_required = False
     left_column['Required']=required_temp
-    return render(request,thermostat_template,{'modify':modify, 'modify_value':modify_value, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, 'left_column':left_column, 'right_column':right_column,'int_weighted_mean':int_weighted_mean,'ext_weighted_mean':ext_weighted_mean,'Boiler':boiler_req,'boosted':boosted,'boiler_relay':boiler_relay,'water_relay':water_relay,  })
+    return render(request,thermostat_template,{'modify':modify, 'modify_value':modify_value, 'redirect_required': redirect_required, 'current_location':'LIFESUPPORT', 'refresh_time':refresh_time, 'left_column':left_column, 'right_column':right_column,'int_weighted_mean':int_weighted_mean,'ext_weighted_mean':ext_weighted_mean,'Boiler':boiler_req,'boosted':boosted,'boiler_relay':boiler_relay,'water_relay':water_relay,'outside_temp':outside_temp,  })
 
 
 def holding_page(request):

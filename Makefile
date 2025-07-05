@@ -39,7 +39,6 @@ os:
 	sudo a2dismod mpm_event
 	sudo a2enmod mpm_prefork
 
-
 binaries: 
 	@echo "Installing into $(BINDIR)"
 	sudo cp bin/relay_state.py $(BINDIR)
