@@ -18,7 +18,7 @@ redisport=int(parser.get('redis','port'))
 redisdb=parser.get('redis','db')
 redistimeout=float(parser.get('redis','timeout'))
 
-redthis=redis.StrictRedis(host=redishost,port=redisport, db=redisdb, socket_timeout=redistimeout)
+redthis = redis.StrictRedis(host='433host',port=6379, db=0,socket_timeout=3, charset="utf-8", decode_responses=True
 
 allowed_jobs = ['/usr/local/bin/bgas', 
                 '/usr/local/bin/homeeasy',
